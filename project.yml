@@ -1,0 +1,29 @@
+name: Mate
+options:
+  bundleIdPrefix: se.mews
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+targets:
+  Mate:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: Mate
+        INFOPLIST_KEY_UIUserInterfaceStyle: Automatic
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: 4S9Z57Q8KR
+    info:
+      path: Resources/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        NSLocalNetworkUsageDescription: Mate hämtar bildata från din TeslaMate-server på det lokala nätverket.
