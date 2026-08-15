@@ -6,9 +6,11 @@ struct SettingsView: View {
     @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
     @AppStorage("carID") private var carID = 1
     @AppStorage("appLanguage") private var appLanguage = "system"
+    @AppStorage("tessieToken") private var tessieToken = ""
 
     @State private var cars: [Car] = []
     @State private var testResult: String?
+    @State private var tessieResult: String?
 
     var body: some View {
         NavigationStack {
@@ -61,6 +63,27 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    TextField(String(localized: "API key"), text: $tessieToken)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .font(.footnote.monospaced())
+                    if !tessieToken.isEmpty {
+                        Button("Test connection") {
+                            Task { await testTessie() }
+                        }
+                    }
+                    if let tessieResult {
+                        Text(tessieResult)
+                            .font(.footnote)
+                            .foregroundStyle(tessieResult.hasPrefix("✓") ? .green : .red)
+                    }
+                } header: {
+                    Text(verbatim: "Tessie")
+                } footer: {
+                    Text("Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only.")
+                }
+
+                Section {
                     Picker("Language", selection: $appLanguage) {
                         Text("System").tag("system")
                         Text(verbatim: "English").tag("en")
@@ -109,5 +132,15 @@ struct SettingsView: View {
 
     private func loadCars() async {
         cars = (try? await APIClient(baseURL: serverURL).cars()) ?? []
+    }
+
+    private func testTessie() async {
+        do {
+            let vehicles = try await TessieClient(token: tessieToken).vehicles()
+            let names = vehicles.compactMap { $0.lastState?.displayName ?? $0.vin }.joined(separator: ", ")
+            tessieResult = String(localized: "✓ Connected – found \(names)")
+        } catch {
+            tessieResult = "✗ \(error.localizedDescription)"
+        }
     }
 }

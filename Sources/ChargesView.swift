@@ -6,7 +6,10 @@ struct ChargesView: View {
     let api: APIClient
     let carID: Int
 
+    @AppStorage("tessieToken") private var tessieToken = ""
+
     @State private var charges: [Charge] = []
+    @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
     @State private var loaded = false
 
@@ -16,20 +19,20 @@ struct ChargesView: View {
                 if !charges.isEmpty {
                     List {
                         Section {
-                            YearSummaryCard(charges: charges)
+                            YearSummaryCard(charges: charges, tessieCosts: tessieCosts)
                                 .listRowInsets(EdgeInsets())
                                 .listRowBackground(Color.clear)
                         }
                         Section {
                             ForEach(charges) { charge in
                                 NavigationLink(value: charge.chargeId) {
-                                    ChargeRow(charge: charge)
+                                    ChargeRow(charge: charge, tessieCost: tessieCosts[charge.chargeId])
                                 }
                             }
                         }
                     }
                     .navigationDestination(for: Int.self) { chargeID in
-                        ChargeDetailView(api: api, carID: carID, chargeID: chargeID)
+                        ChargeDetailView(api: api, carID: carID, chargeID: chargeID, tessieCost: tessieCosts[chargeID])
                     }
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
@@ -53,17 +56,28 @@ struct ChargesView: View {
             if charges.isEmpty { self.error = error.localizedDescription }
         }
         loaded = true
+        await loadTessieCosts()
+    }
+
+    // tillägg, aldrig blockerande — misslyckas tyst om Tessie inte nås
+    private func loadTessieCosts() async {
+        guard !tessieToken.isEmpty, !charges.isEmpty else { return }
+        guard let vin = try? await api.cars().first(where: { $0.carId == carID })?.carDetails?.vin else { return }
+        tessieCosts = (try? await TessieClient(token: tessieToken).missingCosts(for: charges, vin: vin)) ?? [:]
     }
 }
 
 struct YearSummaryCard: View {
     let charges: [Charge]
+    var tessieCosts: [Int: Double] = [:]
 
     private var year: [Charge] {
         charges.filter { Calendar.current.isDate($0.startDate, equalTo: .now, toGranularity: .year) }
     }
 
-    private var cost: Double { year.compactMap(\.displayCost).reduce(0, +) }
+    private var cost: Double {
+        year.reduce(0) { $0 + ($1.displayCost ?? tessieCosts[$1.chargeId] ?? 0) }
+    }
     private var energy: Double { year.compactMap(\.chargeEnergyAdded).reduce(0, +) }
     private var dcShare: Double {
         guard energy > 0 else { return 0 }
@@ -103,6 +117,7 @@ struct YearSummaryCard: View {
 
 struct ChargeRow: View {
     let charge: Charge
+    var tessieCost: Double? = nil
 
     private var typeColor: Color { charge.isDC ? .red : .green }
 
@@ -131,7 +146,7 @@ struct ChargeRow: View {
                 if let batt = charge.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel {
                     Label("\(s) → \(e) %", systemImage: "battery.75percent")
                 }
-                if let cost = charge.displayCost {
+                if let cost = charge.displayCost ?? tessieCost {
                     Label(Fmt.kr(cost), systemImage: "banknote")
                 }
             }
@@ -146,6 +161,7 @@ struct ChargeDetailView: View {
     let api: APIClient
     let carID: Int
     let chargeID: Int
+    var tessieCost: Double? = nil
 
     @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
 
@@ -182,13 +198,17 @@ struct ChargeDetailView: View {
                         StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: batteryText, tint: .green)
                         StatTile(icon: "clock.fill", title: String(localized: "Charge time"), value: Fmt.duration(charge.durationMin), tint: .secondary)
+                        let costTitle = charge.displayCost == nil && tessieCost != nil
+                            ? String(localized: "Cost") + " (Tessie)"
+                            : String(localized: "Cost")
+                        let costValue = Fmt.kr(charge.displayCost ?? tessieCost)
                         if let costEditURL {
                             Link(destination: costEditURL) {
-                                StatTile(icon: "banknote", title: String(localized: "Cost"), value: Fmt.kr(charge.displayCost), tint: .blue, chevron: true)
+                                StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue, chevron: true)
                             }
                             .buttonStyle(.plain)
                         } else {
-                            StatTile(icon: "banknote", title: String(localized: "Cost"), value: Fmt.kr(charge.displayCost), tint: .blue)
+                            StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue)
                         }
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(charge.outsideTempAvg), tint: .teal)
                     }

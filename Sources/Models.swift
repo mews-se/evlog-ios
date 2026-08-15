@@ -26,6 +26,7 @@ struct Car: Decodable, Identifiable {
 struct CarDetails: Decodable {
     let model: String?
     let trimBadging: String?
+    let vin: String?
 }
 
 // MARK: - /status
