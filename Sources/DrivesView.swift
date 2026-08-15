@@ -101,17 +101,14 @@ struct DriveDetailView: View {
     @State private var scrubDate: Date?
     @State private var heldDate: Date?
 
-    private var track: [CLLocationCoordinate2D] {
-        (drive?.driveDetails ?? []).compactMap { point in
-            guard let lat = point.latitude, let lon = point.longitude else { return nil }
-            return CLLocationCoordinate2D(latitude: lat, longitude: lon)
-        }
-    }
+    // förberäknat vid inläsning — beräkning per gest-tick gör scrubbingen trög på långa resor
+    @State private var track: [CLLocationCoordinate2D] = []
+    @State private var scrubPoints: [DrivePoint] = []
+    @State private var series: [SpeedPoint] = []
 
     private var scrubPoint: DrivePoint? {
-        guard let heldDate, let points = drive?.driveDetails else { return nil }
-        return points
-            .filter { $0.date != nil && $0.latitude != nil && $0.longitude != nil }
+        guard let heldDate, !scrubPoints.isEmpty else { return nil }
+        return scrubPoints
             .min { abs($0.date!.timeIntervalSince(heldDate)) < abs($1.date!.timeIntervalSince(heldDate)) }
     }
 
@@ -145,8 +142,8 @@ struct DriveDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
 
-                    if let points = drive.driveDetails, points.count > 2 {
-                        SpeedChart(points: points, selection: $scrubDate, display: heldDate)
+                    if series.count > 2 {
+                        SpeedChart(series: series, selection: $scrubDate, marker: heldDate, label: scrubPoint.map(scrubLabel))
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
@@ -181,34 +178,56 @@ struct DriveDetailView: View {
 
     private func load() async {
         do {
-            drive = try await api.drive(carID: carID, driveID: driveID)
+            let loaded = try await api.drive(carID: carID, driveID: driveID)
+            let points = loaded.driveDetails ?? []
+            drive = loaded
+            track = points.compactMap { p in
+                guard let lat = p.latitude, let lon = p.longitude else { return nil }
+                return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            }
+            scrubPoints = points.filter { $0.date != nil && $0.latitude != nil && $0.longitude != nil }
+            series = Self.buildSeries(points)
         } catch {
             self.error = error.localizedDescription
         }
     }
-}
 
-struct SpeedChart: View {
-    let points: [DrivePoint]
-    @Binding var selection: Date?
-    var display: Date?
+    private func scrubLabel(_ p: DrivePoint) -> String {
+        var parts = [Fmt.time(p.date)]
+        if let speed = p.speed { parts.append("\(Int(speed)) km/h") }
+        if let power = p.power { parts.append("\(Int(power)) kW") }
+        if let level = p.batteryLevel { parts.append("\(level) %") }
+        return parts.joined(separator: " · ")
+    }
 
-    // flera punkter kan dela tidsstämpel (sekundupplösning) — AreaMark staplar då y-värden
-    private var series: [(date: Date, speed: Double)] {
+    // deduplisera per tidsstämpel (AreaMark staplar annars) och sampla ner för renderingen
+    static func buildSeries(_ points: [DrivePoint]) -> [SpeedPoint] {
         var byDate: [Date: Double] = [:]
         for p in points {
             guard let d = p.date, let s = p.speed else { continue }
             byDate[d] = max(byDate[d] ?? 0, s)
         }
-        return byDate.keys.sorted().map { (date: $0, speed: byDate[$0]!) }
+        var series = byDate.keys.sorted().map { SpeedPoint(date: $0, speed: byDate[$0]!) }
+        if series.count > 1600 {
+            let step = series.count / 1600 + 1
+            series = series.enumerated().compactMap { $0.offset % step == 0 ? $0.element : nil }
+        }
+        return series
     }
+}
 
-    private var selectedPoint: DrivePoint? {
-        guard let target = selection ?? display else { return nil }
-        return points
-            .filter { $0.date != nil }
-            .min { abs($0.date!.timeIntervalSince(target)) < abs($1.date!.timeIntervalSince(target)) }
-    }
+struct SpeedPoint: Identifiable {
+    let date: Date
+    let speed: Double
+
+    var id: Date { date }
+}
+
+struct SpeedChart: View {
+    let series: [SpeedPoint]
+    @Binding var selection: Date?
+    var marker: Date?
+    var label: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -216,8 +235,8 @@ struct SpeedChart: View {
                 Text("Speed")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                if let p = selectedPoint {
-                    Text(scrubLabel(p))
+                if let label {
+                    Text(label)
                         .font(.caption.weight(.medium).monospacedDigit())
                         .foregroundStyle(.blue)
                 } else {
@@ -226,14 +245,14 @@ struct SpeedChart: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            Chart(series, id: \.date) { point in
+            Chart(series) { point in
                 AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
                     .foregroundStyle(.blue.opacity(0.15).gradient)
                 LineMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
                     .foregroundStyle(.blue)
                     .lineStyle(StrokeStyle(lineWidth: 2))
-                if let sel = selectedPoint?.date {
-                    RuleMark(x: .value("Selected", sel))
+                if let marker {
+                    RuleMark(x: .value("Selected", marker))
                         .foregroundStyle(.blue.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1))
                 }
@@ -248,13 +267,5 @@ struct SpeedChart: View {
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
-    }
-
-    private func scrubLabel(_ p: DrivePoint) -> String {
-        var parts = [Fmt.time(p.date)]
-        if let speed = p.speed { parts.append("\(Int(speed)) km/h") }
-        if let power = p.power { parts.append("\(Int(power)) kW") }
-        if let level = p.batteryLevel { parts.append("\(level) %") }
-        return parts.joined(separator: " · ")
     }
 }
