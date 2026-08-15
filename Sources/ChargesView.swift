@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 import Charts
 
 struct ChargesView: View {
@@ -51,6 +52,8 @@ struct ChargesView: View {
 struct ChargeRow: View {
     let charge: Charge
 
+    private var typeColor: Color { charge.isDC ? .red : .green }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
@@ -58,9 +61,15 @@ struct ChargeRow: View {
                     .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
                 Spacer()
+                Text(charge.isDC ? "DC" : "AC")
+                    .font(.caption2.weight(.bold))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(typeColor.opacity(0.15), in: Capsule())
+                    .foregroundStyle(typeColor)
                 Text("+" + Fmt.kwh(charge.chargeEnergyAdded))
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.green)
+                    .foregroundStyle(typeColor)
             }
             Text("\(Fmt.day(charge.startDate)) \(Fmt.time(charge.startDate))")
                 .font(.footnote)
@@ -70,7 +79,7 @@ struct ChargeRow: View {
                 if let batt = charge.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel {
                     Label("\(s) → \(e) %", systemImage: "battery.75percent")
                 }
-                if let cost = charge.cost, cost > 0 {
+                if let cost = charge.cost {
                     Label(Fmt.kr(cost), systemImage: "banknote")
                 }
             }
@@ -92,10 +101,27 @@ struct ChargeDetailView: View {
     var body: some View {
         ScrollView {
             if let charge {
+                let typeColor: Color = charge.isDC ? .red : .green
                 VStack(spacing: 16) {
+                    if let lat = charge.latitude, let lon = charge.longitude {
+                        Map(initialPosition: .region(MKCoordinateRegion(
+                            center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                            latitudinalMeters: 1200, longitudinalMeters: 1200
+                        ))) {
+                            Marker(charge.address ?? "Laddplats", systemImage: "bolt.fill",
+                                   coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
+                                .tint(typeColor)
+                        }
+                        .mapControlVisibility(.hidden)
+                        .frame(height: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    }
+
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "bolt.fill", title: "Tillagt", value: Fmt.kwh(charge.chargeEnergyAdded), tint: .green)
+                        StatTile(icon: "bolt.fill", title: "Tillagt", value: Fmt.kwh(charge.chargeEnergyAdded), tint: typeColor)
                         StatTile(icon: "bolt.badge.clock", title: "Använt", value: Fmt.kwh(charge.chargeEnergyUsed), tint: .orange)
+                        StatTile(icon: "gauge.with.dots.needle.100percent", title: "Max effekt", value: Fmt.kw(charge.maxPowerKw), tint: typeColor)
+                        StatTile(icon: "gauge.with.dots.needle.50percent", title: "Snitteffekt", value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
                         StatTile(icon: "battery.75percent", title: "Batteri", value: batteryText, tint: .green)
                         StatTile(icon: "clock.fill", title: "Laddtid", value: Fmt.duration(charge.durationMin), tint: .secondary)
                         StatTile(icon: "banknote", title: "Kostnad", value: Fmt.kr(charge.cost), tint: .blue)
@@ -103,7 +129,7 @@ struct ChargeDetailView: View {
                     }
 
                     if let points = charge.chargeDetails, points.count > 2 {
-                        ChargeCurve(points: points)
+                        ChargeCurve(points: points, powerColor: typeColor)
                     }
                 }
                 .padding(.horizontal)
@@ -135,6 +161,7 @@ struct ChargeDetailView: View {
 
 struct ChargeCurve: View {
     let points: [ChargePoint]
+    var powerColor: Color = .green
 
     // dedupliserat per tidsstämpel, se SpeedChart
     private var series: [(date: Date, power: Double?, level: Int?)] {
@@ -154,7 +181,7 @@ struct ChargeCurve: View {
             Chart(series, id: \.date) { point in
                 if let power = point.power {
                     LineMark(x: .value("Tid", point.date), y: .value("kW", power), series: .value("Serie", "Effekt"))
-                        .foregroundStyle(.green)
+                        .foregroundStyle(powerColor)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                 }
                 if let level = point.level {
@@ -170,7 +197,7 @@ struct ChargeCurve: View {
             }
             .frame(height: 160)
             HStack(spacing: 16) {
-                Label("Effekt (kW)", systemImage: "line.diagonal").foregroundStyle(.green)
+                Label("Effekt (kW)", systemImage: "line.diagonal").foregroundStyle(powerColor)
                 Label("Batteri (%)", systemImage: "line.diagonal").foregroundStyle(.blue.opacity(0.6))
             }
             .font(.caption2)

@@ -192,6 +192,24 @@ struct Charge: Decodable, Identifiable {
     let chargeDetails: [ChargePoint]?
 
     var id: Int { chargeId }
+
+    var avgPowerKw: Double? {
+        guard let minutes = durationMin, minutes > 0,
+              let energy = chargeEnergyUsed ?? chargeEnergyAdded else { return nil }
+        return energy / (minutes / 60)
+    }
+
+    // listan saknar effektdata — snitt över 20 kW kan bara vara DC (AC toppar 11 kW ombord)
+    var isDC: Bool {
+        if let points = chargeDetails {
+            return points.contains { $0.fastChargerInfo?.fastChargerPresent == true }
+        }
+        return (avgPowerKw ?? 0) > 20
+    }
+
+    var maxPowerKw: Double? {
+        chargeDetails?.compactMap { $0.chargerDetails?.chargerPower }.max()
+    }
 }
 
 struct ChargePoint: Decodable, Identifiable {
@@ -200,8 +218,15 @@ struct ChargePoint: Decodable, Identifiable {
     let batteryLevel: Int?
     let chargeEnergyAdded: Double?
     let chargerDetails: ChargerDetails?
+    let fastChargerInfo: FastChargerInfo?
 
     var id: Int { detailId }
+}
+
+struct FastChargerInfo: Decodable {
+    let fastChargerPresent: Bool?
+    let fastChargerBrand: String?
+    let fastChargerType: String?
 }
 
 struct ChargerDetails: Decodable {

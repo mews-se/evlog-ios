@@ -121,9 +121,9 @@ struct DriveDetailView: View {
                                 Marker("Mål", systemImage: "flag.checkered", coordinate: last).tint(.red)
                             }
                         }
+                        .mapControlVisibility(.hidden)
                         .frame(height: 260)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .allowsHitTesting(false)
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {

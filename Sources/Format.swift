@@ -24,6 +24,12 @@ enum Fmt {
         return value.formatted(.number.precision(.fractionLength(0)).locale(sv)) + "°"
     }
 
+    static func kw(_ value: Double?) -> String {
+        guard let value else { return "–" }
+        let decimals = value < 10 ? 1 : 0
+        return value.formatted(.number.precision(.fractionLength(decimals)).locale(sv)) + " kW"
+    }
+
     static func consumption(_ whPerKm: Double?) -> String {
         guard let whPerKm else { return "–" }
         return whPerKm.formatted(.number.precision(.fractionLength(0)).locale(sv)) + " Wh/km"
