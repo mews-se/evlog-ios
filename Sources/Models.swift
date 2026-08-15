@@ -193,9 +193,10 @@ struct Charge: Decodable, Identifiable {
 
     var id: Int { chargeId }
 
+    // added/tid, samma semantik som Grafanas Ø Power-kolumn
     var avgPowerKw: Double? {
         guard let minutes = durationMin, minutes > 0,
-              let energy = chargeEnergyUsed ?? chargeEnergyAdded else { return nil }
+              let energy = chargeEnergyAdded ?? chargeEnergyUsed else { return nil }
         return energy / (minutes / 60)
     }
 

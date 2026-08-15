@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("serverURL") private var serverURL = "http://10.0.0.185:8080"
     @AppStorage("grafanaURL") private var grafanaURL = "http://10.0.0.185:3000"
+    @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
     @AppStorage("carID") private var carID = 1
     @AppStorage("appLanguage") private var appLanguage = "system"
 
@@ -36,6 +37,17 @@ struct SettingsView: View {
                     Text(verbatim: "Grafana")
                 } footer: {
                     Text("Used for the visited places map.")
+                }
+
+                Section {
+                    TextField("http://server:4000", text: $teslamateURL)
+                        .keyboardType(.URL)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                } header: {
+                    Text(verbatim: "TeslaMate")
+                } footer: {
+                    Text("Used for editing charge costs.")
                 }
 
                 if cars.count > 1 {

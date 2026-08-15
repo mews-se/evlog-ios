@@ -702,6 +702,16 @@
         }
       }
     },
+    "Used for editing charge costs." : {
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Används för att redigera laddningskostnader."
+          }
+        }
+      }
+    },
     "Used for the visited places map." : {
       "localizations" : {
         "sv" : {

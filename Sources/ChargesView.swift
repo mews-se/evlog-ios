@@ -147,8 +147,14 @@ struct ChargeDetailView: View {
     let carID: Int
     let chargeID: Int
 
+    @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
+
     @State private var charge: Charge?
     @State private var error: String?
+
+    private var costEditURL: URL? {
+        URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/")) + "/charge-cost/\(chargeID)")
+    }
 
     var body: some View {
         ScrollView {
@@ -176,7 +182,14 @@ struct ChargeDetailView: View {
                         StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: batteryText, tint: .green)
                         StatTile(icon: "clock.fill", title: String(localized: "Charge time"), value: Fmt.duration(charge.durationMin), tint: .secondary)
-                        StatTile(icon: "banknote", title: String(localized: "Cost"), value: Fmt.kr(charge.displayCost), tint: .blue)
+                        if let costEditURL {
+                            Link(destination: costEditURL) {
+                                StatTile(icon: "banknote", title: String(localized: "Cost"), value: Fmt.kr(charge.displayCost), tint: .blue, chevron: true)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            StatTile(icon: "banknote", title: String(localized: "Cost"), value: Fmt.kr(charge.displayCost), tint: .blue)
+                        }
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(charge.outsideTempAvg), tint: .teal)
                     }
 
