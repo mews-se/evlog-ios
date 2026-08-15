@@ -13,7 +13,7 @@ struct DashboardView: View {
                 if let status {
                     VStack(spacing: 16) {
                         BatteryCard(status: status)
-                        StatusGrid(status: status)
+                        StatusGrid(status: status, carID: carID)
                         if status.carVersions?.updateAvailable == true {
                             UpdateBanner(version: status.carVersions?.updateVersion)
                         }
@@ -26,7 +26,7 @@ struct DashboardView: View {
                 }
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle(status?.displayName ?? "Översikt")
+            .navigationTitle(status?.displayName ?? String(localized: "Overview"))
             .toolbar {
                 if let state = status?.state {
                     let s = CarState.label(state, charging: status?.chargingDetails?.chargingState)
@@ -86,18 +86,18 @@ struct BatteryCard: View {
             if status.chargingDetails?.chargingState == "Charging" {
                 let power = status.chargingDetails?.chargerPower
                 let added = status.chargingDetails?.chargeEnergyAdded
-                Label("\(Fmt.kwh(added)) tillagt · \(power.map { Int($0) } ?? 0) kW", systemImage: "bolt.fill")
+                Label("\(Fmt.kwh(added)) added · \(power.map { Int($0) } ?? 0) kW", systemImage: "bolt.fill")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(.green)
             } else if status.chargingDetails?.pluggedIn == true {
-                Label("Inkopplad", systemImage: "powerplug.fill")
+                Label("Plugged in", systemImage: "powerplug.fill")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(.secondary)
             }
 
             HStack {
                 if let model = status.carDetails?.model {
-                    Text("Model \(model)\(status.carDetails?.trimBadging.map { " \($0.uppercased())" } ?? "")")
+                    Text(verbatim: "Model \(model)\(status.carDetails?.trimBadging.map { " \($0.uppercased())" } ?? "")")
                 }
                 Spacer()
                 if let odo = status.odometer {
@@ -114,36 +114,43 @@ struct BatteryCard: View {
 
 struct StatusGrid: View {
     let status: CarStatus
+    let carID: Int
 
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
             StatTile(
                 icon: status.carStatus?.locked == true ? "lock.fill" : "lock.open.fill",
-                title: "Lås",
-                value: status.carStatus?.locked == true ? "Låst" : "Olåst",
+                title: String(localized: "Lock"),
+                value: status.carStatus?.locked == true ? String(localized: "Locked") : String(localized: "Unlocked"),
                 tint: status.carStatus?.locked == true ? .green : .orange
             )
-            StatTile(
-                icon: "mappin.and.ellipse",
-                title: "Plats",
-                value: status.carGeodata?.geofence?.isEmpty == false ? status.carGeodata!.geofence! : "Okänd",
-                tint: .blue
-            )
+            NavigationLink {
+                VisitedView(carID: carID)
+            } label: {
+                StatTile(
+                    icon: "mappin.and.ellipse",
+                    title: String(localized: "Location"),
+                    value: status.carGeodata?.geofence?.isEmpty == false ? status.carGeodata!.geofence! : String(localized: "Unknown"),
+                    tint: .blue,
+                    chevron: true
+                )
+            }
+            .buttonStyle(.plain)
             StatTile(
                 icon: "thermometer.medium",
-                title: "Ute / inne",
+                title: String(localized: "Outside / inside"),
                 value: "\(Fmt.temp(status.climateDetails?.outsideTemp)) / \(Fmt.temp(status.climateDetails?.insideTemp))",
                 tint: .teal
             )
             StatTile(
                 icon: "shield.fill",
                 title: "Sentry",
-                value: status.carStatus?.sentryMode == true ? "På" : "Av",
+                value: status.carStatus?.sentryMode == true ? String(localized: "On") : String(localized: "Off"),
                 tint: status.carStatus?.sentryMode == true ? .red : .secondary
             )
             StatTile(
                 icon: "cpu",
-                title: "Mjukvara",
+                title: String(localized: "Software"),
                 value: status.carVersions?.version?.components(separatedBy: " ").first ?? "–",
                 tint: .purple
             )
@@ -157,7 +164,8 @@ struct StatusGrid: View {
     }
 
     private var statusSinceTitle: String {
-        CarState.label(status.state, charging: status.chargingDetails?.chargingState).text + " sedan"
+        let state = CarState.label(status.state, charging: status.chargingDetails?.chargingState).text
+        return String(localized: "\(state) since")
     }
 }
 
@@ -166,12 +174,21 @@ struct StatTile: View {
     let title: String
     let value: String
     var tint: Color = .primary
+    var chevron: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Image(systemName: icon)
-                .font(.body)
-                .foregroundStyle(tint)
+            HStack {
+                Image(systemName: icon)
+                    .font(.body)
+                    .foregroundStyle(tint)
+                Spacer()
+                if chevron {
+                    Image(systemName: "chevron.right")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                }
+            }
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -190,11 +207,17 @@ struct UpdateBanner: View {
     let version: String?
 
     var body: some View {
-        Label("Uppdatering tillgänglig\(version.map { ": \($0)" } ?? "")", systemImage: "arrow.down.circle.fill")
-            .font(.subheadline.weight(.medium))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-            .background(.purple.opacity(0.15), in: RoundedRectangle(cornerRadius: 16))
-            .foregroundStyle(.purple)
+        Group {
+            if let version {
+                Label("Software Update available (\(version))", systemImage: "arrow.down.circle.fill")
+            } else {
+                Label("Update available", systemImage: "arrow.down.circle.fill")
+            }
+        }
+        .font(.subheadline.weight(.medium))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(.purple.opacity(0.15), in: RoundedRectangle(cornerRadius: 16))
+        .foregroundStyle(.purple)
     }
 }

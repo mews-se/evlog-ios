@@ -2,7 +2,9 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("serverURL") private var serverURL = "http://10.0.0.185:8080"
+    @AppStorage("grafanaURL") private var grafanaURL = "http://10.0.0.185:3000"
     @AppStorage("carID") private var carID = 1
+    @AppStorage("appLanguage") private var appLanguage = "system"
 
     @State private var cars: [Car] = []
     @State private var testResult: String?
@@ -15,7 +17,7 @@ struct SettingsView: View {
                         .keyboardType(.URL)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
-                    Button("Testa anslutning") {
+                    Button("Test connection") {
                         Task { await testConnection() }
                     }
                     if let testResult {
@@ -25,9 +27,20 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    TextField("http://server:3000", text: $grafanaURL)
+                        .keyboardType(.URL)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                } header: {
+                    Text(verbatim: "Grafana")
+                } footer: {
+                    Text("Used for the visited places map.")
+                }
+
                 if cars.count > 1 {
-                    Section("Bil") {
-                        Picker("Bil", selection: $carID) {
+                    Section("Car") {
+                        Picker("Car", selection: $carID) {
                             ForEach(cars) { car in
                                 Text(car.name).tag(car.carId)
                             }
@@ -36,13 +49,38 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    LabeledContent("Datakälla", value: "TeslaMate via teslamateapi")
+                    Picker("Language", selection: $appLanguage) {
+                        Text("System").tag("system")
+                        Text(verbatim: "English").tag("en")
+                        Text(verbatim: "Svenska").tag("sv")
+                    }
+                } header: {
+                    Text("Language")
                 } footer: {
-                    Text("Appen läser din självhostade TeslaMate-databas. Ingen data lämnar ditt nätverk.")
+                    Text("Takes effect after the app is restarted.")
+                }
+
+                Section {
+                    Link(destination: URL(string: "https://github.com/teslamate-org/teslamate")!) {
+                        LabeledContent("Data source") {
+                            Text(verbatim: "TeslaMate")
+                        }
+                    }
+                } header: {
+                    Text("About")
+                } footer: {
+                    Text(verbatim: "This app is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.")
                 }
             }
-            .navigationTitle("Inställningar")
+            .navigationTitle("Settings")
             .task { await loadCars() }
+            .onChange(of: appLanguage) { _, new in
+                if new == "system" {
+                    UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+                } else {
+                    UserDefaults.standard.set([new], forKey: "AppleLanguages")
+                }
+            }
         }
     }
 
@@ -50,7 +88,8 @@ struct SettingsView: View {
         do {
             let cars = try await APIClient(baseURL: serverURL).cars()
             self.cars = cars
-            testResult = "✓ Ansluten – hittade \(cars.map(\.name).joined(separator: ", "))"
+            let names = cars.map(\.name).joined(separator: ", ")
+            testResult = String(localized: "✓ Connected – found \(names)")
         } catch {
             testResult = "✗ \(error.localizedDescription)"
         }

@@ -18,13 +18,13 @@ struct RootView: View {
     var body: some View {
         TabView {
             DashboardView(api: api, carID: carID)
-                .tabItem { Label("Översikt", systemImage: "gauge.with.dots.needle.50percent") }
+                .tabItem { Label("Overview", systemImage: "gauge.with.dots.needle.50percent") }
             DrivesView(api: api, carID: carID)
-                .tabItem { Label("Resor", systemImage: "road.lanes") }
+                .tabItem { Label("Drives", systemImage: "road.lanes") }
             ChargesView(api: api, carID: carID)
-                .tabItem { Label("Laddning", systemImage: "bolt.fill") }
+                .tabItem { Label("Charges", systemImage: "bolt.fill") }
             SettingsView()
-                .tabItem { Label("Inställningar", systemImage: "gearshape.fill") }
+                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
     }
 }
@@ -41,7 +41,7 @@ struct ErrorCard: View {
             Text(message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("Försök igen", action: retry)
+            Button("Try again", action: retry)
                 .buttonStyle(.borderedProminent)
         }
         .padding(32)

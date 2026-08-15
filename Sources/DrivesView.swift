@@ -37,12 +37,12 @@ struct DrivesView: View {
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
                 } else if loaded {
-                    ContentUnavailableView("Inga resor än", systemImage: "road.lanes")
+                    ContentUnavailableView("No drives yet", systemImage: "road.lanes")
                 } else {
                     ProgressView()
                 }
             }
-            .navigationTitle("Resor")
+            .navigationTitle("Drives")
             .refreshable { await load() }
             .task { if !loaded { await load() } }
         }
@@ -65,14 +65,14 @@ struct DriveRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
-                Text("\(Fmt.time(drive.startDate)) – \(Fmt.time(drive.endDate))")
+                Text(verbatim: "\(Fmt.time(drive.startDate)) – \(Fmt.time(drive.endDate))")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 Text(Fmt.km(drive.distance))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.blue)
             }
-            Text("\(drive.startAddress ?? "Okänd") → \(drive.endAddress ?? "Okänd")")
+            Text(verbatim: "\(drive.startAddress ?? String(localized: "Unknown")) → \(drive.endAddress ?? String(localized: "Unknown"))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -98,12 +98,21 @@ struct DriveDetailView: View {
 
     @State private var drive: Drive?
     @State private var error: String?
+    @State private var scrubDate: Date?
+    @State private var heldDate: Date?
 
     private var track: [CLLocationCoordinate2D] {
         (drive?.driveDetails ?? []).compactMap { point in
             guard let lat = point.latitude, let lon = point.longitude else { return nil }
             return CLLocationCoordinate2D(latitude: lat, longitude: lon)
         }
+    }
+
+    private var scrubPoint: DrivePoint? {
+        guard let heldDate, let points = drive?.driveDetails else { return nil }
+        return points
+            .filter { $0.date != nil && $0.latitude != nil && $0.longitude != nil }
+            .min { abs($0.date!.timeIntervalSince(heldDate)) < abs($1.date!.timeIntervalSince(heldDate)) }
     }
 
     var body: some View {
@@ -118,7 +127,17 @@ struct DriveDetailView: View {
                                 Marker("Start", systemImage: "flag.fill", coordinate: first).tint(.green)
                             }
                             if let last = track.last {
-                                Marker("Mål", systemImage: "flag.checkered", coordinate: last).tint(.red)
+                                Marker("Finish", systemImage: "flag.checkered", coordinate: last).tint(.red)
+                            }
+                            if let p = scrubPoint, let lat = p.latitude, let lon = p.longitude {
+                                Annotation("", coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon)) {
+                                    ZStack {
+                                        Circle().fill(.white)
+                                        Circle().fill(.blue).padding(3)
+                                    }
+                                    .frame(width: 20, height: 20)
+                                    .shadow(radius: 2)
+                                }
                             }
                         }
                         .mapControlVisibility(.hidden)
@@ -126,17 +145,17 @@ struct DriveDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
 
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: "Sträcka", value: Fmt.km(drive.distance), tint: .blue)
-                        StatTile(icon: "clock.fill", title: "Restid", value: Fmt.duration(drive.durationMin), tint: .secondary)
-                        StatTile(icon: "gauge.with.dots.needle.67percent", title: "Max / snitt", value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
-                        StatTile(icon: "bolt.fill", title: "Förbrukning", value: Fmt.consumption(drive.consumptionNet), tint: .green)
-                        StatTile(icon: "battery.75percent", title: "Batteri", value: batteryText, tint: .green)
-                        StatTile(icon: "thermometer.medium", title: "Utetemp", value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
+                    if let points = drive.driveDetails, points.count > 2 {
+                        SpeedChart(points: points, selection: $scrubDate, display: heldDate)
                     }
 
-                    if let points = drive.driveDetails, points.count > 2 {
-                        SpeedChart(points: points)
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
+                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance"), value: Fmt.km(drive.distance), tint: .blue)
+                        StatTile(icon: "clock.fill", title: String(localized: "Duration"), value: Fmt.duration(drive.durationMin), tint: .secondary)
+                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg"), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
+                        StatTile(icon: "bolt.fill", title: String(localized: "Consumption"), value: Fmt.consumption(drive.consumptionNet), tint: .green)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: batteryText, tint: .green)
+                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                     }
                 }
                 .padding(.horizontal)
@@ -147,9 +166,12 @@ struct DriveDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? "Resa")
+        .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? String(localized: "Drive"))
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
+        .onChange(of: scrubDate) { _, new in
+            if new != nil { heldDate = new }
+        }
     }
 
     private var batteryText: String {
@@ -168,6 +190,8 @@ struct DriveDetailView: View {
 
 struct SpeedChart: View {
     let points: [DrivePoint]
+    @Binding var selection: Date?
+    var display: Date?
 
     // flera punkter kan dela tidsstämpel (sekundupplösning) — AreaMark staplar då y-värden
     private var series: [(date: Date, speed: Double)] {
@@ -179,17 +203,42 @@ struct SpeedChart: View {
         return byDate.keys.sorted().map { (date: $0, speed: byDate[$0]!) }
     }
 
+    private var selectedPoint: DrivePoint? {
+        guard let target = selection ?? display else { return nil }
+        return points
+            .filter { $0.date != nil }
+            .min { abs($0.date!.timeIntervalSince(target)) < abs($1.date!.timeIntervalSince(target)) }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Hastighet")
-                .font(.subheadline.weight(.semibold))
+            HStack {
+                Text("Speed")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                if let p = selectedPoint {
+                    Text(scrubLabel(p))
+                        .font(.caption.weight(.medium).monospacedDigit())
+                        .foregroundStyle(.blue)
+                } else {
+                    Text("Drag the chart to follow the drive")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+            }
             Chart(series, id: \.date) { point in
-                AreaMark(x: .value("Tid", point.date), y: .value("km/h", point.speed))
+                AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
                     .foregroundStyle(.blue.opacity(0.15).gradient)
-                LineMark(x: .value("Tid", point.date), y: .value("km/h", point.speed))
+                LineMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
                     .foregroundStyle(.blue)
                     .lineStyle(StrokeStyle(lineWidth: 2))
+                if let sel = selectedPoint?.date {
+                    RuleMark(x: .value("Selected", sel))
+                        .foregroundStyle(.blue.opacity(0.5))
+                        .lineStyle(StrokeStyle(lineWidth: 1))
+                }
             }
+            .chartXSelection(value: $selection)
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4)) {
                     AxisValueLabel(format: .dateTime.hour().minute())
@@ -199,5 +248,13 @@ struct SpeedChart: View {
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func scrubLabel(_ p: DrivePoint) -> String {
+        var parts = [Fmt.time(p.date)]
+        if let speed = p.speed { parts.append("\(Int(speed)) km/h") }
+        if let power = p.power { parts.append("\(Int(power)) kW") }
+        if let level = p.batteryLevel { parts.append("\(level) %") }
+        return parts.joined(separator: " · ")
     }
 }

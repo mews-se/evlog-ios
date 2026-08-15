@@ -6,8 +6,8 @@ enum APIError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .badURL: return "Ogiltig server-URL. Kontrollera inställningarna."
-        case .http(let code): return "Servern svarade med fel (HTTP \(code))."
+        case .badURL: return String(localized: "Invalid server URL. Check the settings.")
+        case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).")
         }
     }
 }
@@ -43,8 +43,8 @@ struct APIClient {
         return payload.status
     }
 
-    func drives(carID: Int, results: Int = 100) async throws -> [Drive] {
-        let payload: DrivesPayload = try await get("/api/v1/cars/\(carID)/drives?results=\(results)")
+    func drives(carID: Int, results: Int = 200) async throws -> [Drive] {
+        let payload: DrivesPayload = try await get("/api/v1/cars/\(carID)/drives?show=\(results)")
         return payload.drives
     }
 
@@ -54,7 +54,7 @@ struct APIClient {
     }
 
     func charges(carID: Int, results: Int = 100) async throws -> [Charge] {
-        let payload: ChargesPayload = try await get("/api/v1/cars/\(carID)/charges?results=\(results)")
+        let payload: ChargesPayload = try await get("/api/v1/cars/\(carID)/charges?show=\(results)")
         return payload.charges
     }
 

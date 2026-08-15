@@ -199,6 +199,12 @@ struct Charge: Decodable, Identifiable {
         return energy / (minutes / 60)
     }
 
+    // teslamateapi serialiserar null-kostnad som 0 — 0 betyder alltså "ej registrerad", inte gratis
+    var displayCost: Double? {
+        guard let cost, cost > 0 else { return nil }
+        return cost
+    }
+
     // listan saknar effektdata — snitt över 20 kW kan bara vara DC (AC toppar 11 kW ombord)
     var isDC: Bool {
         if let points = chargeDetails {
