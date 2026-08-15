@@ -48,6 +48,29 @@ struct APIClient {
         return payload.drives
     }
 
+    // teslamateapi kan fela på gamla rader med null-värden (scan error) — hämta sidvis och hoppa över trasiga sidor
+    func allDrives(carID: Int, pageSize: Int = 500) async throws -> [Drive] {
+        var all: [Drive] = []
+        var lastError: Error?
+        var failures = 0
+        var page = 1
+        while page <= 40 {
+            do {
+                let payload: DrivesPayload = try await get("/api/v1/cars/\(carID)/drives?show=\(pageSize)&page=\(page)")
+                all += payload.drives
+                failures = 0
+                if payload.drives.count < pageSize { break }
+            } catch {
+                lastError = error
+                failures += 1
+                if failures >= 3 { break }
+            }
+            page += 1
+        }
+        if all.isEmpty, let lastError { throw lastError }
+        return all
+    }
+
     func drive(carID: Int, driveID: Int) async throws -> Drive {
         let payload: DrivePayload = try await get("/api/v1/cars/\(carID)/drives/\(driveID)")
         return payload.drive

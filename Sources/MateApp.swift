@@ -23,6 +23,8 @@ struct RootView: View {
                 .tabItem { Label("Drives", systemImage: "road.lanes") }
             ChargesView(api: api, carID: carID)
                 .tabItem { Label("Charges", systemImage: "bolt.fill") }
+            StatsView(api: api, carID: carID)
+                .tabItem { Label("Statistics", systemImage: "chart.bar.fill") }
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
