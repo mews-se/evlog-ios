@@ -40,7 +40,6 @@ struct VisitedView: View {
 
     @State private var period: Period = .year
     @State private var segments: [[CLLocationCoordinate2D]] = []
-    @State private var pointCount = 0
     @State private var loading = false
     @State private var error: String?
 
@@ -61,7 +60,7 @@ struct VisitedView: View {
                     }
                 }
                 if loading {
-                    ProgressView("Loading tracks …")
+                    ProgressView("Loading tracks…")
                         .padding(14)
                         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                 } else if let error {
@@ -83,8 +82,12 @@ struct VisitedView: View {
             let points = try await GrafanaClient(baseURL: grafanaURL)
                 .positions(carID: carID, condition: period.condition, sampleSeconds: period.sampleSeconds)
             segments = Self.splitIntoSegments(points)
-            pointCount = points.count
             if points.isEmpty { error = String(localized: "No tracks in this period.") }
+        } catch is CancellationError {
+            // ett periodbyte avbröt anropet - efterträdaren äger tillståndet
+            return
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            return
         } catch {
             segments = []
             self.error = String(localized: "Couldn't load tracks from Grafana (\(grafanaURL)).")

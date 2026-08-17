@@ -48,14 +48,15 @@ enum Fmt {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return String(localized: "Today") }
         if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday") }
-        return date.formatted(.dateTime.weekday(.wide).day().month()).capitalized
+        // bara första bokstaven - .capitalized skulle versalisera månaden mitt i frasen
+        let s = date.formatted(.dateTime.weekday(.wide).day().month())
+        return s.prefix(1).uppercased() + s.dropFirst()
     }
 
-    static func relative(_ date: Date?) -> String {
+    static func since(_ date: Date?) -> String {
         guard let date else { return "–" }
-        let f = RelativeDateTimeFormatter()
-        f.unitsStyle = .short
-        return f.localizedString(for: date, relativeTo: .now)
+        if Calendar.current.isDateInToday(date) { return time(date) }
+        return date.formatted(.dateTime.day().month().hour().minute())
     }
 }
 

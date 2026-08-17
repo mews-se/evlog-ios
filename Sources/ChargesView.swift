@@ -11,7 +11,10 @@ struct ChargesView: View {
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
-    @State private var loaded = false
+    @State private var loadedKey: String?
+
+    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
+    private var loadKey: String { "\(api.baseURL)|\(carID)" }
 
     var body: some View {
         NavigationStack {
@@ -36,7 +39,7 @@ struct ChargesView: View {
                     }
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
-                } else if loaded {
+                } else if loadedKey != nil {
                     ContentUnavailableView("No charges yet", systemImage: "bolt.fill")
                 } else {
                     ProgressView()
@@ -44,7 +47,7 @@ struct ChargesView: View {
             }
             .navigationTitle("Charges")
             .refreshable { await load() }
-            .task { if !loaded { await load() } }
+            .task(id: loadKey) { if loadedKey != loadKey { await load() } }
         }
     }
 
@@ -55,7 +58,7 @@ struct ChargesView: View {
         } catch {
             if charges.isEmpty { self.error = error.localizedDescription }
         }
-        loaded = true
+        loadedKey = loadKey
         await loadTessieCosts()
     }
 
@@ -169,7 +172,7 @@ struct ChargeDetailView: View {
     @State private var error: String?
 
     private var costEditURL: URL? {
-        URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/")) + "/charge-cost/\(chargeID)")
+        URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + "/charge-cost/\(chargeID)")
     }
 
     var body: some View {

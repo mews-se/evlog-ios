@@ -11,7 +11,7 @@ struct GrafanaClient {
     let baseURL: String
 
     private var root: String {
-        baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
     }
 
     func positions(carID: Int, condition: String, sampleSeconds: Int) async throws -> [TrackPoint] {
@@ -38,9 +38,10 @@ struct GrafanaClient {
         let decoded = try JSONDecoder().decode(DSResponse.self, from: data)
         guard let values = decoded.results["A"]?.frames.first?.data.values, values.count >= 3 else { return [] }
 
+        let count = values.map(\.count).min() ?? 0
         var points: [TrackPoint] = []
-        points.reserveCapacity(values[0].count)
-        for i in values[0].indices {
+        points.reserveCapacity(count)
+        for i in 0..<count {
             guard let t = values[0][i], let lat = values[1][i], let lon = values[2][i] else { continue }
             points.append(TrackPoint(date: Date(timeIntervalSince1970: t), lat: lat, lon: lon))
         }

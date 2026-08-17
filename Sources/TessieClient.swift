@@ -37,14 +37,19 @@ struct TessieClient {
         guard let oldest = charges.map(\.startDate).min() else { return [:] }
         let tessieCharges = try await self.charges(vin: vin, from: oldest.addingTimeInterval(-3600))
 
+        // en tessie-laddning får bara matcha en teslamate-laddning - en avbruten
+        // session kan ligga som två processer på teslamate-sidan
+        var pool = tessieCharges.filter { $0.cost ?? 0 > 0 && $0.startDate != nil }
         var costs: [Int: Double] = [:]
         for charge in charges where charge.displayCost == nil {
-            let match = tessieCharges
-                .filter { $0.cost ?? 0 > 0 && $0.startDate != nil }
-                .min { abs($0.startDate!.timeIntervalSince(charge.startDate)) < abs($1.startDate!.timeIntervalSince(charge.startDate)) }
-            if let match, let cost = match.cost, let date = match.startDate,
+            guard let idx = pool.indices.min(by: {
+                abs(pool[$0].startDate!.timeIntervalSince(charge.startDate)) <
+                    abs(pool[$1].startDate!.timeIntervalSince(charge.startDate))
+            }) else { continue }
+            if let cost = pool[idx].cost, let date = pool[idx].startDate,
                abs(date.timeIntervalSince(charge.startDate)) < 600 {
                 costs[charge.chargeId] = cost
+                pool.remove(at: idx)
             }
         }
         return costs

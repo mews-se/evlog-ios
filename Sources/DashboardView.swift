@@ -157,7 +157,7 @@ struct StatusGrid: View {
             StatTile(
                 icon: "clock.fill",
                 title: statusSinceTitle,
-                value: Fmt.relative(status.stateSince),
+                value: Fmt.since(status.stateSince),
                 tint: .secondary
             )
         }

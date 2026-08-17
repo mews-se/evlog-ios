@@ -8,7 +8,10 @@ struct DrivesView: View {
 
     @State private var drives: [Drive] = []
     @State private var error: String?
-    @State private var loaded = false
+    @State private var loadedKey: String?
+
+    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
+    private var loadKey: String { "\(api.baseURL)|\(carID)" }
 
     private var grouped: [(day: Date, drives: [Drive])] {
         Dictionary(grouping: drives) { Calendar.current.startOfDay(for: $0.startDate) }
@@ -36,7 +39,7 @@ struct DrivesView: View {
                     }
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
-                } else if loaded {
+                } else if loadedKey != nil {
                     ContentUnavailableView("No drives yet", systemImage: "road.lanes")
                 } else {
                     ProgressView()
@@ -44,7 +47,7 @@ struct DrivesView: View {
             }
             .navigationTitle("Drives")
             .refreshable { await load() }
-            .task { if !loaded { await load() } }
+            .task(id: loadKey) { if loadedKey != loadKey { await load() } }
         }
     }
 
@@ -55,7 +58,7 @@ struct DrivesView: View {
         } catch {
             if drives.isEmpty { self.error = error.localizedDescription }
         }
-        loaded = true
+        loadedKey = loadKey
     }
 }
 
@@ -245,12 +248,15 @@ struct SpeedChart: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            Chart(series) { point in
-                AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
-                    .foregroundStyle(.blue.opacity(0.15).gradient)
-                LineMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
-                    .foregroundStyle(.blue)
-                    .lineStyle(StrokeStyle(lineWidth: 2))
+            // markören ligger utanför per-punkt-loopen - annars ritas en RuleMark per datapunkt
+            Chart {
+                ForEach(series) { point in
+                    AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
+                        .foregroundStyle(.blue.opacity(0.15).gradient)
+                    LineMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
+                        .foregroundStyle(.blue)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
+                }
                 if let marker {
                     RuleMark(x: .value("Selected", marker))
                         .foregroundStyle(.blue.opacity(0.5))

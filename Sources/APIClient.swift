@@ -23,7 +23,7 @@ struct APIClient {
     }()
 
     private func get<T: Decodable>(_ path: String) async throws -> T {
-        guard let url = URL(string: baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/")) + path) else {
+        guard let url = URL(string: baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + path) else {
             throw APIError.badURL
         }
         let (data, response) = try await URLSession.shared.data(from: url)

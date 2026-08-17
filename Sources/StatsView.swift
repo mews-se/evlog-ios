@@ -33,7 +33,11 @@ struct StatsView: View {
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
-    @State private var loaded = false
+    @State private var partialFailure = false
+    @State private var loadedKey: String?
+
+    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
+    private var loadKey: String { "\(api.baseURL)|\(carID)" }
 
     private var buckets: [StatBucket] {
         let calendar = Calendar.current
@@ -68,6 +72,13 @@ struct StatsView: View {
             Group {
                 if !drives.isEmpty || !charges.isEmpty {
                     List {
+                        if partialFailure {
+                            Section {
+                                Text("Some of the data could not be loaded.")
+                                    .font(.footnote)
+                                    .foregroundStyle(.orange)
+                            }
+                        }
                         Section {
                             Picker("Period", selection: $granularity) {
                                 ForEach(Granularity.allCases) { Text($0.title).tag($0) }
@@ -84,7 +95,7 @@ struct StatsView: View {
                     }
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
-                } else if loaded {
+                } else if loadedKey != nil {
                     ContentUnavailableView("No drives yet", systemImage: "chart.bar")
                 } else {
                     ProgressView()
@@ -92,21 +103,25 @@ struct StatsView: View {
             }
             .navigationTitle("Statistics")
             .refreshable { await load() }
-            .task { if !loaded { await load() } }
+            .task(id: loadKey) { if loadedKey != loadKey { await load() } }
         }
     }
 
     private func load() async {
-        do {
-            async let d = api.allDrives(carID: carID)
-            async let c = api.charges(carID: carID, results: 5000)
-            drives = try await d
-            charges = try await c
+        // ett fel i den ena hämtningen ska inte tyst nolla den andras kolumner
+        async let d = api.allDrives(carID: carID)
+        async let c = api.charges(carID: carID, results: 5000)
+        var failure: String?
+        do { drives = try await d } catch { failure = error.localizedDescription }
+        do { charges = try await c } catch { failure = failure ?? error.localizedDescription }
+        if drives.isEmpty && charges.isEmpty {
+            error = failure
+            partialFailure = false
+        } else {
             error = nil
-        } catch {
-            if drives.isEmpty { self.error = error.localizedDescription }
+            partialFailure = failure != nil
         }
-        loaded = true
+        loadedKey = loadKey
         await loadTessieCosts()
     }
 
