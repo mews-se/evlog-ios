@@ -6,15 +6,16 @@ struct ChargesView: View {
     let api: APIClient
     let carID: Int
 
-    @AppStorage("tessieToken") private var tessieToken = ""
+    @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
     @State private var loadedKey: String?
 
-    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
-    private var loadKey: String { "\(api.baseURL)|\(carID)" }
+    // server-, bil- eller tessiebyte i inställningarna ska ogiltigförklara flikens
+    // cache — en nyinlagd nyckel syntes annars inte förrän man drog för att uppdatera
+    private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
 
     var body: some View {
         NavigationStack {
@@ -59,14 +60,8 @@ struct ChargesView: View {
             if charges.isEmpty { self.error = error.localizedDescription }
         }
         loadedKey = loadKey
-        await loadTessieCosts()
-    }
-
-    // tillägg, aldrig blockerande — misslyckas tyst om Tessie inte nås
-    private func loadTessieCosts() async {
-        guard !tessieToken.isEmpty, !charges.isEmpty else { return }
-        guard let vin = try? await api.cars().first(where: { $0.carId == carID })?.carDetails?.vin else { return }
-        tessieCosts = (try? await TessieClient(token: tessieToken).missingCosts(for: charges, vin: vin)) ?? [:]
+        // tillägg, aldrig blockerande — misslyckas tyst om Tessie inte nås
+        tessieCosts = await TessieCosts.load(api: api, carID: carID, token: tessieToken, for: charges)
     }
 }
 
@@ -146,8 +141,8 @@ struct ChargeRow: View {
                 .foregroundStyle(.secondary)
             HStack(spacing: 12) {
                 Label(Fmt.duration(charge.durationMin), systemImage: "clock")
-                if let batt = charge.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel {
-                    Label("\(s) → \(e) %", systemImage: "battery.75percent")
+                if let battery = Fmt.battery(charge.batteryDetails) {
+                    Label(battery, systemImage: "battery.75percent")
                 }
                 if let cost = charge.displayCost ?? tessieCost {
                     Label(Fmt.kr(cost), systemImage: "banknote")
@@ -166,10 +161,12 @@ struct ChargeDetailView: View {
     let chargeID: Int
     var tessieCost: Double? = nil
 
-    @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
+    @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
 
     @State private var charge: Charge?
     @State private var error: String?
+    // förberäknad vid inläsning, se ChargeCurve.build
+    @State private var curve: [ChargeCurve.Sample] = []
 
     private var costEditURL: URL? {
         URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + "/charge-cost/\(chargeID)")
@@ -199,7 +196,7 @@ struct ChargeDetailView: View {
                         StatTile(icon: "bolt.badge.clock", title: String(localized: "Used"), value: Fmt.kwh(charge.chargeEnergyUsed), tint: .orange)
                         StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power"), value: Fmt.kw(charge.maxPowerKw), tint: typeColor)
                         StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: batteryText, tint: .green)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(charge.batteryDetails) ?? "–", tint: .green)
                         StatTile(icon: "clock.fill", title: String(localized: "Charge time"), value: Fmt.duration(charge.durationMin), tint: .secondary)
                         let costTitle = charge.displayCost == nil && tessieCost != nil
                             ? String(localized: "Cost") + " (Tessie)"
@@ -216,8 +213,8 @@ struct ChargeDetailView: View {
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(charge.outsideTempAvg), tint: .teal)
                     }
 
-                    if let points = charge.chargeDetails, points.count > 2 {
-                        ChargeCurve(points: points, powerColor: typeColor)
+                    if curve.count > 2 {
+                        ChargeCurve(samples: curve, powerColor: typeColor)
                     }
                 }
                 .padding(.horizontal)
@@ -233,14 +230,11 @@ struct ChargeDetailView: View {
         .task { await load() }
     }
 
-    private var batteryText: String {
-        guard let batt = charge?.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel else { return "–" }
-        return "\(s) → \(e) %"
-    }
-
     private func load() async {
         do {
-            charge = try await api.charge(carID: carID, chargeID: chargeID)
+            let loaded = try await api.charge(carID: carID, chargeID: chargeID)
+            charge = loaded
+            curve = ChargeCurve.build(loaded.chargeDetails ?? [])
         } catch {
             self.error = error.localizedDescription
         }
@@ -248,25 +242,34 @@ struct ChargeDetailView: View {
 }
 
 struct ChargeCurve: View {
-    let points: [ChargePoint]
+    let samples: [Sample]
     var powerColor: Color = .green
 
-    // dedupliserat per tidsstämpel, se SpeedChart
-    private var series: [(date: Date, power: Double?, level: Int?)] {
+    struct Sample: Identifiable {
+        let date: Date
+        let power: Double?
+        let level: Int?
+
+        var id: Date { date }
+    }
+
+    // dedupliserat per tidsstämpel, se SpeedChart. byggs vid inläsning som
+    // resedetaljens serie — som computed sorterades punkterna om vid varje render
+    static func build(_ points: [ChargePoint]) -> [Sample] {
         var byDate: [Date: (power: Double?, level: Int?)] = [:]
         for p in points {
             guard let d = p.date else { continue }
             let old = byDate[d]
             byDate[d] = (power: p.chargerDetails?.chargerPower ?? old?.power, level: p.batteryLevel ?? old?.level)
         }
-        return byDate.keys.sorted().map { (date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level) }
+        return byDate.keys.sorted().map { Sample(date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level) }
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Charge curve")
                 .font(.subheadline.weight(.semibold))
-            Chart(series, id: \.date) { point in
+            Chart(samples) { point in
                 if let power = point.power {
                     LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power"))
                         .foregroundStyle(powerColor)

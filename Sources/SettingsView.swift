@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("serverURL") private var serverURL = "http://10.0.0.185:8080"
-    @AppStorage("grafanaURL") private var grafanaURL = "http://10.0.0.185:3000"
-    @AppStorage("teslamateURL") private var teslamateURL = "http://10.0.0.185:4000"
-    @AppStorage("carID") private var carID = 1
-    @AppStorage("appLanguage") private var appLanguage = "system"
-    @AppStorage("tessieToken") private var tessieToken = ""
+    @AppStorage(Pref.server.key) private var serverURL = Pref.server.value
+    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
+    @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
+    @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
+    @AppStorage(Pref.language.key) private var appLanguage = Pref.language.value
+    @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
     @State private var cars: [Car] = []
     @State private var testResult: String?

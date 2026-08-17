@@ -4,11 +4,6 @@ struct Envelope<T: Decodable>: Decodable {
     let data: T
 }
 
-struct CarRef: Decodable {
-    let carId: Int
-    let carName: String
-}
-
 // MARK: - /cars
 
 struct CarsPayload: Decodable {
@@ -32,7 +27,6 @@ struct CarDetails: Decodable {
 // MARK: - /status
 
 struct StatusPayload: Decodable {
-    let car: CarRef
     let status: CarStatus
 }
 
@@ -107,12 +101,10 @@ struct ChargingDetails: Decodable {
 // MARK: - /drives
 
 struct DrivesPayload: Decodable {
-    let car: CarRef
     let drives: [Drive]
 }
 
 struct DrivePayload: Decodable {
-    let car: CarRef
     let drive: Drive
 }
 
@@ -124,11 +116,8 @@ struct Drive: Decodable, Identifiable {
     let endAddress: String?
     let odometerDetails: OdometerDetails?
     let durationMin: Double?
-    let durationStr: String?
     let speedMax: Double?
     let speedAvg: Double?
-    let powerMax: Double?
-    let powerMin: Double?
     let batteryDetails: DriveBattery?
     let outsideTempAvg: Double?
     let energyConsumedNet: Double?
@@ -140,8 +129,6 @@ struct Drive: Decodable, Identifiable {
 }
 
 struct OdometerDetails: Decodable {
-    let odometerStart: Double?
-    let odometerEnd: Double?
     let odometerDistance: Double?
 }
 
@@ -158,7 +145,6 @@ struct DrivePoint: Decodable, Identifiable {
     let speed: Double?
     let power: Double?
     let batteryLevel: Int?
-    let elevation: Double?
 
     var id: Int { detailId }
 }
@@ -166,12 +152,10 @@ struct DrivePoint: Decodable, Identifiable {
 // MARK: - /charges
 
 struct ChargesPayload: Decodable {
-    let car: CarRef
     let charges: [Charge]
 }
 
 struct ChargePayload: Decodable {
-    let car: CarRef
     let charge: Charge
 }
 
@@ -184,7 +168,6 @@ struct Charge: Decodable, Identifiable {
     let chargeEnergyUsed: Double?
     let cost: Double?
     let durationMin: Double?
-    let durationStr: String?
     let batteryDetails: DriveBattery?
     let outsideTempAvg: Double?
     let odometer: Double?
@@ -224,7 +207,6 @@ struct ChargePoint: Decodable, Identifiable {
     let detailId: Int
     let date: Date?
     let batteryLevel: Int?
-    let chargeEnergyAdded: Double?
     let chargerDetails: ChargerDetails?
     let fastChargerInfo: FastChargerInfo?
 
@@ -233,13 +215,8 @@ struct ChargePoint: Decodable, Identifiable {
 
 struct FastChargerInfo: Decodable {
     let fastChargerPresent: Bool?
-    let fastChargerBrand: String?
-    let fastChargerType: String?
 }
 
 struct ChargerDetails: Decodable {
     let chargerPower: Double?
-    let chargerVoltage: Double?
-    let chargerActualCurrent: Double?
-    let chargerPhases: Double?
 }

@@ -82,8 +82,8 @@ struct DriveRow: View {
             HStack(spacing: 12) {
                 Label(Fmt.duration(drive.durationMin), systemImage: "clock")
                 Label(Fmt.consumption(drive.consumptionNet), systemImage: "bolt")
-                if let batt = drive.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel {
-                    Label("\(s) → \(e) %", systemImage: "battery.75percent")
+                if let battery = Fmt.battery(drive.batteryDetails) {
+                    Label(battery, systemImage: "battery.75percent")
                 }
             }
             .font(.caption)
@@ -154,7 +154,7 @@ struct DriveDetailView: View {
                         StatTile(icon: "clock.fill", title: String(localized: "Duration"), value: Fmt.duration(drive.durationMin), tint: .secondary)
                         StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg"), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
                         StatTile(icon: "bolt.fill", title: String(localized: "Consumption"), value: Fmt.consumption(drive.consumptionNet), tint: .green)
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: batteryText, tint: .green)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                     }
                 }
@@ -172,11 +172,6 @@ struct DriveDetailView: View {
         .onChange(of: scrubDate) { _, new in
             if new != nil { heldDate = new }
         }
-    }
-
-    private var batteryText: String {
-        guard let batt = drive?.batteryDetails, let s = batt.startBatteryLevel, let e = batt.endBatteryLevel else { return "–" }
-        return "\(s) → \(e) %"
     }
 
     private func load() async {

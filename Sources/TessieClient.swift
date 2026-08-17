@@ -56,6 +56,32 @@ struct TessieClient {
     }
 }
 
+// laddnings- och statistikfliken kompletterar samma kostnader, så hämtningen bor
+// här i stället för i båda vyerna. vin:et slås upp en gång per server och bil,
+// inte vid varje omladdning
+enum TessieCosts {
+    private static let vins = VINStore()
+
+    static func load(api: APIClient, carID: Int, token: String, for charges: [Charge]) async -> [Int: Double] {
+        guard !token.isEmpty, !charges.isEmpty else { return [:] }
+        guard let vin = await vins.vin(api: api, carID: carID) else { return [:] }
+        return (try? await TessieClient(token: token).missingCosts(for: charges, vin: vin)) ?? [:]
+    }
+}
+
+private actor VINStore {
+    private var cache: [String: String] = [:]
+
+    func vin(api: APIClient, carID: Int) async -> String? {
+        let key = "\(api.baseURL)|\(carID)"
+        if let known = cache[key] { return known }
+        guard let cars = try? await api.cars(),
+              let vin = cars.first(where: { $0.carId == carID })?.carDetails?.vin else { return nil }
+        cache[key] = vin
+        return vin
+    }
+}
+
 struct TessieVehiclesResponse: Decodable {
     let results: [TessieVehicle]?
 }

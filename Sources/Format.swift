@@ -53,6 +53,12 @@ enum Fmt {
         return s.prefix(1).uppercased() + s.dropFirst()
     }
 
+    // "12 → 80 %", nil när nivåerna saknas så listraderna kan hoppa över etiketten
+    static func battery(_ details: DriveBattery?) -> String? {
+        guard let start = details?.startBatteryLevel, let end = details?.endBatteryLevel else { return nil }
+        return "\(start) → \(end) %"
+    }
+
     static func since(_ date: Date?) -> String {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return time(date) }

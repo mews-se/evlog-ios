@@ -4,7 +4,7 @@ import MapKit
 struct VisitedView: View {
     let carID: Int
 
-    @AppStorage("grafanaURL") private var grafanaURL = "http://10.0.0.185:3000"
+    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
 
     enum Period: String, CaseIterable, Identifiable {
         case days90

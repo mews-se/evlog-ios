@@ -9,9 +9,20 @@ struct MateApp: App {
     }
 }
 
+// nycklarna och deras standardvärden på ett ställe. literalerna låg utspridda i
+// fem vyer, där samma nyckel kunde få olika default utan att något sa ifrån
+enum Pref {
+    static let server = (key: "serverURL", value: "http://10.0.0.185:8080")
+    static let grafana = (key: "grafanaURL", value: "http://10.0.0.185:3000")
+    static let teslamate = (key: "teslamateURL", value: "http://10.0.0.185:4000")
+    static let tessieToken = (key: "tessieToken", value: "")
+    static let language = (key: "appLanguage", value: "system")
+    static let carID = (key: "carID", value: 1)
+}
+
 struct RootView: View {
-    @AppStorage("serverURL") private var serverURL = "http://10.0.0.185:8080"
-    @AppStorage("carID") private var carID = 1
+    @AppStorage(Pref.server.key) private var serverURL = Pref.server.value
+    @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
 
     var api: APIClient { APIClient(baseURL: serverURL) }
 

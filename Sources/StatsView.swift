@@ -4,7 +4,7 @@ struct StatsView: View {
     let api: APIClient
     let carID: Int
 
-    @AppStorage("tessieToken") private var tessieToken = ""
+    @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
     enum Granularity: String, CaseIterable, Identifiable {
         case week, month, year
@@ -36,8 +36,9 @@ struct StatsView: View {
     @State private var partialFailure = false
     @State private var loadedKey: String?
 
-    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
-    private var loadKey: String { "\(api.baseURL)|\(carID)" }
+    // server-, bil- eller tessiebyte i inställningarna ska ogiltigförklara flikens
+    // cache — en nyinlagd nyckel syntes annars inte förrän man drog för att uppdatera
+    private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
 
     private var buckets: [StatBucket] {
         let calendar = Calendar.current
@@ -122,13 +123,7 @@ struct StatsView: View {
             partialFailure = failure != nil
         }
         loadedKey = loadKey
-        await loadTessieCosts()
-    }
-
-    private func loadTessieCosts() async {
-        guard !tessieToken.isEmpty, !charges.isEmpty else { return }
-        guard let vin = try? await api.cars().first(where: { $0.carId == carID })?.carDetails?.vin else { return }
-        tessieCosts = (try? await TessieClient(token: tessieToken).missingCosts(for: charges, vin: vin)) ?? [:]
+        tessieCosts = await TessieCosts.load(api: api, carID: carID, token: tessieToken, for: charges)
     }
 }
 
