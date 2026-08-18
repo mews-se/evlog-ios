@@ -1,0 +1,14 @@
+app_identifier "se.mews.EVLog"
+
+# The screenshots carry real drive data, so they live in the gitignored folder.
+screenshots_path "./screenshots/appstore"
+overwrite_screenshots true
+
+# Binaries go through the beta lane or Xcode, never through deliver.
+skip_binary_upload true
+
+# Nothing is submitted for review from here. That stays a decision you make
+# in App Store Connect, with the finished page in front of you.
+submit_for_review false
+automatic_release false
+precheck_include_in_app_purchases false

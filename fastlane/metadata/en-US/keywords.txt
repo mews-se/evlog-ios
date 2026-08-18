@@ -1,0 +1,1 @@
+tesla,ev,drives,charging,battery,range,efficiency,logger,dashboard,selfhosted,supercharger,trips

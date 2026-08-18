@@ -1,0 +1,39 @@
+opt_out_usage
+
+default_platform(:ios)
+
+def asc_key
+  app_store_connect_api_key(
+    key_id: ENV.fetch("ASC_KEY_ID"),
+    issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+    key_filepath: ENV.fetch("ASC_KEY_PATH"),
+    in_house: false
+  )
+end
+
+platform :ios do
+  desc "Push store text and screenshots to App Store Connect. Uploads nothing else."
+  lane :metadata do
+    deliver(api_key: asc_key)
+  end
+
+  desc "Push store text only, leaving the screenshots alone."
+  lane :text do
+    deliver(api_key: asc_key, skip_screenshots: true)
+  end
+
+  desc "Build and upload to TestFlight. Needs a distribution certificate, which Xcode creates on the first run."
+  lane :beta do
+    sh("cd .. && xcodegen generate")
+    increment_build_number(
+      build_number: latest_testflight_build_number(api_key: asc_key) + 1,
+      xcodeproj: "EVLog.xcodeproj"
+    )
+    build_app(
+      project: "EVLog.xcodeproj",
+      scheme: "EVLog",
+      export_method: "app-store"
+    )
+    upload_to_testflight(api_key: asc_key, skip_waiting_for_build_processing: true)
+  end
+end

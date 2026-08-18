@@ -1,0 +1,31 @@
+EVLog is a native iPhone client for your own TeslaMate server. It reads the data your instance has already collected — drives, charges, statistics, battery health — and gives it an interface built for the phone, rather than a dashboard squeezed onto a small screen.
+
+It talks only to servers you run yourself. It never connects to Tesla, there is no account to create, no service in between, and nothing leaves your network.
+
+OVERVIEW
+Battery ring with range, lock state, Sentry, location, inside and outside temperature, degradation, software version, and how long ago the car was last heard from.
+
+DRIVES
+Grouped by day, each with the route on a map and a speed graph you can drag along to follow the car through the trip. Efficiency is shown as a percentage of rated consumption, and drives where the battery heater ran are marked — that is often what explains a cold day's consumption.
+
+CHARGES
+Sessions split into AC and DC, with charge curves, added energy, average power and cost. Charging costs TeslaMate never receives from Tesla can be filled in automatically from Tessie, if you use it.
+
+STATISTICS
+Week, month and year, drilling from a period down to a single day and the drives it contains. Charging statistics with top locations, AC/DC split, and a weekday-by-hour heat map.
+
+MAPS
+Every track you have driven over a chosen period, and a range map showing how far the current charge takes you — using a detour factor derived from your own trips rather than a guess.
+
+FREE
+No ads, no in-app purchases, no analytics, no accounts.
+
+WHAT YOU NEED
+• A running TeslaMate instance
+• teslamateapi reachable from your phone — the app's main data source
+• Optionally Grafana, used for the visited-places map, battery health and a few queries the API does not expose
+• Optionally a Tessie API key, only to fill in charging costs TeslaMate never records
+
+English and Swedish, light and dark.
+
+This app is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.

@@ -2,3 +2,7 @@ EVLog.xcodeproj
 .DS_Store
 build/
 screenshots/
+fastlane/.env
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
