@@ -34,6 +34,17 @@ struct CountryStat: Identifiable {
 }
 
 extension GrafanaClient {
+    // reselistan saknar klimatdata, så vilka resor som gick med värmare hämtas i klump
+    func heaterDrives(carID: Int) async throws -> Set<Int> {
+        let sql = """
+        select distinct drive_id::text from positions
+        where car_id = \(carID) and battery_heater and drive_id is not null
+        """
+        let columns = try await textColumns(sql)
+        guard let ids = columns.first else { return [] }
+        return Set(ids.compactMap { $0.flatMap(Int.init) })
+    }
+
     // länderna bor i addresses.raw (Nominatim), inte i teslamateapi
     func countries(carID: Int) async throws -> [CountryStat] {
         let sql = """

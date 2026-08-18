@@ -6,6 +6,7 @@ struct StatsView: View {
     @Binding var path: NavigationPath
 
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
+    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
 
     enum Granularity: String, CaseIterable, Identifiable {
         case week, month, year
@@ -41,6 +42,7 @@ struct StatsView: View {
     @State private var drives: [Drive] = []
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
+    @State private var heaterDrives: Set<Int> = []
     @State private var error: String?
     @State private var partialFailure = false
     @State private var loadedKey: String?
@@ -102,7 +104,7 @@ struct StatsView: View {
                     PeriodDetailView(period: period, granularity: granularity,
                                      drives: drives, charges: charges, tessieCosts: tessieCosts)
                 case let .day(day):
-                    DayDrivesView(day: day, drives: drives)
+                    DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
                 case .charging:
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
                 }
@@ -120,7 +122,9 @@ struct StatsView: View {
         // ett fel i den ena hämtningen ska inte tyst nolla den andras kolumner
         async let d = api.allDrives(carID: carID)
         async let c = api.charges(carID: carID, results: 5000)
+        async let h = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         var failure: String?
+        heaterDrives = (try? await h) ?? []
         do { drives = try await d } catch { failure = error.localizedDescription }
         do { charges = try await c } catch { failure = failure ?? error.localizedDescription }
         if drives.isEmpty && charges.isEmpty {
@@ -305,6 +309,7 @@ struct PeriodDetailView: View {
 struct DayDrivesView: View {
     let day: Date
     let drives: [Drive]
+    var heaterDrives: Set<Int> = []
 
     private var ofDay: [Drive] {
         drives
@@ -320,7 +325,7 @@ struct DayDrivesView: View {
                 List {
                     ForEach(ofDay) { drive in
                         NavigationLink(value: drive.driveId) {
-                            DriveRow(drive: drive)
+                            DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
                         }
                     }
                 }

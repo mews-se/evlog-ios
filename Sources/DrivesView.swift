@@ -7,7 +7,10 @@ struct DrivesView: View {
     let carID: Int
     @Binding var path: NavigationPath
 
+    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
+
     @State private var drives: [Drive] = []
+    @State private var heaterDrives: Set<Int> = []
     @State private var error: String?
     @State private var loadedKey: String?
 
@@ -29,7 +32,7 @@ struct DrivesView: View {
                             Section(Fmt.day(group.day)) {
                                 ForEach(group.drives) { drive in
                                     NavigationLink(value: drive.driveId) {
-                                        DriveRow(drive: drive)
+                                        DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
                                     }
                                 }
                             }
@@ -53,6 +56,8 @@ struct DrivesView: View {
     }
 
     private func load() async {
+        // värmarfrågan går parallellt - annars dyker symbolen upp långt efter listan
+        async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         do {
             drives = try await api.drives(carID: carID)
             error = nil
@@ -60,11 +65,13 @@ struct DrivesView: View {
             if drives.isEmpty { self.error = error.localizedDescription }
         }
         loadedKey = loadKey
+        heaterDrives = (try? await heaters) ?? []
     }
 }
 
 struct DriveRow: View {
     let drive: Drive
+    var heaterUsed = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -86,6 +93,11 @@ struct DriveRow: View {
                     .foregroundStyle(CarState.efficiencyColor(drive.efficiencyPct))
                 if let battery = Fmt.battery(drive.batteryDetails) {
                     Label(battery, systemImage: "battery.75percent")
+                }
+                if heaterUsed {
+                    Image(systemName: "battery.100percent")
+                        .foregroundStyle(.red)
+                        .accessibilityLabel(Text("Battery heater"))
                 }
             }
             .font(.caption)
@@ -160,6 +172,10 @@ struct DriveDetailView: View {
                                  valueTint: CarState.efficiencyColor(drive.efficiencyPct))
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
+                        if drive.batteryHeaterUsed {
+                            StatTile(icon: "battery.100percent", title: String(localized: "Battery heater"),
+                                     value: String(localized: "On during the drive"), tint: .red, valueTint: .red)
+                        }
                     }
                 }
                 .padding(.horizontal)

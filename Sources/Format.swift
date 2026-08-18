@@ -99,8 +99,10 @@ enum CarState {
     // TeslaMates skala: 100 % är rated förbrukning, högre är bättre
     static func efficiencyColor(_ percent: Double?) -> Color {
         guard let percent else { return .secondary }
-        if percent >= 100 { return .green }
-        if percent >= 85 { return .yellow }
+        // avrunda som visningen gör, annars ser ett utskrivet "100 %" gult ut
+        let shown = percent.rounded()
+        if shown >= 100 { return .green }
+        if shown >= 85 { return .yellow }
         return .red
     }
 

@@ -136,6 +136,11 @@ struct Drive: Decodable, Identifiable {
 
     // TeslaMates köreffektivitet: sträcka delat med räckviddstappet.
     // 100 % = exakt rated förbrukning, över 100 % = bättre än rated.
+    // strömmande positionsrader saknar klimatdata, så bara en delmängd bär flaggan
+    var batteryHeaterUsed: Bool {
+        driveDetails?.contains { $0.batteryInfo?.batteryHeater == true } ?? false
+    }
+
     // korta rullningar domineras av tomgångsförluster - måttet blir brus under en km
     var efficiencyPct: Double? {
         guard let diff = rangeRated?.rangeDiff, diff > 0, distance >= 1 else { return nil }
@@ -164,8 +169,15 @@ struct DrivePoint: Decodable, Identifiable {
     let speed: Double?
     let power: Double?
     let batteryLevel: Int?
+    let batteryInfo: PointBattery?
 
     var id: Int { detailId }
+}
+
+struct PointBattery: Decodable {
+    // climate_state-flaggan, inte charge_states battery_heater_on som aldrig
+    // rapporteras av den här bilen
+    let batteryHeater: Bool?
 }
 
 // MARK: - /updates

@@ -161,6 +161,16 @@
         }
       }
     },
+    "Battery heater": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batterivärmare"
+          }
+        }
+      }
+    },
     "By day": {
       "localizations": {
         "sv": {
@@ -738,6 +748,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "På"
+          }
+        }
+      }
+    },
+    "On during the drive": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "På under resan"
           }
         }
       }
