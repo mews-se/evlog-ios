@@ -11,6 +11,7 @@ targets:
     platform: iOS
     sources:
       - Sources
+      - Resources/Assets.xcassets
     settings:
       base:
         SWIFT_VERSION: "5.9"
