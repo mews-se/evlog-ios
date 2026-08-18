@@ -300,7 +300,7 @@ struct PeriodDetailView: View {
         }
         .navigationTitle(PeriodTitle.text(period, granularity.component))
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
     }
 }
 
@@ -333,6 +333,6 @@ struct DayDrivesView: View {
         }
         .navigationTitle(Fmt.day(day))
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
     }
 }

@@ -117,7 +117,7 @@ struct ChargingStatsView: View {
         }
         .navigationTitle("Charging statistics")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
     }
 }
 

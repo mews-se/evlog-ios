@@ -98,7 +98,7 @@ struct VisitedView: View {
         }
         .navigationTitle("Visited")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
         .task(id: period) { await load() }
     }
 

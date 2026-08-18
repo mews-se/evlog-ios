@@ -36,6 +36,6 @@ struct CountriesView: View {
         }
         .navigationTitle("Countries")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
     }
 }

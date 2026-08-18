@@ -24,7 +24,7 @@
 		<true/>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Mate hämtar bildata från din TeslaMate-server på det lokala nätverket.</string>
+	<string>EVLog hämtar bildata från din TeslaMate-server på det lokala nätverket.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

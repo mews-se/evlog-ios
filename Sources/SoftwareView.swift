@@ -35,7 +35,7 @@ struct SoftwareView: View {
         }
         .navigationTitle("Software")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
         .task { await load() }
     }
 

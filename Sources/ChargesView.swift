@@ -229,7 +229,7 @@ struct ChargeDetailView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(charge?.address ?? String(localized: "Charge"))
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
         .task { await load() }
     }
 

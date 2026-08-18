@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct MateApp: App {
+struct EVLogApp: App {
     init() {
         AppLanguage.apply(UserDefaults.standard.string(forKey: Pref.language.key) ?? Pref.language.value)
     }

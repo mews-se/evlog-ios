@@ -1,4 +1,4 @@
-name: Mate
+name: EVLog
 options:
   bundleIdPrefix: se.mews
   deploymentTarget:
@@ -6,7 +6,7 @@ options:
   createIntermediateGroups: true
   developmentLanguage: en
 targets:
-  Mate:
+  EVLog:
     type: application
     platform: iOS
     sources:
@@ -15,7 +15,7 @@ targets:
       base:
         SWIFT_VERSION: "5.9"
         TARGETED_DEVICE_FAMILY: "1"
-        INFOPLIST_KEY_CFBundleDisplayName: Mate
+        INFOPLIST_KEY_CFBundleDisplayName: EVLog
         INFOPLIST_KEY_UIUserInterfaceStyle: Automatic
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: 4S9Z57Q8KR
@@ -27,4 +27,4 @@ targets:
           - UIInterfaceOrientationPortrait
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
-        NSLocalNetworkUsageDescription: Mate hämtar bildata från din TeslaMate-server på det lokala nätverket.
+        NSLocalNetworkUsageDescription: EVLog hämtar bildata från din TeslaMate-server på det lokala nätverket.

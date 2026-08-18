@@ -21,5 +21,5 @@ struct BackButton: ViewModifier {
 }
 
 extension View {
-    func mateBackButton() -> some View { modifier(BackButton()) }
+    func appBackButton() -> some View { modifier(BackButton()) }
 }

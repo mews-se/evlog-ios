@@ -35,6 +35,6 @@ struct BatteryHealthView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Battery")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
     }
 }

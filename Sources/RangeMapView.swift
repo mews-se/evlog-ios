@@ -78,7 +78,7 @@ struct RangeMapView: View {
         }
         .navigationTitle("Range")
         .navigationBarTitleDisplayMode(.inline)
-        .mateBackButton()
+        .appBackButton()
         .task {
             // cachen visas direkt, nätfrågan får komma när den kommer
             let key = ChargerCache.key(center, rangeKm)
