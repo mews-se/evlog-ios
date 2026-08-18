@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AboutView: View {
-    private static let developer = "Martin Stockzell"
+    private static let developer = "Martin Stockzell (mews-se)"
 
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
@@ -21,7 +21,7 @@ struct AboutView: View {
                     Text(verbatim: version)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                    Text("Made by \(Self.developer)")
+                    Text("A project by \(Self.developer)")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .padding(.top, 2)
@@ -32,24 +32,48 @@ struct AboutView: View {
             }
 
             Section {
-                LinkRow(title: String(localized: "Source code"), detail: "GitHub",
+                HStack(spacing: 13) {
+                    Image(systemName: "heart.fill")
+                        .font(.title3)
+                        .foregroundStyle(.green)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Free and open source")
+                            .font(.subheadline.weight(.semibold))
+                        Text("No ads, no tracking, nothing to buy")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 3)
+
+                LinkRow(icon: "chevron.left.forwardslash.chevron.right",
+                        title: String(localized: "Source code"), detail: "GitHub",
                         url: "https://github.com/mews-se/evlog-ios")
-                LabeledContent(String(localized: "License")) { Text(verbatim: "MIT") }
+
+                LabeledContent {
+                    Text(verbatim: "MIT")
+                } label: {
+                    Label(String(localized: "License"), systemImage: "doc.plaintext")
+                }
             } header: {
                 Text("Open source")
             } footer: {
-                Text("EVLog is free software. No ads, no tracking and nothing to buy – and the code is there to read, build and change.")
+                Text("The code is there to read, build and change.")
             }
 
             Section {
-                LinkRow(title: "TeslaMate", detail: String(localized: "Drives, charges and vehicle data"),
+                LinkRow(icon: "car.fill", title: "TeslaMate",
+                        detail: String(localized: "Drives, charges and vehicle data"),
                         url: "https://github.com/teslamate-org/teslamate")
-                LinkRow(title: "supercharge.info", detail: String(localized: "Supercharger locations"),
+                LinkRow(icon: "bolt.fill", title: "supercharge.info",
+                        detail: String(localized: "Supercharger locations"),
                         url: "https://supercharge.info")
-                LinkRow(title: "notateslaapp.com", detail: String(localized: "Software release notes"),
+                LinkRow(icon: "doc.text", title: "notateslaapp.com",
+                        detail: String(localized: "Software release notes"),
                         url: "https://www.notateslaapp.com")
                 if !tessieToken.isEmpty {
-                    LinkRow(title: "Tessie", detail: String(localized: "Charging costs TeslaMate lacks"),
+                    LinkRow(icon: "creditcard", title: "Tessie",
+                            detail: String(localized: "Charging costs TeslaMate lacks"),
                             url: "https://tessie.com")
                 }
             } header: {
@@ -65,13 +89,18 @@ struct AboutView: View {
 }
 
 private struct LinkRow: View {
+    let icon: String
     let title: String
     let detail: String
     let url: String
 
     var body: some View {
         Link(destination: URL(string: url)!) {
-            HStack {
+            HStack(spacing: 13) {
+                Image(systemName: icon)
+                    .font(.subheadline)
+                    .foregroundStyle(.tint)
+                    .frame(width: 22)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: title)
                         .foregroundStyle(.primary)
@@ -80,8 +109,8 @@ private struct LinkRow: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Image(systemName: "arrow.up.right.square")
-                    .font(.footnote)
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
                     .foregroundStyle(.tertiary)
             }
         }

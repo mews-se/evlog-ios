@@ -54,6 +54,16 @@
         }
       }
     },
+    "A project by %@": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett projekt av %@"
+          }
+        }
+      }
+    },
     "AC / DC": {
       "localizations": {
         "sv": {
@@ -495,16 +505,6 @@
         }
       }
     },
-    "EVLog is free software. No ads, no tracking and nothing to buy – and the code is there to read, build and change.": {
-      "localizations": {
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "EVLog är fri programvara. Inga annonser, ingen spårning och inget att köpa – och koden går att läsa, bygga och ändra."
-          }
-        }
-      }
-    },
     "Efficiency": {
       "localizations": {
         "sv": {
@@ -574,6 +574,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mål"
+          }
+        }
+      }
+    },
+    "Free and open source": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fri och öppen programvara"
           }
         }
       }
@@ -673,16 +683,6 @@
         }
       }
     },
-    "Made by %@": {
-      "localizations": {
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skapad av %@"
-          }
-        }
-      }
-    },
     "Max / avg": {
       "extractionState": "stale",
       "localizations": {
@@ -732,6 +732,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dyrast"
+          }
+        }
+      }
+    },
+    "No ads, no tracking, nothing to buy": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen reklam, ingen spårning, inget att köpa"
           }
         }
       }
@@ -1174,6 +1184,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Testa anslutning"
+          }
+        }
+      }
+    },
+    "The code is there to read, build and change.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koden går att läsa, bygga och ändra."
           }
         }
       }
