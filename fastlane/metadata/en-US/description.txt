@@ -17,8 +17,8 @@ Week, month and year, drilling from a period down to a single day and the drives
 MAPS
 Every track you have driven over a chosen period, and a range map showing how far the current charge takes you — using a detour factor derived from your own trips rather than a guess.
 
-FREE
-No ads, no in-app purchases, no analytics, no accounts.
+FREE AND OPEN SOURCE
+No ads, no in-app purchases, no analytics, no accounts. The source is on GitHub under the MIT licence.
 
 WHAT YOU NEED
 • A running TeslaMate instance
