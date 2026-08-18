@@ -1,6 +1,14 @@
 opt_out_usage
 
+# deliver läser metadatafilerna med processens standardkodning, som är US-ASCII
+# om skalet inte säger annat — och beskrivningen är full av tankstreck. .env
+# räcker inte: Ruby har låst kodningen innan dotenv hinner läsas.
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 default_platform(:ios)
+
+APP_ID = "se.mews.EVLog"
 
 def asc_key
   app_store_connect_api_key(
@@ -11,36 +19,115 @@ def asc_key
   )
 end
 
+def edit_version
+  app = Spaceship::ConnectAPI::App.find(APP_ID)
+  UI.user_error!("No app found for #{APP_ID}") if app.nil?
+  app.get_edit_app_store_version
+end
+
 platform :ios do
+  desc "Push everything the store page needs: text, then screenshots, then a read-back."
+  lane :metadata do |options|
+    force = options.fetch(:force, false)
+    text(force: force)
+    screenshots(force: force)
+    dedupe
+    state
+  end
+
+  desc "Push store text only."
+  lane :text do |options|
+    expected = File.read("metadata/en-US/description.txt").strip.length
+
+    # deliver hämtar versionens review detail sist i metadatasteget och kraschar
+    # med "No data" på en förstaversion — en känd uppströmsbugg. Uppladdningen
+    # är redan gjord när det smäller, så felet sväljs och ersätts med en riktig
+    # kontroll av vad som faktiskt ligger uppe.
+    begin
+      deliver(api_key: asc_key, skip_screenshots: true, force: options.fetch(:force, false))
+    rescue StandardError => e
+      raise e unless e.message.to_s.include?("No data")
+      UI.important("deliver dog på review detail igen — kontrollerar uppladdningen i stället")
+    end
+
+    asc_key
+    actual = edit_version.get_app_store_version_localizations.first.description.to_s.length
+    UI.user_error!("Description is #{actual} chars, expected #{expected}") unless actual == expected
+    UI.success("Text is up: #{actual} characters")
+  end
+
+  desc "Push screenshots only. Skips the metadata step that the bug lives in."
+  lane :screenshots do |options|
+    deliver(api_key: asc_key, skip_metadata: true, force: options.fetch(:force, false))
+  end
+
+  desc "Remove duplicate screenshots that a retried upload can leave behind."
+  lane :dedupe do
+    asc_key
+    edit_version.get_app_store_version_localizations.each do |loc|
+      loc.get_app_screenshot_sets.each do |set|
+        seen = []
+        set.app_screenshots.each do |shot|
+          if seen.include?(shot.file_name)
+            UI.important("Deleting duplicate #{shot.file_name}")
+            shot.delete!
+          else
+            seen << shot.file_name
+          end
+        end
+      end
+    end
+  end
+
+  desc "Report what App Store Connect currently holds. Reads, never writes."
+  lane :state do
+    asc_key
+    version = edit_version
+    UI.success("Version #{version.version_string} · #{version.app_store_state}")
+    begin
+      build = version.build
+      UI.message("Build attached: #{build ? "build #{build.version}" : "none"}")
+    rescue StandardError => e
+      UI.message("Build attached: could not read (#{e.class})")
+    end
+    version.get_app_store_version_localizations.each do |loc|
+      UI.message("#{loc.locale}: description #{loc.description.to_s.length} chars, keywords #{loc.keywords.to_s.length} chars")
+      loc.get_app_screenshot_sets.each do |set|
+        UI.message("  #{set.screenshot_display_type}: #{set.app_screenshots.count} screenshots")
+      end
+    end
+  end
+
+  desc "List the most recent builds and where they are in processing."
+  lane :builds do
+    asc_key
+    app = Spaceship::ConnectAPI::App.find(APP_ID)
+    builds = Spaceship::ConnectAPI::Build.all(app_id: app.id, sort: "-uploadedDate", limit: 5)
+    UI.user_error!("No builds uploaded yet") if builds.empty?
+    builds.each do |b|
+      UI.message("#{b.app_version} (#{b.version}) · #{b.processing_state} · uploaded #{b.uploaded_date}")
+    end
+  end
+
   desc "Check that the App Store Connect key works. Reads, never writes."
   lane :verify do
     asc_key
-    app = Spaceship::ConnectAPI::App.find(ENV.fetch("APP_IDENTIFIER", "se.mews.EVLog"))
+    app = Spaceship::ConnectAPI::App.find(APP_ID)
     UI.user_error!("No app found for that bundle identifier") if app.nil?
     UI.success("Connected: #{app.name} (#{app.bundle_id}), Apple ID #{app.id}")
   end
 
-  desc "Push store text and screenshots to App Store Connect. Uploads nothing else."
-  lane :metadata do
-    deliver(api_key: asc_key)
-  end
-
-  desc "Push store text only, leaving the screenshots alone."
-  lane :text do
-    deliver(api_key: asc_key, skip_screenshots: true)
-  end
-
   desc "Build and upload to TestFlight. Needs a distribution certificate, which Xcode creates on the first run."
+  # Bumpa CFBundleVersion i project.yml före varje ny uppladdning — Apple tar
+  # inte emot samma byggnummer två gånger, och xcodeprojektet genereras om så
+  # en bump där skulle skrivas över.
   lane :beta do
     sh("cd .. && xcodegen generate")
-    increment_build_number(
-      build_number: latest_testflight_build_number(api_key: asc_key) + 1,
-      xcodeproj: "EVLog.xcodeproj"
-    )
     build_app(
       project: "EVLog.xcodeproj",
       scheme: "EVLog",
-      export_method: "app-store"
+      export_method: "app-store",
+      xcargs: "-allowProvisioningUpdates"
     )
     upload_to_testflight(api_key: asc_key, skip_waiting_for_build_processing: true)
   end

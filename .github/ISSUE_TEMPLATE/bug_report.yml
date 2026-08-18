@@ -1,0 +1,56 @@
+name: Bug report
+description: Something in the app behaves wrong or does not work
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Screenshots from this app can contain your home address, your GPS
+        tracks and your VIN. Crop or blur them, and never include your server
+        address or your Tessie key.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What the app did, and what you expected instead.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: screen
+    attributes:
+      label: Where in the app
+      options:
+        - Overview
+        - Drives
+        - Charges
+        - Statistics
+        - Range map
+        - Visited places
+        - Battery health
+        - Settings
+        - Somewhere else, or everywhere
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: EVLog version
+      description: Shown at the top of Settings → About.
+      placeholder: 1.0 (1)
+    validations:
+      required: true
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything else
+      description: |
+        Whatever you happen to know. Useful if you have it: your iPhone and
+        iOS version, your TeslaMate and teslamateapi versions, whether the
+        app was set to English or Swedish, whether a pull to refresh changes
+        anything, and how to reproduce it.
+    validations:
+      required: false

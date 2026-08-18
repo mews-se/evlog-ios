@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Setup help and common questions
+    url: https://mews-se.github.io/evlog-site/support/
+    about: What the app needs to run, why costs or maps can be empty, and how to reach me by email.
+  - name: TeslaMate itself
+    url: https://github.com/teslamate-org/teslamate
+    about: Problems with the server, the database or the Grafana dashboards belong there, not here.

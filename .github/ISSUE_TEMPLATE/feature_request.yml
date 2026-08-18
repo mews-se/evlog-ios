@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest something the app should be able to do
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        EVLog reads your own TeslaMate instance and never talks to Tesla, so
+        anything needing a Tesla login or control of the car is out of scope.
+        See CONTRIBUTING.md for what fits.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What should the app do
+      description: Describe it from your side, and what you would use it for. The situation you are in when you reach for it decides more than the feature itself.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Where would the data come from, if you know
+      description: |
+        Drives, charges and status come from teslamateapi. The visited-places
+        map, battery health and countries come from Grafana. Charging costs
+        can come from Tessie. If TeslaMate already shows something like it on
+        a dashboard, naming that dashboard helps.
+    validations:
+      required: false
