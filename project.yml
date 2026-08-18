@@ -24,6 +24,7 @@ targets:
       path: Resources/Info.plist
       properties:
         UILaunchScreen: {}
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSAppTransportSecurity:
