@@ -64,7 +64,7 @@ struct RangeMapView: View {
                            title: String(localized: "Straight line"), value: Fmt.km(rangeKm, decimals: 0))
                 }
                 if !chargers.isEmpty {
-                    Text("\(chargers.filter(within).count) of \(chargers.count) Superchargers are within realistic reach. \(OverpassClient.attribution)")
+                    Text("\(chargers.filter(within).count) of \(chargers.count) Superchargers are within realistic reach. \(SuperchargeClient.attribution)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -85,7 +85,7 @@ struct RangeMapView: View {
             let cached = ChargerCache.load(key)
             if let cached { chargers = cached.chargers }
             guard cached == nil || cached?.stale == true else { return }
-            if let fresh = try? await OverpassClient().superchargers(around: center, radiusKm: rangeKm),
+            if let fresh = try? await SuperchargeClient().sites(around: center, radiusKm: rangeKm),
                !fresh.isEmpty {
                 chargers = fresh
                 ChargerCache.save(fresh, key)

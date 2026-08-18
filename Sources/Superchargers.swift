@@ -7,6 +7,7 @@ struct Supercharger: Identifiable, Codable {
     let lat: Double
     let lon: Double
     let stalls: Int?
+    var kw: Int?
 
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: lat, longitude: lon) }
 }
@@ -44,55 +45,53 @@ enum ChargerCache {
     }
 }
 
-// Teslas egen platslista svarar 403 utåt, så laddarna hämtas ur OpenStreetMap
-// via Overpass. Fri tjänst utan nyckel - därav en enda fråga per kartöppning.
-struct OverpassClient {
-    static let attribution = "© OpenStreetMap contributors"
+// Teslas egen platslista svarar 403 utåt. supercharge.info är en öppen
+// community-databas som svarar på ~1,5 s mot Overpass 8-26, och bär status så
+// att planerade och stängda platser kan sorteras bort.
+struct SuperchargeClient {
+    static let attribution = "Data from supercharge.info"
 
-    func superchargers(around center: CLLocationCoordinate2D, radiusKm: Double) async throws -> [Supercharger] {
-        // cirkelfråga i stället för bounding box: hämtar bara det som ligger inom räckvidden
-        let query = """
-        [out:json][timeout:45];node(around:\(Int(radiusKm * 1000)),\(center.latitude),\(center.longitude))        ["amenity"="charging_station"]["operator"~"Tesla",i];out body;
-        """
-
-        guard let url = URL(string: "https://overpass-api.de/api/interpreter") else { throw APIError.badURL }
+    func sites(around center: CLLocationCoordinate2D, radiusKm: Double) async throws -> [Supercharger] {
+        guard let url = URL(string: "https://supercharge.info/service/supercharge/allSites") else {
+            throw APIError.badURL
+        }
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.timeoutInterval = 60
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        // Overpass svarar 406 på anrop utan egen User-Agent
-        request.setValue("Mate (TeslaMate client)", forHTTPHeaderField: "User-Agent")
-        request.httpBody = "data=\(query.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? "")"
-            .data(using: .utf8)
+        request.timeoutInterval = 30
 
         let (data, response) = try await URLSession.shared.data(for: request)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             throw APIError.http(http.statusCode)
         }
-        return try JSONDecoder().decode(OverpassResponse.self, from: data).elements.map {
-            Supercharger(
-                id: $0.id,
-                name: $0.tags?.name ?? String(localized: "Supercharger"),
-                lat: $0.lat,
-                lon: $0.lon,
-                stalls: $0.tags?.capacity.flatMap(Int.init)
-            )
-        }
+
+        let origin = CLLocation(latitude: center.latitude, longitude: center.longitude)
+        return try JSONDecoder().decode([Site].self, from: data)
+            .filter { $0.status == "OPEN" }
+            .compactMap { site in
+                guard let gps = site.gps else { return nil }
+                let distance = CLLocation(latitude: gps.latitude, longitude: gps.longitude).distance(from: origin)
+                guard distance <= radiusKm * 1000 else { return nil }
+                return Supercharger(
+                    id: site.id,
+                    name: site.name,
+                    lat: gps.latitude,
+                    lon: gps.longitude,
+                    stalls: site.stallCount,
+                    kw: site.powerKilowatt
+                )
+            }
     }
-}
 
-private struct OverpassResponse: Decodable {
-    let elements: [Element]
-
-    struct Element: Decodable {
+    private struct Site: Decodable {
         let id: Int
-        let lat: Double
-        let lon: Double
-        let tags: Tags?
-    }
+        let name: String
+        let status: String?
+        let gps: GPS?
+        let stallCount: Int?
+        let powerKilowatt: Int?
 
-    struct Tags: Decodable {
-        let name: String?
-        let capacity: String?
+        struct GPS: Decodable {
+            let latitude: Double
+            let longitude: Double
+        }
     }
 }
