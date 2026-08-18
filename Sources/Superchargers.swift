@@ -6,8 +6,6 @@ struct Supercharger: Identifiable, Codable {
     let name: String
     let lat: Double
     let lon: Double
-    let stalls: Int?
-    var kw: Int?
 
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: lat, longitude: lon) }
 }
@@ -74,20 +72,17 @@ struct SuperchargeClient {
                     id: site.id,
                     name: site.name,
                     lat: gps.latitude,
-                    lon: gps.longitude,
-                    stalls: site.stallCount,
-                    kw: site.powerKilowatt
+                    lon: gps.longitude
                 )
             }
     }
 
+    // bara fälten kartan faktiskt använder - resten av svaret hoppas över
     private struct Site: Decodable {
         let id: Int
         let name: String
         let status: String?
         let gps: GPS?
-        let stallCount: Int?
-        let powerKilowatt: Int?
 
         struct GPS: Decodable {
             let latitude: Double
