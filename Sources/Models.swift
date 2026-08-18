@@ -87,6 +87,12 @@ struct BatteryStatus: Decodable {
     let idealBatteryRange: Double?
     let batteryLevel: Int?
     let usableBatteryLevel: Int?
+
+    // samma uttryck som TeslaMates projected-range-dashboard: räknar upp till 100 %
+    var projectedRatedRange: Double? {
+        guard let range = ratedBatteryRange, let level = usableBatteryLevel ?? batteryLevel, level > 0 else { return nil }
+        return range / Double(level) * 100
+    }
 }
 
 struct ChargingDetails: Decodable {
@@ -122,10 +128,23 @@ struct Drive: Decodable, Identifiable {
     let outsideTempAvg: Double?
     let energyConsumedNet: Double?
     let consumptionNet: Double?
+    let rangeRated: RangeDetails?
     let driveDetails: [DrivePoint]?
 
     var id: Int { driveId }
     var distance: Double { odometerDetails?.odometerDistance ?? 0 }
+
+    // TeslaMates köreffektivitet: sträcka delat med räckviddstappet.
+    // 100 % = exakt rated förbrukning, över 100 % = bättre än rated.
+    // korta rullningar domineras av tomgångsförluster - måttet blir brus under en km
+    var efficiencyPct: Double? {
+        guard let diff = rangeRated?.rangeDiff, diff > 0, distance >= 1 else { return nil }
+        return distance / diff * 100
+    }
+}
+
+struct RangeDetails: Decodable {
+    let rangeDiff: Double?
 }
 
 struct OdometerDetails: Decodable {
@@ -147,6 +166,32 @@ struct DrivePoint: Decodable, Identifiable {
     let batteryLevel: Int?
 
     var id: Int { detailId }
+}
+
+// MARK: - /updates
+
+struct UpdatesPayload: Decodable {
+    let updates: [SoftwareUpdate]
+}
+
+struct SoftwareUpdate: Decodable, Identifiable {
+    let updateId: Int
+    let startDate: Date?
+    let endDate: Date?
+    let version: String?
+
+    var id: Int { updateId }
+
+    // versionssträngen kan bära en bygghash, den vill notateslaapp inte ha
+    var shortVersion: String? {
+        guard let first = version?.components(separatedBy: " ").first, !first.isEmpty else { return nil }
+        return first
+    }
+
+    var releaseNotesURL: URL? {
+        guard let shortVersion else { return nil }
+        return URL(string: "https://www.notateslaapp.com/software-updates/version/\(shortVersion)/release-notes")
+    }
 }
 
 // MARK: - /charges
@@ -196,6 +241,12 @@ struct Charge: Decodable, Identifiable {
             return points.contains { $0.fastChargerInfo?.fastChargerPresent == true }
         }
         return (avgPowerKw ?? 0) > 20
+    }
+
+    // added/used - resten gick till kylning, värmning och laddförluster
+    var efficiency: Double? {
+        guard let added = chargeEnergyAdded, let used = chargeEnergyUsed, added > 0, used > 0 else { return nil }
+        return added / used
     }
 
     var maxPowerKw: Double? {

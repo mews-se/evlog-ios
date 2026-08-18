@@ -33,6 +33,16 @@ enum Fmt {
         return whPerKm.formatted(.number.precision(.fractionLength(0))) + " Wh/km"
     }
 
+    static func percent(_ fraction: Double?) -> String {
+        guard let fraction else { return "–" }
+        return (fraction * 100).formatted(.number.precision(.fractionLength(0))) + " %"
+    }
+
+    static func pct(_ value: Double?, decimals: Int = 1) -> String {
+        guard let value else { return "–" }
+        return value.formatted(.number.precision(.fractionLength(decimals))) + " %"
+    }
+
     static func duration(_ minutes: Double?) -> String {
         guard let minutes else { return "–" }
         let m = Int(minutes)
@@ -59,6 +69,11 @@ enum Fmt {
         return "\(start) → \(end) %"
     }
 
+    static func date(_ date: Date?) -> String {
+        guard let date else { return "–" }
+        return date.formatted(.dateTime.year().month().day())
+    }
+
     static func since(_ date: Date?) -> String {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return time(date) }
@@ -79,6 +94,14 @@ enum CarState {
         case "updating": return (String(localized: "Updating"), .purple, "arrow.down.circle.fill")
         default: return (state ?? String(localized: "Unknown"), .secondary, "questionmark.circle")
         }
+    }
+
+    // TeslaMates skala: 100 % är rated förbrukning, högre är bättre
+    static func efficiencyColor(_ percent: Double?) -> Color {
+        guard let percent else { return .secondary }
+        if percent >= 100 { return .green }
+        if percent >= 85 { return .yellow }
+        return .red
     }
 
     static func batteryColor(_ level: Int?) -> Color {

@@ -5,6 +5,7 @@ import Charts
 struct ChargesView: View {
     let api: APIClient
     let carID: Int
+    @Binding var path: NavigationPath
 
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
@@ -18,7 +19,7 @@ struct ChargesView: View {
     private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if !charges.isEmpty {
                     List {
@@ -194,6 +195,7 @@ struct ChargeDetailView: View {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
                         StatTile(icon: "bolt.fill", title: String(localized: "Added"), value: Fmt.kwh(charge.chargeEnergyAdded), tint: typeColor)
                         StatTile(icon: "bolt.badge.clock", title: String(localized: "Used"), value: Fmt.kwh(charge.chargeEnergyUsed), tint: .orange)
+                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency"), value: Fmt.percent(charge.efficiency), tint: .mint)
                         StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power"), value: Fmt.kw(charge.maxPowerKw), tint: typeColor)
                         StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(charge.batteryDetails) ?? "–", tint: .green)
@@ -227,6 +229,7 @@ struct ChargeDetailView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(charge?.address ?? String(localized: "Charge"))
         .navigationBarTitleDisplayMode(.inline)
+        .mateBackButton()
         .task { await load() }
     }
 

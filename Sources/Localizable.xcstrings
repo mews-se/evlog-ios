@@ -1,887 +1,1207 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@ added · %lld kW" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ tillagt · %lld kW"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ added · %lld kW": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ tillagt · %lld kW"
           }
         }
       }
     },
-    "%@ since" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ sedan"
+    "%@ since": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ sedan"
           }
         }
       }
     },
-    "✓ Connected – found %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "✓ Ansluten – hittade %@"
+    "%lld drives · last %@": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld resor · senast %@"
           }
         }
       }
     },
-    "90 days" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "90 dagar"
+    "90 days": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 dagar"
           }
         }
       }
     },
-    "About" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Om"
+    "AC / DC": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AC / DC"
           }
         }
       }
     },
-    "Added" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tillagt"
+    "API key": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-nyckel"
           }
         }
       }
     },
-    "All" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allt"
+    "About": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om"
           }
         }
       }
     },
-    "API key" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-nyckel"
+    "Added": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tillagt"
           }
         }
       }
     },
-    "Asleep" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vilar"
+    "All": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allt"
           }
         }
       }
     },
-    "Avg power" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Snitteffekt"
+    "Asleep": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vilar"
           }
         }
       }
     },
-    "Battery" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batteri"
+    "Avg power": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snitteffekt"
           }
         }
       }
     },
-    "Battery (%)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batteri (%)"
+    "Back": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tillbaka"
           }
         }
       }
     },
-    "Car" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bil"
+    "Battery": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batteri"
           }
         }
       }
     },
-    "Charge" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laddning"
+    "Battery (%)": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batteri (%)"
           }
         }
       }
     },
-    "Charge curve" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laddkurva"
+    "Battery health": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batterihälsa"
           }
         }
       }
     },
-    "Charge time" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laddtid"
+    "By day": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per dag"
           }
         }
       }
     },
-    "Charges" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laddningar"
+    "By month": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per månad"
           }
         }
       }
     },
-    "Charging" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laddar"
+    "Cancel": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avbryt"
           }
         }
       }
     },
-    "Consumption" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Förbrukning"
+    "Capacity now": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapacitet nu"
           }
         }
       }
     },
-    "Cost" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kostnad"
+    "Capacity when new": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapacitet ny"
           }
         }
       }
     },
-    "Couldn't load tracks from Grafana (%@)." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kunde inte hämta spåren från Grafana (%@)."
+    "Car": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bil"
           }
         }
       }
     },
-    "Data source" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datakälla"
+    "Charge": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddning"
           }
         }
       }
     },
-    "Distance" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sträcka"
+    "Charge curve": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddkurva"
           }
         }
       }
     },
-    "Drag the chart to follow the drive" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dra i grafen för att följa resan"
+    "Charge time": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddtid"
           }
         }
       }
     },
-    "Drive" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resa"
+    "Charges": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddningar"
           }
         }
       }
     },
-    "Drives" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resor"
+    "Charging": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddar"
           }
         }
       }
     },
-    "Driving" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kör"
+    "Charging statistics": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddstatistik"
           }
         }
       }
     },
-    "Duration" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restid"
+    "Consumption": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Förbrukning"
           }
         }
       }
     },
-    "Energy" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energi"
+    "Cost": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kostnad"
           }
         }
       }
     },
-    "Falling asleep" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Går i vila"
+    "Couldn't load tracks from Grafana (%@).": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kunde inte hämta spåren från Grafana (%@)."
           }
         }
       }
     },
-    "Finish" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mål"
+    "Counted from where each drive ended.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räknat på var varje resa slutade."
           }
         }
       }
     },
-    "Invalid server URL. Check the settings." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ogiltig server-URL. Kontrollera inställningarna."
+    "Countries": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Länder"
           }
         }
       }
     },
-    "Language" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Språk"
+    "Data source": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datakälla"
           }
         }
       }
     },
-    "Loading tracks…" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hämtar körspår…"
+    "Degradation": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Degradering"
           }
         }
       }
     },
-    "Location" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plats"
+    "Distance": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sträcka"
           }
         }
       }
     },
-    "Lock" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lås"
+    "Done": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klar"
           }
         }
       }
     },
-    "Locked" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Låst"
+    "Drag the chart to follow the drive": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dra i grafen för att följa resan"
           }
         }
       }
     },
-    "Max / avg" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Max / snitt"
+    "Drive": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resa"
           }
         }
       }
     },
-    "Max power" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maxeffekt"
+    "Drives": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resor"
           }
         }
       }
     },
-    "Month" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Månad"
+    "Driving": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kör"
           }
         }
       }
     },
-    "No charges yet" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inga laddningar än"
+    "Duration": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restid"
           }
         }
       }
     },
-    "No drives yet" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inga resor än"
+    "Efficiency": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effektivitet"
           }
         }
       }
     },
-    "No tracks in this period." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inga körspår i perioden."
+    "Energy": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energi"
           }
         }
       }
     },
-    "Off" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Av"
+    "Energy added per weekday and hour, across every charge.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tillförd energi per veckodag och timme, över alla laddningar."
           }
         }
       }
     },
-    "Offline" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offline"
+    "Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppskattat från rated range vid slutet av de senaste 100 laddningarna, med samma metod som TeslaMates battery health-dashboard. Cellkemi och temperatur gör enskilda avläsningar brusiga."
           }
         }
       }
     },
-    "On" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "På"
+    "Falling asleep": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Går i vila"
           }
         }
       }
     },
-    "Online" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Online"
+    "Finish": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mål"
           }
         }
       }
     },
-    "Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only." : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Valfritt. Fyller i laddningskostnader som TeslaMate saknar, t.ex. Superchargers. Nyckeln lagras bara på den här enheten."
+    "Installed": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installerad"
           }
         }
       }
     },
-    "Outside / inside" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ute / inne"
+    "Installed versions": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installerade versioner"
           }
         }
       }
     },
-    "Outside temp" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utetemp"
+    "Invalid server URL. Check the settings.": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogiltig server-URL. Kontrollera inställningarna."
           }
         }
       }
     },
-    "Overview" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Översikt"
+    "Language": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Språk"
           }
         }
       }
     },
-    "Period" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Period"
+    "Loading tracks…": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hämtar körspår…"
           }
         }
       }
     },
-    "Plugged in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inkopplad"
+    "Location": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plats"
           }
         }
       }
     },
-    "Power (kW)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effekt (kW)"
+    "Lock": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lås"
           }
         }
       }
     },
-    "Server" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Server"
+    "Locked": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Låst"
           }
         }
       }
     },
-    "Settings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inställningar"
+    "Max / avg": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max / snitt"
           }
         }
       }
     },
-    "Software" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mjukvara"
+    "Max power": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maxeffekt"
           }
         }
       }
     },
-    "Software Update available (%@)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mjukvaruuppdatering tillgänglig (%@)"
+    "Month": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Månad"
           }
         }
       }
     },
-    "Some of the data could not be loaded." : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delar av datan kunde inte hämtas."
+    "Most energy": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mest energi"
           }
         }
       }
     },
-    "Speed" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hastighet"
+    "Most expensive": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dyrast"
           }
         }
       }
     },
-    "Start" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
+    "No charges yet": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga laddningar än"
           }
         }
       }
     },
-    "Statistics" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statistik"
+    "No countries yet": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga länder än"
           }
         }
       }
     },
-    "System" : {
-      "comment" : "A language option that uses the system's preferred language.",
-      "isCommentAutoGenerated" : true,
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System"
+    "No drives this day": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga resor den dagen"
           }
         }
       }
     },
-    "Takes effect after the app is restarted." : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Börjar gälla när appen startats om."
+    "No drives yet": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga resor än"
           }
         }
       }
     },
-    "Test connection" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Testa anslutning"
+    "No tracks in this period.": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga körspår i perioden."
           }
         }
       }
     },
-    "The server returned an error (HTTP %lld)." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Servern svarade med fel (HTTP %lld)."
+    "Not enough charging data yet": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För lite laddningsdata än"
           }
         }
       }
     },
-    "This year" : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I år"
+    "OK": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         }
       }
     },
-    "Today" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Idag"
+    "Off": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Av"
           }
         }
       }
     },
-    "Try again" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Försök igen"
+    "Offline": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline"
           }
         }
       }
     },
-    "Unknown" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Okänd"
+    "On": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "På"
           }
         }
       }
     },
-    "Unknown location" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Okänd plats"
+    "Online": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Online"
           }
         }
       }
     },
-    "Unlocked" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Olåst"
+    "Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valfritt. Fyller i laddningskostnader som TeslaMate saknar, t.ex. Superchargers. Nyckeln lagras bara på den här enheten."
           }
         }
       }
     },
-    "Update available" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uppdatering tillgänglig"
+    "Outside / inside": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ute / inne"
           }
         }
       }
     },
-    "Updating" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uppdaterar"
+    "Outside temp": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utetemp"
           }
         }
       }
     },
-    "Used" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Använt"
+    "Overview": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Översikt"
           }
         }
       }
     },
-    "Used for editing charge costs." : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Används för att redigera laddningskostnader."
+    "Period": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Period"
           }
         }
       }
     },
-    "Used for the visited places map." : {
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Används för kartan över besökta platser."
+    "Plugged in": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inkopplad"
           }
         }
       }
     },
-    "Visited" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Besökta platser"
+    "Power (kW)": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effekt (kW)"
           }
         }
       }
     },
-    "Week" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vecka"
+    "Range at 100 %": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räckvidd vid 100 %"
           }
         }
       }
     },
-    "Year" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "År"
+    "Range lost": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Förlorad räckvidd"
           }
         }
       }
     },
-    "Yesterday" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Igår"
+    "Release notes come from notateslaapp.com, which is not affiliated with Tesla or TeslaMate.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release notes kommer från notateslaapp.com, som varken hör ihop med Tesla eller TeslaMate."
+          }
+        }
+      }
+    },
+    "Server": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inställningar"
+          }
+        }
+      }
+    },
+    "Software": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mjukvara"
+          }
+        }
+      }
+    },
+    "Software Update available (%@)": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mjukvaruuppdatering tillgänglig (%@)"
+          }
+        }
+      }
+    },
+    "Some of the data could not be loaded.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delar av datan kunde inte hämtas."
+          }
+        }
+      }
+    },
+    "Speed": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hastighet"
+          }
+        }
+      }
+    },
+    "Start": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        }
+      }
+    },
+    "Statistics": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistik"
+          }
+        }
+      }
+    },
+    "System": {
+      "comment": "A language option that uses the system's preferred language.",
+      "isCommentAutoGenerated": true,
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        }
+      }
+    },
+    "Takes effect after the app is restarted.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Börjar gälla när appen startats om."
+          }
+        }
+      }
+    },
+    "Test connection": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testa anslutning"
+          }
+        }
+      }
+    },
+    "The server returned an error (HTTP %lld).": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Servern svarade med fel (HTTP %lld)."
+          }
+        }
+      }
+    },
+    "This year": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I år"
+          }
+        }
+      }
+    },
+    "Time": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tid"
+          }
+        }
+      }
+    },
+    "Today": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idag"
+          }
+        }
+      }
+    },
+    "Total": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Totalt"
+          }
+        }
+      }
+    },
+    "Try again": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Försök igen"
+          }
+        }
+      }
+    },
+    "Unknown": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Okänd"
+          }
+        }
+      }
+    },
+    "Unknown location": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Okänd plats"
+          }
+        }
+      }
+    },
+    "Unlocked": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olåst"
+          }
+        }
+      }
+    },
+    "Update available": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppdatering tillgänglig"
+          }
+        }
+      }
+    },
+    "Updating": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppdaterar"
+          }
+        }
+      }
+    },
+    "Used": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Använt"
+          }
+        }
+      }
+    },
+    "Used for editing charge costs.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Används för att redigera laddningskostnader."
+          }
+        }
+      }
+    },
+    "Used for the visited places map.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Används för kartan över besökta platser."
+          }
+        }
+      }
+    },
+    "Visited": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besökta platser"
+          }
+        }
+      }
+    },
+    "Week": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vecka"
+          }
+        }
+      }
+    },
+    "When you charge": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "När du laddar"
+          }
+        }
+      }
+    },
+    "Year": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "År"
+          }
+        }
+      }
+    },
+    "Yesterday": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Igår"
+          }
+        }
+      }
+    },
+    "≈ %@ at %@": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "≈ %@ vid %@"
+          }
+        }
+      }
+    },
+    "✓ Connected – found %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ Ansluten – hittade %@"
           }
         }
       }
     }
   },
-  "version" : "1.1"
+  "version": "1.1"
 }

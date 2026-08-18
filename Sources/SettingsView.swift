@@ -8,6 +8,8 @@ struct SettingsView: View {
     @AppStorage(Pref.language.key) private var appLanguage = Pref.language.value
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
+    @FocusState private var editing: Bool
+
     @State private var cars: [Car] = []
     @State private var testResult: String?
     @State private var tessieResult: String?
@@ -18,6 +20,7 @@ struct SettingsView: View {
                 Section("Server") {
                     TextField("http://server:8080", text: $serverURL)
                         .keyboardType(.URL)
+                        .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                     Button("Test connection") {
@@ -33,6 +36,7 @@ struct SettingsView: View {
                 Section {
                     TextField("http://server:3000", text: $grafanaURL)
                         .keyboardType(.URL)
+                        .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                 } header: {
@@ -44,6 +48,7 @@ struct SettingsView: View {
                 Section {
                     TextField("http://server:4000", text: $teslamateURL)
                         .keyboardType(.URL)
+                        .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                 } header: {
@@ -64,6 +69,7 @@ struct SettingsView: View {
 
                 Section {
                     TextField(String(localized: "API key"), text: $tessieToken)
+                        .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                         .font(.footnote.monospaced())
@@ -108,6 +114,12 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") { editing = false }
+                }
+            }
             .task { await loadCars() }
             .onChange(of: appLanguage) { _, new in
                 if new == "system" {

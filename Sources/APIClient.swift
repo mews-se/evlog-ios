@@ -43,6 +43,11 @@ struct APIClient {
         return payload.status
     }
 
+    func updates(carID: Int) async throws -> [SoftwareUpdate] {
+        let payload: UpdatesPayload = try await get("/api/v1/cars/\(carID)/updates")
+        return payload.updates
+    }
+
     func drives(carID: Int, results: Int = 200) async throws -> [Drive] {
         let payload: DrivesPayload = try await get("/api/v1/cars/\(carID)/drives?show=\(results)")
         return payload.drives

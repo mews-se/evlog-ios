@@ -5,6 +5,7 @@ import Charts
 struct DrivesView: View {
     let api: APIClient
     let carID: Int
+    @Binding var path: NavigationPath
 
     @State private var drives: [Drive] = []
     @State private var error: String?
@@ -20,7 +21,7 @@ struct DrivesView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if !drives.isEmpty {
                     List {
@@ -81,7 +82,8 @@ struct DriveRow: View {
                 .lineLimit(1)
             HStack(spacing: 12) {
                 Label(Fmt.duration(drive.durationMin), systemImage: "clock")
-                Label(Fmt.consumption(drive.consumptionNet), systemImage: "bolt")
+                Label(Fmt.pct(drive.efficiencyPct, decimals: 0), systemImage: "leaf")
+                    .foregroundStyle(CarState.efficiencyColor(drive.efficiencyPct))
                 if let battery = Fmt.battery(drive.batteryDetails) {
                     Label(battery, systemImage: "battery.75percent")
                 }
@@ -153,7 +155,9 @@ struct DriveDetailView: View {
                         StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance"), value: Fmt.km(drive.distance), tint: .blue)
                         StatTile(icon: "clock.fill", title: String(localized: "Duration"), value: Fmt.duration(drive.durationMin), tint: .secondary)
                         StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg"), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
-                        StatTile(icon: "bolt.fill", title: String(localized: "Consumption"), value: Fmt.consumption(drive.consumptionNet), tint: .green)
+                        StatTile(icon: "leaf.fill", title: String(localized: "Efficiency"), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
+                                 tint: CarState.efficiencyColor(drive.efficiencyPct),
+                                 valueTint: CarState.efficiencyColor(drive.efficiencyPct))
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                     }
@@ -168,6 +172,7 @@ struct DriveDetailView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? String(localized: "Drive"))
         .navigationBarTitleDisplayMode(.inline)
+        .mateBackButton()
         .task { await load() }
         .onChange(of: scrubDate) { _, new in
             if new != nil { heldDate = new }

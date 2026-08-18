@@ -24,22 +24,53 @@ struct RootView: View {
     @AppStorage(Pref.server.key) private var serverURL = Pref.server.value
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
 
+    @State private var selection = 0
+    @State private var overviewPath = NavigationPath()
+    @State private var drivesPath = NavigationPath()
+    @State private var chargesPath = NavigationPath()
+    @State private var statsPath = NavigationPath()
+
     var api: APIClient { APIClient(baseURL: serverURL) }
 
     var body: some View {
-        TabView {
-            DashboardView(api: api, carID: carID)
+        TabView(selection: $selection) {
+            DashboardView(api: api, carID: carID, path: $overviewPath)
                 .tabItem { Label("Overview", systemImage: "gauge.with.dots.needle.50percent") }
-            DrivesView(api: api, carID: carID)
+                .tag(0)
+            DrivesView(api: api, carID: carID, path: $drivesPath)
                 .tabItem { Label("Drives", systemImage: "road.lanes") }
-            ChargesView(api: api, carID: carID)
+                .tag(1)
+            ChargesView(api: api, carID: carID, path: $chargesPath)
                 .tabItem { Label("Charges", systemImage: "bolt.fill") }
-            StatsView(api: api, carID: carID)
+                .tag(2)
+            StatsView(api: api, carID: carID, path: $statsPath)
                 .tabItem { Label("Statistics", systemImage: "chart.bar.fill") }
+                .tag(3)
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+                .tag(4)
+        }
+        // ett flikbyte ska landa på flikens rot, inte där man stod sist
+        .onChange(of: selection) { _, _ in
+            overviewPath = NavigationPath()
+            drivesPath = NavigationPath()
+            chargesPath = NavigationPath()
+            statsPath = NavigationPath()
         }
     }
+}
+
+enum OverviewRoute: Hashable {
+    case visited(lat: Double?, lon: Double?)
+    case software(version: String?)
+    case batteryHealth
+    case countries
+}
+
+enum StatsRoute: Hashable {
+    case period(Date, StatsView.Granularity)
+    case day(Date)
+    case charging
 }
 
 struct ErrorCard: View {
