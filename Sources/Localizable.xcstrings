@@ -9,6 +9,12 @@
             "state": "translated",
             "value": "%@ tillagt · %lld kW"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ added · %lld kW"
+          }
         }
       }
     },
@@ -20,6 +26,12 @@
             "state": "translated",
             "value": "%@ sedan"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ since"
+          }
         }
       }
     },
@@ -30,6 +42,12 @@
             "state": "translated",
             "value": "%lld resor · senast %@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld drives · last %@"
+          }
         }
       }
     },
@@ -39,6 +57,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld av %lld superchargers ligger inom realistisk räckvidd. %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld Superchargers are within realistic reach. %@"
           }
         }
       }
@@ -51,6 +75,12 @@
             "state": "translated",
             "value": "90 dagar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 days"
+          }
         }
       }
     },
@@ -61,12 +91,24 @@
             "state": "translated",
             "value": "Ett projekt av %@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A project by %@"
+          }
         }
       }
     },
     "AC / DC": {
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AC / DC"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "AC / DC"
@@ -82,6 +124,12 @@
             "state": "translated",
             "value": "API-nyckel"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API key"
+          }
         }
       }
     },
@@ -92,6 +140,12 @@
             "state": "translated",
             "value": "Om"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
         }
       }
     },
@@ -101,6 +155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om EVLog"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About EVLog"
           }
         }
       }
@@ -113,6 +173,12 @@
             "state": "translated",
             "value": "Tillagt"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Added"
+          }
         }
       }
     },
@@ -123,6 +189,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Allt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
           }
         }
       }
@@ -135,6 +207,12 @@
             "state": "translated",
             "value": "Vilar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asleep"
+          }
         }
       }
     },
@@ -146,6 +224,12 @@
             "state": "translated",
             "value": "Snitteffekt"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avg power"
+          }
         }
       }
     },
@@ -155,6 +239,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tillbaka"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
           }
         }
       }
@@ -167,6 +257,12 @@
             "state": "translated",
             "value": "Batteri"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery"
+          }
         }
       }
     },
@@ -178,6 +274,12 @@
             "state": "translated",
             "value": "Batteri (%)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery (%)"
+          }
         }
       }
     },
@@ -187,6 +289,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Batterihälsa"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery health"
           }
         }
       }
@@ -198,6 +306,12 @@
             "state": "translated",
             "value": "Batterivärmare"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery heater"
+          }
         }
       }
     },
@@ -207,6 +321,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Per dag"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By day"
           }
         }
       }
@@ -218,6 +338,12 @@
             "state": "translated",
             "value": "Per månad"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By month"
+          }
         }
       }
     },
@@ -227,6 +353,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Avbryt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
@@ -238,6 +370,12 @@
             "state": "translated",
             "value": "Kapacitet nu"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capacity now"
+          }
         }
       }
     },
@@ -247,6 +385,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kapacitet ny"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capacity when new"
           }
         }
       }
@@ -259,6 +403,12 @@
             "state": "translated",
             "value": "Bil"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Car"
+          }
         }
       }
     },
@@ -270,6 +420,12 @@
             "state": "translated",
             "value": "Laddning"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge"
+          }
         }
       }
     },
@@ -279,6 +435,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laddkurva"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge curve"
           }
         }
       }
@@ -291,6 +453,12 @@
             "state": "translated",
             "value": "Laddtid"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge time"
+          }
         }
       }
     },
@@ -301,6 +469,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laddningar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charges"
           }
         }
       }
@@ -313,6 +487,12 @@
             "state": "translated",
             "value": "Laddar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging"
+          }
         }
       }
     },
@@ -323,6 +503,12 @@
             "state": "translated",
             "value": "Laddkostnader som TeslaMate saknar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging costs TeslaMate lacks"
+          }
         }
       }
     },
@@ -332,6 +518,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laddstatistik"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging statistics"
           }
         }
       }
@@ -344,6 +536,12 @@
             "state": "translated",
             "value": "Förbrukning"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consumption"
+          }
         }
       }
     },
@@ -354,6 +552,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kostnad"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cost"
           }
         }
       }
@@ -366,6 +570,12 @@
             "state": "translated",
             "value": "Kunde inte hämta spåren från Grafana (%@)."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load tracks from Grafana (%@)."
+          }
         }
       }
     },
@@ -376,6 +586,12 @@
             "state": "translated",
             "value": "Räknat på var varje resa slutade."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Counted from where each drive ended."
+          }
         }
       }
     },
@@ -385,6 +601,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Länder"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Countries"
           }
         }
       }
@@ -397,6 +619,12 @@
             "state": "translated",
             "value": "Datakälla"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data source"
+          }
         }
       }
     },
@@ -407,6 +635,12 @@
             "state": "translated",
             "value": "Datakällor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data sources"
+          }
         }
       }
     },
@@ -416,6 +650,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Degradering"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Degradation"
           }
         }
       }
@@ -428,6 +668,12 @@
             "state": "translated",
             "value": "Sträcka"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance"
+          }
         }
       }
     },
@@ -438,6 +684,12 @@
             "state": "translated",
             "value": "Klar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
         }
       }
     },
@@ -447,6 +699,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dra i grafen för att följa resan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag the chart to follow the drive"
           }
         }
       }
@@ -459,6 +717,12 @@
             "state": "translated",
             "value": "Resa"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drive"
+          }
         }
       }
     },
@@ -470,6 +734,12 @@
             "state": "translated",
             "value": "Resor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drives"
+          }
         }
       }
     },
@@ -479,6 +749,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Resor, laddningar och fordonsdata"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drives, charges and vehicle data"
           }
         }
       }
@@ -491,6 +767,12 @@
             "state": "translated",
             "value": "Kör"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Driving"
+          }
         }
       }
     },
@@ -502,6 +784,12 @@
             "state": "translated",
             "value": "Restid"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration"
+          }
         }
       }
     },
@@ -511,6 +799,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Effektivitet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Efficiency"
           }
         }
       }
@@ -523,6 +817,12 @@
             "state": "translated",
             "value": "Energi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy"
+          }
         }
       }
     },
@@ -532,6 +832,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tillförd energi per veckodag och timme, över alla laddningar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy added per weekday and hour, across every charge."
           }
         }
       }
@@ -543,6 +849,12 @@
             "state": "translated",
             "value": "Uppskattat från rated range vid slutet av de senaste 100 laddningarna, med samma metod som TeslaMates battery health-dashboard. Cellkemi och temperatur gör enskilda avläsningar brusiga."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy."
+          }
         }
       }
     },
@@ -552,6 +864,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uppskattad räckvidd"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated range"
           }
         }
       }
@@ -564,6 +882,12 @@
             "state": "translated",
             "value": "Går i vila"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falling asleep"
+          }
         }
       }
     },
@@ -575,6 +899,12 @@
             "state": "translated",
             "value": "Mål"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish"
+          }
         }
       }
     },
@@ -584,6 +914,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fri och öppen programvara"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free and open source"
           }
         }
       }
@@ -595,6 +931,12 @@
             "state": "translated",
             "value": "Installerad"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed"
+          }
         }
       }
     },
@@ -604,6 +946,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Installerade versioner"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed versions"
           }
         }
       }
@@ -616,6 +964,12 @@
             "state": "translated",
             "value": "Ogiltig server-URL. Kontrollera inställningarna."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid server URL. Check the settings."
+          }
         }
       }
     },
@@ -626,6 +980,12 @@
             "state": "translated",
             "value": "Språk"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
         }
       }
     },
@@ -635,6 +995,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Licens"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "License"
           }
         }
       }
@@ -647,6 +1013,12 @@
             "state": "translated",
             "value": "Hämtar körspår…"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading tracks…"
+          }
         }
       }
     },
@@ -657,6 +1029,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plats"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location"
           }
         }
       }
@@ -669,6 +1047,12 @@
             "state": "translated",
             "value": "Lås"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock"
+          }
         }
       }
     },
@@ -679,6 +1063,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Låst"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked"
           }
         }
       }
@@ -691,6 +1081,12 @@
             "state": "translated",
             "value": "Max / snitt"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max / avg"
+          }
         }
       }
     },
@@ -701,6 +1097,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Maxeffekt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max power"
           }
         }
       }
@@ -713,6 +1115,12 @@
             "state": "translated",
             "value": "Månad"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Month"
+          }
         }
       }
     },
@@ -722,6 +1130,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mest energi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most energy"
           }
         }
       }
@@ -733,6 +1147,12 @@
             "state": "translated",
             "value": "Dyrast"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most expensive"
+          }
         }
       }
     },
@@ -742,6 +1162,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ingen reklam, ingen spårning, inget att köpa"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No ads, no tracking, nothing to buy"
           }
         }
       }
@@ -754,6 +1180,12 @@
             "state": "translated",
             "value": "Inga laddningar än"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No charges yet"
+          }
         }
       }
     },
@@ -764,6 +1196,12 @@
             "state": "translated",
             "value": "Inga länder än"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No countries yet"
+          }
         }
       }
     },
@@ -773,6 +1211,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Inga resor den dagen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No drives this day"
           }
         }
       }
@@ -785,6 +1229,12 @@
             "state": "translated",
             "value": "Inga resor än"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No drives yet"
+          }
         }
       }
     },
@@ -794,6 +1244,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ingen position än"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No position yet"
           }
         }
       }
@@ -806,6 +1262,12 @@
             "state": "translated",
             "value": "Inga körspår i perioden."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tracks in this period."
+          }
         }
       }
     },
@@ -816,12 +1278,24 @@
             "state": "translated",
             "value": "För lite laddningsdata än"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough charging data yet"
+          }
         }
       }
     },
     "OK": {
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "OK"
@@ -837,6 +1311,12 @@
             "state": "translated",
             "value": "Av"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
         }
       }
     },
@@ -844,6 +1324,12 @@
       "extractionState": "stale",
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Offline"
@@ -859,6 +1345,12 @@
             "state": "translated",
             "value": "På"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On"
+          }
         }
       }
     },
@@ -869,6 +1361,12 @@
             "state": "translated",
             "value": "På under resan"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On during the drive"
+          }
         }
       }
     },
@@ -876,6 +1374,12 @@
       "extractionState": "stale",
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Online"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Online"
@@ -890,6 +1394,12 @@
             "state": "translated",
             "value": "Öppen källkod"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open source"
+          }
         }
       }
     },
@@ -899,6 +1409,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Valfritt. Fyller i laddningskostnader som TeslaMate saknar, t.ex. Superchargers. Nyckeln lagras bara på den här enheten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only."
           }
         }
       }
@@ -911,6 +1427,12 @@
             "state": "translated",
             "value": "Ute / inne"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outside / inside"
+          }
         }
       }
     },
@@ -921,6 +1443,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Utetemp"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outside temp"
           }
         }
       }
@@ -933,6 +1461,12 @@
             "state": "translated",
             "value": "Översikt"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overview"
+          }
         }
       }
     },
@@ -940,6 +1474,12 @@
       "extractionState": "stale",
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Period"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Period"
@@ -955,6 +1495,12 @@
             "state": "translated",
             "value": "Inkopplad"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plugged in"
+          }
         }
       }
     },
@@ -966,6 +1512,12 @@
             "state": "translated",
             "value": "Effekt (kW)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Power (kW)"
+          }
         }
       }
     },
@@ -975,6 +1527,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Räckvidd"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Range"
           }
         }
       }
@@ -986,6 +1544,12 @@
             "state": "translated",
             "value": "Räckvidd vid 100 %"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Range at 100 %"
+          }
         }
       }
     },
@@ -995,6 +1559,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Förlorad räckvidd"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Range lost"
           }
         }
       }
@@ -1006,6 +1576,12 @@
             "state": "translated",
             "value": "Realistisk räckvidd"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Realistic reach"
+          }
         }
       }
     },
@@ -1015,6 +1591,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Release notes kommer från notateslaapp.com, som varken hör ihop med Tesla eller TeslaMate."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release notes come from notateslaapp.com, which is not affiliated with Tesla or TeslaMate."
           }
         }
       }
@@ -1026,6 +1608,12 @@
             "state": "translated",
             "value": "Vägar är som bekant inte raka. Dina egna resor använder %@ km väg per km fågelvägen, så den ifyllda cirkeln är den mest realistiska"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roads are not straight. Your own drives cover %@ km of road per kilometre in a straight line, so the filled circle is the honest one."
+          }
         }
       }
     },
@@ -1033,6 +1621,12 @@
       "extractionState": "stale",
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Server"
@@ -1048,6 +1642,12 @@
             "state": "translated",
             "value": "Inställningar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
         }
       }
     },
@@ -1058,6 +1658,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mjukvara"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Software"
           }
         }
       }
@@ -1070,6 +1676,12 @@
             "state": "translated",
             "value": "Mjukvaruuppdatering tillgänglig (%@)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Software Update available (%@)"
+          }
         }
       }
     },
@@ -1079,6 +1691,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Versionsinformation"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Software release notes"
           }
         }
       }
@@ -1090,6 +1708,12 @@
             "state": "translated",
             "value": "Delar av datan kunde inte hämtas."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some of the data could not be loaded."
+          }
         }
       }
     },
@@ -1099,6 +1723,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Källkod"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source code"
           }
         }
       }
@@ -1110,6 +1740,12 @@
             "state": "translated",
             "value": "Hastighet"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speed"
+          }
         }
       }
     },
@@ -1117,6 +1753,12 @@
       "extractionState": "stale",
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Start"
@@ -1132,6 +1774,12 @@
             "state": "translated",
             "value": "Statistik"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistics"
+          }
         }
       }
     },
@@ -1142,12 +1790,24 @@
             "state": "translated",
             "value": "Fågelvägen"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Straight line"
+          }
         }
       }
     },
     "Supercharger": {
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supercharger"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Supercharger"
@@ -1162,6 +1822,12 @@
             "state": "translated",
             "value": "Superchargerplatser"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supercharger locations"
+          }
         }
       }
     },
@@ -1170,6 +1836,12 @@
       "isCommentAutoGenerated": true,
       "localizations": {
         "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "System"
@@ -1185,6 +1857,12 @@
             "state": "translated",
             "value": "Testa anslutning"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test connection"
+          }
         }
       }
     },
@@ -1194,6 +1872,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koden går att läsa, bygga och ändra."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The code is there to read, build and change."
           }
         }
       }
@@ -1206,6 +1890,12 @@
             "state": "translated",
             "value": "Servern svarade med fel (HTTP %lld)."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server returned an error (HTTP %lld)."
+          }
         }
       }
     },
@@ -1215,6 +1905,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Containern teslamateapi. Resor, laddningar och fordonsstatus kommer härifrån."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The teslamateapi container. Drives, charges and vehicle status all come from here."
           }
         }
       }
@@ -1226,6 +1922,12 @@
             "state": "translated",
             "value": "I år"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This year"
+          }
         }
       }
     },
@@ -1235,6 +1937,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tid"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time"
           }
         }
       }
@@ -1247,6 +1955,12 @@
             "state": "translated",
             "value": "Idag"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
         }
       }
     },
@@ -1256,6 +1970,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Totalt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total"
           }
         }
       }
@@ -1268,6 +1988,12 @@
             "state": "translated",
             "value": "Försök igen"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
         }
       }
     },
@@ -1278,6 +2004,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Okänd"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown"
           }
         }
       }
@@ -1290,6 +2022,12 @@
             "state": "translated",
             "value": "Okänd plats"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown location"
+          }
         }
       }
     },
@@ -1300,6 +2038,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Olåst"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocked"
           }
         }
       }
@@ -1312,6 +2056,12 @@
             "state": "translated",
             "value": "Uppdatering tillgänglig"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update available"
+          }
         }
       }
     },
@@ -1322,6 +2072,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uppdaterar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating"
           }
         }
       }
@@ -1334,6 +2090,12 @@
             "state": "translated",
             "value": "Använt"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used"
+          }
         }
       }
     },
@@ -1344,6 +2106,12 @@
             "state": "translated",
             "value": "Används för att redigera laddningskostnader."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used for editing charge costs."
+          }
         }
       }
     },
@@ -1353,6 +2121,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Används för kartan över besökta platser."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used for the visited places map."
           }
         }
       }
@@ -1365,6 +2139,12 @@
             "state": "translated",
             "value": "Besökta platser"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visited"
+          }
         }
       }
     },
@@ -1376,6 +2156,12 @@
             "state": "translated",
             "value": "Vecka"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Week"
+          }
         }
       }
     },
@@ -1385,6 +2171,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "När du laddar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you charge"
           }
         }
       }
@@ -1397,6 +2189,12 @@
             "state": "translated",
             "value": "År"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Year"
+          }
         }
       }
     },
@@ -1408,6 +2206,12 @@
             "state": "translated",
             "value": "Igår"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yesterday"
+          }
         }
       }
     },
@@ -1417,6 +2221,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "≈ %@ vid %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "≈ %@ at %@"
           }
         }
       }
@@ -1428,6 +2238,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "✓ Ansluten – hittade %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓ Connected – found %@"
           }
         }
       }

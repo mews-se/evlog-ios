@@ -72,7 +72,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    TextField(String(localized: "API key"), text: $tessieToken)
+                    TextField(String(localized: "API key", bundle: .current), text: $tessieToken)
                         .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
@@ -131,7 +131,7 @@ struct SettingsView: View {
             let cars = try await APIClient(baseURL: serverURL).cars()
             self.cars = cars
             let names = cars.map(\.name).joined(separator: ", ")
-            testResult = String(localized: "✓ Connected – found \(names)")
+            testResult = String(localized: "✓ Connected – found \(names)", bundle: .current)
         } catch {
             testResult = "✗ \(error.localizedDescription)"
         }
@@ -149,7 +149,7 @@ struct SettingsView: View {
         do {
             let vehicles = try await TessieClient(token: tessieToken).vehicles()
             let names = vehicles.compactMap { $0.lastState?.displayName ?? $0.vin }.joined(separator: ", ")
-            tessieResult = String(localized: "✓ Connected – found \(names)")
+            tessieResult = String(localized: "✓ Connected – found \(names)", bundle: .current)
         } catch {
             tessieResult = "✗ \(error.localizedDescription)"
         }

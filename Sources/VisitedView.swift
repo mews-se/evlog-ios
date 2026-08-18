@@ -120,7 +120,7 @@ struct VisitedView: View {
                 .positions(carID: carID, condition: period.condition, sampleSeconds: period.sampleSeconds)
             segments = Self.splitIntoSegments(points)
             if let region = Self.boundingRegion(points) { camera = .region(region) }
-            if points.isEmpty { error = String(localized: "No tracks in this period.") }
+            if points.isEmpty { error = String(localized: "No tracks in this period.", bundle: .current) }
         } catch is CancellationError {
             // ett periodbyte avbröt anropet - efterträdaren äger tillståndet
             return
@@ -128,7 +128,7 @@ struct VisitedView: View {
             return
         } catch {
             segments = []
-            self.error = String(localized: "Couldn't load tracks from Grafana (\(grafanaURL)).")
+            self.error = String(localized: "Couldn't load tracks from Grafana (\(grafanaURL)).", bundle: .current)
         }
         loading = false
     }

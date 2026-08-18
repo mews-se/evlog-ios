@@ -22,7 +22,7 @@ struct CountryStat: Identifiable {
 
     // databasen har namnet på Nominatims språk - appen ska följa sitt eget
     var displayName: String {
-        Locale.current.localizedString(forRegionCode: code) ?? name
+        Locale.app.localizedString(forRegionCode: code) ?? name
     }
 
     // regional indicator symbols: "se" blir 🇸🇪

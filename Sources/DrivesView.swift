@@ -83,7 +83,7 @@ struct DriveRow: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.blue)
             }
-            Text(verbatim: "\(drive.startAddress ?? String(localized: "Unknown")) → \(drive.endAddress ?? String(localized: "Unknown"))")
+            Text(verbatim: "\(drive.startAddress ?? String(localized: "Unknown", bundle: .current)) → \(drive.endAddress ?? String(localized: "Unknown", bundle: .current))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -164,17 +164,17 @@ struct DriveDetailView: View {
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance"), value: Fmt.km(drive.distance), tint: .blue)
-                        StatTile(icon: "clock.fill", title: String(localized: "Duration"), value: Fmt.duration(drive.durationMin), tint: .secondary)
-                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg"), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
-                        StatTile(icon: "leaf.fill", title: String(localized: "Efficiency"), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
+                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance", bundle: .current), value: Fmt.km(drive.distance), tint: .blue)
+                        StatTile(icon: "clock.fill", title: String(localized: "Duration", bundle: .current), value: Fmt.duration(drive.durationMin), tint: .secondary)
+                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg", bundle: .current), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
+                        StatTile(icon: "leaf.fill", title: String(localized: "Efficiency", bundle: .current), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
                                  tint: CarState.efficiencyColor(drive.efficiencyPct),
                                  valueTint: CarState.efficiencyColor(drive.efficiencyPct))
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
-                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
+                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                         if drive.batteryHeaterUsed {
-                            StatTile(icon: "battery.100percent", title: String(localized: "Battery heater"),
-                                     value: String(localized: "On during the drive"), tint: .red, valueTint: .red)
+                            StatTile(icon: "battery.100percent", title: String(localized: "Battery heater", bundle: .current),
+                                     value: String(localized: "On during the drive", bundle: .current), tint: .red, valueTint: .red)
                         }
                     }
                 }
@@ -186,7 +186,7 @@ struct DriveDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? String(localized: "Drive"))
+        .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? String(localized: "Drive", bundle: .current))
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
         .task { await load() }

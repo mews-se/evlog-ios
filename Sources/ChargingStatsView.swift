@@ -22,7 +22,7 @@ struct ChargingStatsView: View {
     private var places: [Place] {
         var byName: [String: Place] = [:]
         for charge in charges {
-            let name = charge.address ?? String(localized: "Unknown location")
+            let name = charge.address ?? String(localized: "Unknown location", bundle: .current)
             var place = byName[name] ?? Place(name: name)
             place.energy += charge.chargeEnergyAdded ?? 0
             place.cost += cost(of: charge)
@@ -90,15 +90,15 @@ struct ChargingStatsView: View {
 
             Section {
                 SplitBar(acEnergy: energy(ac), dcEnergy: energy(dc))
-                LabeledContent(String(localized: "Energy")) {
+                LabeledContent(String(localized: "Energy", bundle: .current)) {
                     Text(verbatim: "\(Fmt.kwh(energy(ac))) / \(Fmt.kwh(energy(dc)))")
                         .monospacedDigit()
                 }
-                LabeledContent(String(localized: "Time")) {
+                LabeledContent(String(localized: "Time", bundle: .current)) {
                     Text(verbatim: "\(Fmt.duration(minutes(ac))) / \(Fmt.duration(minutes(dc)))")
                         .monospacedDigit()
                 }
-                LabeledContent(String(localized: "Charges")) {
+                LabeledContent(String(localized: "Charges", bundle: .current)) {
                     Text(verbatim: "\(ac.count) / \(dc.count)")
                         .monospacedDigit()
                 }

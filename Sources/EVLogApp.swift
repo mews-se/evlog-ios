@@ -64,7 +64,7 @@ struct RootView: View {
             statsPath = NavigationPath()
         }
         .id(appLanguage)
-        .environment(\.locale, appLanguage == "system" ? Locale.current : Locale(identifier: appLanguage))
+        .environment(\.locale, .app)
     }
 }
 

@@ -47,13 +47,13 @@ struct AboutView: View {
                 .padding(.vertical, 3)
 
                 LinkRow(icon: "chevron.left.forwardslash.chevron.right",
-                        title: String(localized: "Source code"), detail: "GitHub",
+                        title: String(localized: "Source code", bundle: .current), detail: "GitHub",
                         url: "https://github.com/mews-se/evlog-ios")
 
                 LabeledContent {
                     Text(verbatim: "MIT")
                 } label: {
-                    Label(String(localized: "License"), systemImage: "doc.plaintext")
+                    Label(String(localized: "License", bundle: .current), systemImage: "doc.plaintext")
                 }
             } header: {
                 Text("Open source")
@@ -63,17 +63,17 @@ struct AboutView: View {
 
             Section {
                 LinkRow(icon: "car.fill", title: "TeslaMate",
-                        detail: String(localized: "Drives, charges and vehicle data"),
+                        detail: String(localized: "Drives, charges and vehicle data", bundle: .current),
                         url: "https://github.com/teslamate-org/teslamate")
                 LinkRow(icon: "bolt.fill", title: "supercharge.info",
-                        detail: String(localized: "Supercharger locations"),
+                        detail: String(localized: "Supercharger locations", bundle: .current),
                         url: "https://supercharge.info")
                 LinkRow(icon: "doc.text", title: "notateslaapp.com",
-                        detail: String(localized: "Software release notes"),
+                        detail: String(localized: "Software release notes", bundle: .current),
                         url: "https://www.notateslaapp.com")
                 if !tessieToken.isEmpty {
                     LinkRow(icon: "creditcard", title: "Tessie",
-                            detail: String(localized: "Charging costs TeslaMate lacks"),
+                            detail: String(localized: "Charging costs TeslaMate lacks", bundle: .current),
                             url: "https://tessie.com")
                 }
             } header: {

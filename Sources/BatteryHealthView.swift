@@ -8,17 +8,17 @@ struct BatteryHealthView: View {
             if let health {
                 VStack(spacing: 16) {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "battery.100percent.bolt", title: String(localized: "Degradation"),
+                        StatTile(icon: "battery.100percent.bolt", title: String(localized: "Degradation", bundle: .current),
                                  value: Fmt.pct(health.degradation), tint: .teal, valueTint: .teal)
-                        StatTile(icon: "heart.fill", title: String(localized: "Battery health"),
+                        StatTile(icon: "heart.fill", title: String(localized: "Battery health", bundle: .current),
                                  value: Fmt.pct(health.health), tint: .green, valueTint: .green)
-                        StatTile(icon: "bolt.fill", title: String(localized: "Capacity now"),
+                        StatTile(icon: "bolt.fill", title: String(localized: "Capacity now", bundle: .current),
                                  value: Fmt.kwh(health.currentCapacity), tint: .blue)
-                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Capacity when new"),
+                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Capacity when new", bundle: .current),
                                  value: Fmt.kwh(health.maxCapacity), tint: .secondary)
-                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Range at 100 %"),
+                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Range at 100 %", bundle: .current),
                                  value: Fmt.km(health.currentRange, decimals: 0), tint: .blue)
-                        StatTile(icon: "arrow.down.right", title: String(localized: "Range lost"),
+                        StatTile(icon: "arrow.down.right", title: String(localized: "Range lost", bundle: .current),
                                  value: Fmt.km(health.lostRange, decimals: 0), tint: .orange)
                     }
                     Text("Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy.")

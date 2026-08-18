@@ -6,8 +6,8 @@ enum APIError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .badURL: return String(localized: "Invalid server URL. Check the settings.")
-        case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).")
+        case .badURL: return String(localized: "Invalid server URL. Check the settings.", bundle: .current)
+        case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).", bundle: .current)
         }
     }
 }

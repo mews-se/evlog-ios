@@ -61,8 +61,8 @@ enum Fmt {
 
     static func day(_ date: Date?) -> String {
         guard let date else { return "–" }
-        if Calendar.current.isDateInToday(date) { return String(localized: "Today") }
-        if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday") }
+        if Calendar.current.isDateInToday(date) { return String(localized: "Today", bundle: .current) }
+        if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", bundle: .current) }
         // bara första bokstaven - .capitalized skulle versalisera månaden mitt i frasen
         let s = date.formatted(.dateTime.weekday(.wide).day().month())
         return s.prefix(1).uppercased() + s.dropFirst()
@@ -88,16 +88,16 @@ enum Fmt {
 
 enum CarState {
     static func label(_ state: String?, charging: String?) -> (text: String, color: Color, icon: String) {
-        if charging == "Charging" { return (String(localized: "Charging"), .green, "bolt.fill") }
+        if charging == "Charging" { return (String(localized: "Charging", bundle: .current), .green, "bolt.fill") }
         switch state {
-        case "driving": return (String(localized: "Driving"), .blue, "steeringwheel")
-        case "charging": return (String(localized: "Charging"), .green, "bolt.fill")
-        case "online": return (String(localized: "Online"), .primary, "car.fill")
-        case "asleep": return (String(localized: "Asleep"), .secondary, "moon.zzz.fill")
-        case "suspended": return (String(localized: "Falling asleep"), .secondary, "moon.fill")
-        case "offline": return (String(localized: "Offline"), .orange, "antenna.radiowaves.left.and.right.slash")
-        case "updating": return (String(localized: "Updating"), .purple, "arrow.down.circle.fill")
-        default: return (state ?? String(localized: "Unknown"), .secondary, "questionmark.circle")
+        case "driving": return (String(localized: "Driving", bundle: .current), .blue, "steeringwheel")
+        case "charging": return (String(localized: "Charging", bundle: .current), .green, "bolt.fill")
+        case "online": return (String(localized: "Online", bundle: .current), .primary, "car.fill")
+        case "asleep": return (String(localized: "Asleep", bundle: .current), .secondary, "moon.zzz.fill")
+        case "suspended": return (String(localized: "Falling asleep", bundle: .current), .secondary, "moon.fill")
+        case "offline": return (String(localized: "Offline", bundle: .current), .orange, "antenna.radiowaves.left.and.right.slash")
+        case "updating": return (String(localized: "Updating", bundle: .current), .purple, "arrow.down.circle.fill")
+        default: return (state ?? String(localized: "Unknown", bundle: .current), .secondary, "questionmark.circle")
         }
     }
 

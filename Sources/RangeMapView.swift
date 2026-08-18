@@ -59,9 +59,9 @@ struct RangeMapView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 16) {
                     legend(color: .green, filled: true,
-                           title: String(localized: "Realistic reach"), value: Fmt.km(realistic, decimals: 0))
+                           title: String(localized: "Realistic reach", bundle: .current), value: Fmt.km(realistic, decimals: 0))
                     legend(color: .green.opacity(0.45), filled: false,
-                           title: String(localized: "Straight line"), value: Fmt.km(rangeKm, decimals: 0))
+                           title: String(localized: "Straight line", bundle: .current), value: Fmt.km(rangeKm, decimals: 0))
                 }
                 if !chargers.isEmpty {
                     Text("\(chargers.filter(within).count) of \(chargers.count) Superchargers are within realistic reach. \(SuperchargeClient.attribution)")
