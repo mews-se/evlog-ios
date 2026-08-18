@@ -673,6 +673,16 @@
         }
       }
     },
+    "Made by %@": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skapad av %@"
+          }
+        }
+      }
+    },
     "Max / avg": {
       "extractionState": "stale",
       "localizations": {

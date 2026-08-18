@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AboutView: View {
+    private static let developer = "Martin Stockzell"
+
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
     private var version: String {
@@ -19,6 +21,10 @@ struct AboutView: View {
                     Text(verbatim: version)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                    Text("Made by \(Self.developer)")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 2)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
