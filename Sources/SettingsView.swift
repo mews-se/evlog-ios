@@ -97,8 +97,6 @@ struct SettingsView: View {
                     }
                 } header: {
                     Text("Language")
-                } footer: {
-                    Text("Takes effect after the app is restarted.")
                 }
 
                 Section {
@@ -127,6 +125,7 @@ struct SettingsView: View {
                 } else {
                     UserDefaults.standard.set([new], forKey: "AppleLanguages")
                 }
+                AppLanguage.apply(new)
             }
         }
     }

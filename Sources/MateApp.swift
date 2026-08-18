@@ -2,6 +2,10 @@ import SwiftUI
 
 @main
 struct MateApp: App {
+    init() {
+        AppLanguage.apply(UserDefaults.standard.string(forKey: Pref.language.key) ?? Pref.language.value)
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -23,6 +27,8 @@ enum Pref {
 struct RootView: View {
     @AppStorage(Pref.server.key) private var serverURL = Pref.server.value
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
+
+    @AppStorage(Pref.language.key) private var appLanguage = Pref.language.value
 
     @State private var selection = 0
     @State private var overviewPath = NavigationPath()
@@ -57,6 +63,8 @@ struct RootView: View {
             chargesPath = NavigationPath()
             statsPath = NavigationPath()
         }
+        .id(appLanguage)
+        .environment(\.locale, appLanguage == "system" ? Locale.current : Locale(identifier: appLanguage))
     }
 }
 

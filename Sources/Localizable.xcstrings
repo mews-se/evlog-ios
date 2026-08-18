@@ -934,7 +934,7 @@
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vägar är som bekant inte raka. Dina egna resor använder %@ km mer väg per km fågelvägen, så den ifyllda cirkeln är den mest realistiska"
+            "value": "Vägar är som bekant inte raka. Dina egna resor använder %@ km väg per km fågelvägen, så den ifyllda cirkeln är den mest realistiska"
           }
         }
       }
@@ -1053,16 +1053,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "System"
-          }
-        }
-      }
-    },
-    "Takes effect after the app is restarted.": {
-      "localizations": {
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Börjar gälla när appen startats om."
           }
         }
       }
