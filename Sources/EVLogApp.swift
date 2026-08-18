@@ -16,9 +16,9 @@ struct EVLogApp: App {
 // nycklarna och deras standardvärden på ett ställe. literalerna låg utspridda i
 // fem vyer, där samma nyckel kunde få olika default utan att något sa ifrån
 enum Pref {
-    static let server = (key: "serverURL", value: "http://10.0.0.185:8080")
-    static let grafana = (key: "grafanaURL", value: "http://10.0.0.185:3000")
-    static let teslamate = (key: "teslamateURL", value: "http://10.0.0.185:4000")
+    static let server = (key: "serverURL", value: "")
+    static let grafana = (key: "grafanaURL", value: "")
+    static let teslamate = (key: "teslamateURL", value: "")
     static let tessieToken = (key: "tessieToken", value: "")
     static let language = (key: "appLanguage", value: "system")
     static let carID = (key: "carID", value: 1)

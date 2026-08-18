@@ -14,6 +14,12 @@ struct GrafanaClient {
         baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
     }
 
+    private func endpoint(_ path: String) throws -> URL {
+        if root.isEmpty { throw APIError.noGrafana }
+        guard let url = URL(string: root + path) else { throw APIError.badURL }
+        return url
+    }
+
     func positions(carID: Int, condition: String, sampleSeconds: Int) async throws -> [TrackPoint] {
         let uid = try await datasourceUID()
         let sql = """
@@ -22,7 +28,7 @@ struct GrafanaClient {
         and mod(floor(extract(epoch from date))::bigint, \(sampleSeconds)) = 0 order by date
         """
 
-        guard let url = URL(string: root + "/api/ds/query") else { throw APIError.badURL }
+        let url = try endpoint("/api/ds/query")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -56,7 +62,7 @@ struct GrafanaClient {
     // kolumnvis textsvar - anropare får casta till text i SQL:en
     func textColumns(_ sql: String) async throws -> [[String?]] {
         let uid = try await datasourceUID()
-        guard let url = URL(string: root + "/api/ds/query") else { throw APIError.badURL }
+        let url = try endpoint("/api/ds/query")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -75,7 +81,7 @@ struct GrafanaClient {
     // en enda textcell ur en fråga
     func scalarText(_ sql: String) async throws -> String? {
         let uid = try await datasourceUID()
-        guard let url = URL(string: root + "/api/ds/query") else { throw APIError.badURL }
+        let url = try endpoint("/api/ds/query")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -93,7 +99,7 @@ struct GrafanaClient {
     }
 
     private func datasourceUID() async throws -> String {
-        guard let url = URL(string: root + "/api/datasources") else { throw APIError.badURL }
+        let url = try endpoint("/api/datasources")
         let (data, _) = try await URLSession.shared.data(from: url)
         let sources = try JSONDecoder().decode([Datasource].self, from: data)
         guard let uid = sources.first(where: { $0.type.contains("postgres") })?.uid else {

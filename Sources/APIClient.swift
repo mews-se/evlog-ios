@@ -1,11 +1,15 @@
 import Foundation
 
 enum APIError: LocalizedError {
+    case noServer
+    case noGrafana
     case badURL
     case http(Int)
 
     var errorDescription: String? {
         switch self {
+        case .noServer: return String(localized: "No server yet. Add your TeslaMate API address under Settings.", bundle: .current)
+        case .noGrafana: return String(localized: "No Grafana address yet. Add it under Settings to see this.", bundle: .current)
         case .badURL: return String(localized: "Invalid server URL. Check the settings.", bundle: .current)
         case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).", bundle: .current)
         }
@@ -23,9 +27,9 @@ struct APIClient {
     }()
 
     private func get<T: Decodable>(_ path: String) async throws -> T {
-        guard let url = URL(string: baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + path) else {
-            throw APIError.badURL
-        }
+        let root = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
+        if root.isEmpty { throw APIError.noServer }
+        guard let url = URL(string: root + path) else { throw APIError.badURL }
         let (data, response) = try await URLSession.shared.data(from: url)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             throw APIError.http(http.statusCode)

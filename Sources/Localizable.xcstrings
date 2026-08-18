@@ -1156,6 +1156,22 @@
         }
       }
     },
+    "No Grafana address yet. Add it under Settings to see this.": {
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen Grafana-adress ännu. Lägg in den under Inställningar för att se det här."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Grafana address yet. Add it under Settings to see this."
+          }
+        }
+      }
+    },
     "No ads, no tracking, nothing to buy": {
       "localizations": {
         "sv": {
@@ -1250,6 +1266,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "No position yet"
+          }
+        }
+      }
+    },
+    "No server yet. Add your TeslaMate API address under Settings.": {
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen server ännu. Lägg in adressen till TeslaMate API under Inställningar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No server yet. Add your TeslaMate API address under Settings."
           }
         }
       }
