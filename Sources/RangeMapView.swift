@@ -33,8 +33,18 @@ struct RangeMapView: View {
                     .foregroundStyle(.green.opacity(0.20))
                     .stroke(.green, lineWidth: 2)
                 ForEach(chargers) { charger in
-                    Marker(charger.name, systemImage: "bolt.fill", coordinate: charger.coordinate)
-                        .tint(within(charger) ? .green : .secondary)
+                    // egen annotation i stället för Marker: ballongen går inte att krympa
+                    Annotation(charger.name, coordinate: charger.coordinate) {
+                        ZStack {
+                            Circle().fill(within(charger) ? .red : .secondary)
+                            Image(systemName: "bolt.fill")
+                                .font(.system(size: 7, weight: .bold))
+                                .foregroundStyle(.white)
+                        }
+                        .frame(width: 14, height: 14)
+                        .shadow(radius: 1)
+                    }
+                    .annotationTitles(.hidden)
                 }
                 Annotation("", coordinate: center) {
                     ZStack {

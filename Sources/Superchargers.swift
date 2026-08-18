@@ -14,15 +14,9 @@ struct OverpassClient {
     static let attribution = "© OpenStreetMap contributors"
 
     func superchargers(around center: CLLocationCoordinate2D, radiusKm: Double) async throws -> [Supercharger] {
-        let dLat = radiusKm / 111.0
-        let dLon = radiusKm / (111.0 * max(cos(center.latitude * .pi / 180), 0.1))
-        let bbox = String(
-            format: "%.4f,%.4f,%.4f,%.4f",
-            center.latitude - dLat, center.longitude - dLon,
-            center.latitude + dLat, center.longitude + dLon
-        )
+        // cirkelfråga i stället för bounding box: hämtar bara det som ligger inom räckvidden
         let query = """
-        [out:json][timeout:45];node["amenity"="charging_station"]["operator"~"Tesla",i](\(bbox));out body;
+        [out:json][timeout:45];node(around:\(Int(radiusKm * 1000)),\(center.latitude),\(center.longitude))        ["amenity"="charging_station"]["operator"~"Tesla",i];out body;
         """
 
         guard let url = URL(string: "https://overpass-api.de/api/interpreter") else { throw APIError.badURL }
@@ -30,6 +24,8 @@ struct OverpassClient {
         request.httpMethod = "POST"
         request.timeoutInterval = 60
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        // Overpass svarar 406 på anrop utan egen User-Agent
+        request.setValue("Mate (TeslaMate client)", forHTTPHeaderField: "User-Agent")
         request.httpBody = "data=\(query.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? "")"
             .data(using: .utf8)
 
