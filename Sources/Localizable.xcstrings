@@ -85,6 +85,16 @@
         }
       }
     },
+    "About EVLog": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om EVLog"
+          }
+        }
+      }
+    },
     "Added": {
       "extractionState": "stale",
       "localizations": {
@@ -296,6 +306,16 @@
         }
       }
     },
+    "Charging costs TeslaMate lacks": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laddkostnader som TeslaMate saknar"
+          }
+        }
+      }
+    },
     "Charging statistics": {
       "localizations": {
         "sv": {
@@ -370,6 +390,16 @@
         }
       }
     },
+    "Data sources": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datakällor"
+          }
+        }
+      }
+    },
     "Degradation": {
       "localizations": {
         "sv": {
@@ -433,6 +463,16 @@
         }
       }
     },
+    "Drives, charges and vehicle data": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resor, laddningar och fordonsdata"
+          }
+        }
+      }
+    },
     "Driving": {
       "extractionState": "stale",
       "localizations": {
@@ -451,6 +491,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Restid"
+          }
+        }
+      }
+    },
+    "EVLog is free software. No ads, no tracking and nothing to buy – and the code is there to read, build and change.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EVLog är fri programvara. Inga annonser, ingen spårning och inget att köpa – och koden går att läsa, bygga och ändra."
           }
         }
       }
@@ -565,6 +615,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Språk"
+          }
+        }
+      }
+    },
+    "License": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licens"
           }
         }
       }
@@ -803,6 +863,16 @@
         }
       }
     },
+    "Open source": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öppen källkod"
+          }
+        }
+      }
+    },
     "Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only.": {
       "localizations": {
         "sv": {
@@ -983,12 +1053,32 @@
         }
       }
     },
+    "Software release notes": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versionsinformation"
+          }
+        }
+      }
+    },
     "Some of the data could not be loaded.": {
       "localizations": {
         "sv": {
           "stringUnit": {
             "state": "translated",
             "value": "Delar av datan kunde inte hämtas."
+          }
+        }
+      }
+    },
+    "Source code": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Källkod"
           }
         }
       }
@@ -1041,6 +1131,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Supercharger"
+          }
+        }
+      }
+    },
+    "Supercharger locations": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Superchargerplatser"
           }
         }
       }

@@ -100,15 +100,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Link(destination: URL(string: "https://github.com/teslamate-org/teslamate")!) {
-                        LabeledContent("Data source") {
-                            Text(verbatim: "TeslaMate")
-                        }
-                    }
-                } header: {
-                    Text("About")
-                } footer: {
-                    Text(verbatim: "This app is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.")
+                    NavigationLink("About EVLog") { AboutView() }
                 }
             }
             .navigationTitle("Settings")
