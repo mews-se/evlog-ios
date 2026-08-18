@@ -80,7 +80,16 @@ struct RangeMapView: View {
         .navigationBarTitleDisplayMode(.inline)
         .mateBackButton()
         .task {
-            chargers = (try? await OverpassClient().superchargers(around: center, radiusKm: rangeKm)) ?? []
+            // cachen visas direkt, nätfrågan får komma när den kommer
+            let key = ChargerCache.key(center, rangeKm)
+            let cached = ChargerCache.load(key)
+            if let cached { chargers = cached.chargers }
+            guard cached == nil || cached?.stale == true else { return }
+            if let fresh = try? await OverpassClient().superchargers(around: center, radiusKm: rangeKm),
+               !fresh.isEmpty {
+                chargers = fresh
+                ChargerCache.save(fresh, key)
+            }
         }
     }
 

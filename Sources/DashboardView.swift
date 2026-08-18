@@ -151,7 +151,7 @@ struct BatteryCard: View {
             }
 
             HStack {
-                Label("Range on this charge", systemImage: "map")
+                Label("Estimated range", systemImage: "map")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.blue)
                 Spacer()

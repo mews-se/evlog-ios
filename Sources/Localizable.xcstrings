@@ -496,6 +496,16 @@
         }
       }
     },
+    "Estimated range": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uppskattad räckvidd"
+          }
+        }
+      }
+    },
     "Falling asleep": {
       "extractionState": "stale",
       "localizations": {
@@ -899,16 +909,6 @@
         }
       }
     },
-    "Range on this charge": {
-      "localizations": {
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Räckvidd på nuvarande laddning"
-          }
-        }
-      }
-    },
     "Realistic reach": {
       "localizations": {
         "sv": {
@@ -934,7 +934,7 @@
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vägar går inte rakt. Dina egna resor går %@ km väg per kilometer fågelvägen, så den fyllda cirkeln är den ärliga."
+            "value": "Vägar är som bekant inte raka. Dina egna resor använder %@ km mer väg per km fågelvägen, så den ifyllda cirkeln är den mest realistiska"
           }
         }
       }
