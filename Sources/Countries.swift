@@ -34,6 +34,25 @@ struct CountryStat: Identifiable {
 }
 
 extension GrafanaClient {
+    // hur många vägkilometer som går åt per kilometer fågelvägen, medianen över egna resor
+    func detourFactor(carID: Int) async throws -> Double? {
+        let sql = """
+        select round(percentile_cont(0.5) within group (order by ratio)::numeric, 2)::text
+        from (
+          select d.distance / nullif(
+              6371 * acos(least(1, greatest(-1,
+                sin(radians(ps.latitude)) * sin(radians(pe.latitude)) +
+                cos(radians(ps.latitude)) * cos(radians(pe.latitude)) *
+                cos(radians(pe.longitude - ps.longitude))))), 0) as ratio
+          from drives d
+            join positions ps on ps.id = d.start_position_id
+            join positions pe on pe.id = d.end_position_id
+          where d.car_id = \(carID) and d.distance > 5
+        ) t where ratio between 1 and 5
+        """
+        return try await scalarText(sql).flatMap(Double.init)
+    }
+
     // reselistan saknar klimatdata, så vilka resor som gick med värmare hämtas i klump
     func heaterDrives(carID: Int) async throws -> Set<Int> {
         let sql = """

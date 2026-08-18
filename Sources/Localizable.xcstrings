@@ -33,6 +33,16 @@
         }
       }
     },
+    "%lld of %lld Superchargers are within realistic reach. %@": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld av %lld superchargers ligger inom realistisk räckvidd. %@"
+          }
+        }
+      }
+    },
     "90 days": {
       "extractionState": "stale",
       "localizations": {
@@ -688,6 +698,16 @@
         }
       }
     },
+    "No position yet": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen position än"
+          }
+        }
+      }
+    },
     "No tracks in this period.": {
       "extractionState": "stale",
       "localizations": {
@@ -849,6 +869,16 @@
         }
       }
     },
+    "Range": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räckvidd"
+          }
+        }
+      }
+    },
     "Range at 100 %": {
       "localizations": {
         "sv": {
@@ -869,12 +899,42 @@
         }
       }
     },
+    "Range on this charge": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räckvidd på nuvarande laddning"
+          }
+        }
+      }
+    },
+    "Realistic reach": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Realistisk räckvidd"
+          }
+        }
+      }
+    },
     "Release notes come from notateslaapp.com, which is not affiliated with Tesla or TeslaMate.": {
       "localizations": {
         "sv": {
           "stringUnit": {
             "state": "translated",
             "value": "Release notes kommer från notateslaapp.com, som varken hör ihop med Tesla eller TeslaMate."
+          }
+        }
+      }
+    },
+    "Roads are not straight. Your own drives cover %@ km of road per kilometre in a straight line, so the filled circle is the honest one.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vägar går inte rakt. Dina egna resor går %@ km väg per kilometer fågelvägen, så den fyllda cirkeln är den ärliga."
           }
         }
       }
@@ -961,6 +1021,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Statistik"
+          }
+        }
+      }
+    },
+    "Straight line": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fågelvägen"
+          }
+        }
+      }
+    },
+    "Supercharger": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supercharger"
           }
         }
       }

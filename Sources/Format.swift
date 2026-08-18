@@ -38,6 +38,11 @@ enum Fmt {
         return (fraction * 100).formatted(.number.precision(.fractionLength(0))) + " %"
     }
 
+    static func number(_ value: Double?, decimals: Int = 2) -> String {
+        guard let value else { return "–" }
+        return value.formatted(.number.precision(.fractionLength(decimals)))
+    }
+
     static func pct(_ value: Double?, decimals: Int = 1) -> String {
         guard let value else { return "–" }
         return value.formatted(.number.precision(.fractionLength(decimals))) + " %"

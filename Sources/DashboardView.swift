@@ -13,13 +13,21 @@ struct DashboardView: View {
     @State private var marketingName: String?
     @State private var batteryHealth: BatteryHealth?
     @State private var countries: [CountryStat] = []
+    @State private var detour: Double?
 
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
                 if let status {
                     VStack(spacing: 12) {
-                        BatteryCard(status: status, marketingName: marketingName)
+                        NavigationLink(value: OverviewRoute.range(
+                            lat: status.carGeodata?.latitude,
+                            lon: status.carGeodata?.longitude,
+                            km: status.batteryDetails?.ratedBatteryRange
+                        )) {
+                            BatteryCard(status: status, marketingName: marketingName)
+                        }
+                        .buttonStyle(.plain)
                         StatusGrid(status: status, health: batteryHealth, countries: countries)
                         if status.carVersions?.updateAvailable == true {
                             UpdateBanner(version: status.carVersions?.updateVersion)
@@ -45,6 +53,13 @@ struct DashboardView: View {
                     BatteryHealthView(health: batteryHealth)
                 case .countries:
                     CountriesView(countries: countries)
+                case let .range(lat, lon, km):
+                    if let lat, let lon, let km, km > 0 {
+                        RangeMapView(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                     rangeKm: km, detour: detour ?? 1.4)
+                    } else {
+                        ContentUnavailableView("No position yet", systemImage: "map")
+                    }
                 }
             }
             .navigationTitle(status?.displayName ?? String(localized: "Overview"))
@@ -74,15 +89,15 @@ struct DashboardView: View {
         }
         // tillägg, aldrig blockerande - faller tillbaka på trim-koden om Grafana inte nås
         let grafana = GrafanaClient(baseURL: grafanaURL)
-        if marketingName == nil {
-            marketingName = try? await grafana.marketingName(carID: carID)
-        }
-        if batteryHealth == nil {
-            batteryHealth = try? await grafana.batteryHealth(carID: carID)
-        }
-        if countries.isEmpty {
-            countries = (try? await grafana.countries(carID: carID)) ?? []
-        }
+        // frågorna går parallellt - annars hinner vyn öppnas innan svaren kommer
+        async let name = grafana.marketingName(carID: carID)
+        async let health = grafana.batteryHealth(carID: carID)
+        async let lands = grafana.countries(carID: carID)
+        async let factor = grafana.detourFactor(carID: carID)
+        if marketingName == nil { marketingName = try? await name }
+        if batteryHealth == nil { batteryHealth = try? await health }
+        if countries.isEmpty { countries = (try? await lands) ?? [] }
+        if detour == nil { detour = try? await factor }
     }
 }
 
@@ -133,6 +148,16 @@ struct BatteryCard: View {
                 Label("Plugged in", systemImage: "powerplug.fill")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(.secondary)
+            }
+
+            HStack {
+                Label("Range on this charge", systemImage: "map")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.blue)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
 
             HStack {
