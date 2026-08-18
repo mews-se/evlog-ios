@@ -33,7 +33,7 @@ struct AboutView: View {
 
             Section {
                 LinkRow(title: String(localized: "Source code"), detail: "GitHub",
-                        url: "https://github.com/mews-se/mate-ios")
+                        url: "https://github.com/mews-se/evlog-ios")
                 LabeledContent(String(localized: "License")) { Text(verbatim: "MIT") }
             } header: {
                 Text("Open source")
