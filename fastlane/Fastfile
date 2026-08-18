@@ -12,6 +12,14 @@ def asc_key
 end
 
 platform :ios do
+  desc "Check that the App Store Connect key works. Reads, never writes."
+  lane :verify do
+    asc_key
+    app = Spaceship::ConnectAPI::App.find(ENV.fetch("APP_IDENTIFIER", "se.mews.EVLog"))
+    UI.user_error!("No app found for that bundle identifier") if app.nil?
+    UI.success("Connected: #{app.name} (#{app.bundle_id}), Apple ID #{app.id}")
+  end
+
   desc "Push store text and screenshots to App Store Connect. Uploads nothing else."
   lane :metadata do
     deliver(api_key: asc_key)

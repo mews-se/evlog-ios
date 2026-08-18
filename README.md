@@ -1,11 +1,14 @@
 # EVLog
 
-A native iPhone app for reading your own [TeslaMate](https://github.com/teslamate-org/teslamate)
-data — drives, charges, statistics and battery health, in a SwiftUI interface built for the phone
-rather than a dashboard squeezed onto a small screen.
+A native iPhone client for your own [TeslaMate](https://github.com/teslamate-org/teslamate) server
+— drives, charges, statistics and battery health, in an interface built for the phone rather than a
+dashboard squeezed onto a small screen.
 
-EVLog talks only to servers you run yourself. It never connects to Tesla, and nothing leaves your
-network.
+EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
+create, and nothing leaves your network.
+
+[Privacy policy](https://mews-se.github.io/evlog-site/privacy/) ·
+[Support](https://mews-se.github.io/evlog-site/support/)
 
 ## What it does
 
@@ -25,7 +28,7 @@ Charging statistics with top locations, AC/DC split and a weekday-by-hour heat m
 **Maps** — every track you have driven over a chosen period, and a range map showing how far the
 current charge takes you, using a detour factor derived from your own trips rather than a guess.
 
-## Requirements
+## What you need
 
 - A running TeslaMate instance
 - [teslamateapi](https://github.com/tobiasehlert/teslamateapi) reachable from your phone — this is
@@ -35,30 +38,56 @@ current charge takes you, using a detour factor derived from your own trips rath
 - Optionally a [Tessie](https://tessie.com) API key, only to fill in charging costs that TeslaMate
   never records
 
-All four addresses are configured in Settings. The defaults point at a LAN address and will need
-changing.
+All addresses are configured under Settings in the app.
+
+The app allows plain HTTP so it can reach a server on your own LAN, which is the normal way to run
+TeslaMate. Reaching your instance over HTTPS or through a VPN needs no other change.
+
+## Adding teslamateapi
+
+TeslaMate has no HTTP API of its own, so EVLog reads through
+[teslamateapi](https://github.com/tobiasehlert/teslamateapi). If you are not running it yet, put a
+`docker-compose.override.yml` next to your existing TeslaMate compose file and leave the original
+untouched:
+
+```yaml
+services:
+  teslamateapi:
+    image: tobiasehlert/teslamateapi:latest
+    restart: always
+    depends_on:
+      - database
+      - mosquitto
+    environment:
+      - DATABASE_USER=teslamate
+      - DATABASE_PASS=the same password as your database service
+      - DATABASE_NAME=teslamate
+      - DATABASE_HOST=database
+      - MQTT_HOST=mosquitto
+      - TZ=Europe/Stockholm
+      - ENABLE_COMMANDS=false
+    ports:
+      - 8080:8080
+```
+
+Then `docker compose up -d`, and point the app at `http://your-server:8080`. `ENABLE_COMMANDS=false`
+keeps the API read-only, which is all EVLog needs — it never writes to your instance.
+
+Grafana needs nothing extra. TeslaMate's own compose file already runs it with
+`GF_AUTH_ANONYMOUS_ENABLED=true`, and that is the access EVLog uses for the visited-places map and
+battery health.
 
 ## Building
 
-The Xcode project is generated, not committed:
+The Xcode project is generated rather than committed, so a fresh clone has no `.xcodeproj` until
+you run:
 
 ```
 brew install xcodegen
 xcodegen generate
-open EVLog.xcodeproj
 ```
 
-Then pick your own team under Signing & Capabilities and run. A free Apple ID works — the app has
-to be reinstalled from Xcode every seven days, which a paid Apple Developer Program membership
-removes.
-
 iOS 17 or later, iPhone only.
-
-## A note on networking
-
-The app allows plain HTTP so it can reach a server on your own LAN, which is the normal way to run
-TeslaMate. If you expose your instance over HTTPS, or reach it through a VPN, nothing else needs
-changing.
 
 ## Licence
 
