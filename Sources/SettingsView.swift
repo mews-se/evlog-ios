@@ -17,7 +17,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Server") {
+                Section {
                     TextField("http://server:8080", text: $serverURL)
                         .keyboardType(.URL)
                         .focused($editing)
@@ -31,6 +31,10 @@ struct SettingsView: View {
                             .font(.footnote)
                             .foregroundStyle(testResult.hasPrefix("✓") ? .green : .red)
                     }
+                } header: {
+                    Text(verbatim: "TeslaMate API")
+                } footer: {
+                    Text("The teslamateapi container. Drives, charges and vehicle status all come from here.")
                 }
 
                 Section {

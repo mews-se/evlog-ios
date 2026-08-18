@@ -1179,6 +1179,16 @@
         }
       }
     },
+    "The teslamateapi container. Drives, charges and vehicle status all come from here.": {
+      "localizations": {
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Containern teslamateapi. Resor, laddningar och fordonsstatus kommer härifrån."
+          }
+        }
+      }
+    },
     "This year": {
       "localizations": {
         "sv": {
