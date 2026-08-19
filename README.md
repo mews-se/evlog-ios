@@ -102,6 +102,11 @@ xcodegen generate
 
 iOS 17 or later, iPhone only.
 
+That is enough to build and run it in the simulator. To put it on your own iPhone, change
+`DEVELOPMENT_TEAM` in `project.yml` first — the identifier in the file is mine, and Xcode will not
+sign for a team you are not a member of. A free Apple ID works: pick Personal Team when Xcode asks.
+Apps signed that way stop launching after seven days and have to be run from Xcode again to renew.
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
