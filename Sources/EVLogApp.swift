@@ -32,8 +32,7 @@ struct RootView: View {
 
     @State private var selection = 0
     @State private var overviewPath = NavigationPath()
-    @State private var drivesPath = NavigationPath()
-    @State private var chargesPath = NavigationPath()
+    @State private var timelinePath = NavigationPath()
     @State private var statsPath = NavigationPath()
 
     var api: APIClient { APIClient(baseURL: serverURL) }
@@ -43,24 +42,20 @@ struct RootView: View {
             DashboardView(api: api, carID: carID, path: $overviewPath)
                 .tabItem { Label("Overview", systemImage: "gauge.with.dots.needle.50percent") }
                 .tag(0)
-            DrivesView(api: api, carID: carID, path: $drivesPath)
-                .tabItem { Label("Drives", systemImage: "road.lanes") }
+            TimelineView(api: api, carID: carID, path: $timelinePath)
+                .tabItem { Label("Timeline", systemImage: "calendar.day.timeline.left") }
                 .tag(1)
-            ChargesView(api: api, carID: carID, path: $chargesPath)
-                .tabItem { Label("Charges", systemImage: "bolt.fill") }
-                .tag(2)
             StatsView(api: api, carID: carID, path: $statsPath)
                 .tabItem { Label("Statistics", systemImage: "chart.bar.fill") }
-                .tag(3)
+                .tag(2)
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
-                .tag(4)
+                .tag(3)
         }
         // ett flikbyte ska landa på flikens rot, inte där man stod sist
         .onChange(of: selection) { _, _ in
             overviewPath = NavigationPath()
-            drivesPath = NavigationPath()
-            chargesPath = NavigationPath()
+            timelinePath = NavigationPath()
             statsPath = NavigationPath()
         }
         .id(appLanguage)

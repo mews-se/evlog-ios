@@ -2,70 +2,6 @@ import SwiftUI
 import MapKit
 import Charts
 
-struct ChargesView: View {
-    let api: APIClient
-    let carID: Int
-    @Binding var path: NavigationPath
-
-    @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
-
-    @State private var charges: [Charge] = []
-    @State private var tessieCosts: [Int: Double] = [:]
-    @State private var error: String?
-    @State private var loadedKey: String?
-
-    // server-, bil- eller tessiebyte i inställningarna ska ogiltigförklara flikens
-    // cache — en nyinlagd nyckel syntes annars inte förrän man drog för att uppdatera
-    private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
-
-    var body: some View {
-        NavigationStack(path: $path) {
-            Group {
-                if !charges.isEmpty {
-                    List {
-                        Section {
-                            YearSummaryCard(charges: charges, tessieCosts: tessieCosts)
-                                .listRowInsets(EdgeInsets())
-                                .listRowBackground(Color.clear)
-                        }
-                        Section {
-                            ForEach(charges) { charge in
-                                NavigationLink(value: charge.chargeId) {
-                                    ChargeRow(charge: charge, tessieCost: tessieCosts[charge.chargeId])
-                                }
-                            }
-                        }
-                    }
-                    .navigationDestination(for: Int.self) { chargeID in
-                        ChargeDetailView(api: api, carID: carID, chargeID: chargeID, tessieCost: tessieCosts[chargeID])
-                    }
-                } else if let error {
-                    ErrorCard(message: error) { Task { await load() } }
-                } else if loadedKey != nil {
-                    ContentUnavailableView("No charges yet", systemImage: "bolt.fill")
-                } else {
-                    ProgressView()
-                }
-            }
-            .navigationTitle("Charges")
-            .refreshable { await load() }
-            .task(id: loadKey) { if loadedKey != loadKey { await load() } }
-        }
-    }
-
-    private func load() async {
-        do {
-            charges = try await api.charges(carID: carID, results: 2000)
-            error = nil
-        } catch {
-            if charges.isEmpty { self.error = error.localizedDescription }
-        }
-        loadedKey = loadKey
-        // tillägg, aldrig blockerande — misslyckas tyst om Tessie inte nås
-        tessieCosts = await TessieCosts.load(api: api, carID: carID, token: tessieToken, for: charges)
-    }
-}
-
 struct YearSummaryCard: View {
     let charges: [Charge]
     var tessieCosts: [Int: Double] = [:]
@@ -117,6 +53,8 @@ struct YearSummaryCard: View {
 struct ChargeRow: View {
     let charge: Charge
     var tessieCost: Double? = nil
+    // dagen står redan i sektionsrubriken när raden ligger i tidslinjen
+    var showsDay = true
 
     private var typeColor: Color { charge.isDC ? .red : .green }
 
@@ -137,20 +75,20 @@ struct ChargeRow: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(typeColor)
             }
-            Text(verbatim: "\(Fmt.day(charge.startDate)) \(Fmt.time(charge.startDate))")
+            Text(verbatim: showsDay
+                 ? "\(Fmt.day(charge.startDate)) \(Fmt.time(charge.startDate))"
+                 : "\(Fmt.time(charge.startDate)) – \(Fmt.time(charge.endDate))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            HStack(spacing: 12) {
-                Label(Fmt.duration(charge.durationMin), systemImage: "clock")
+            HStack(spacing: 6) {
+                MetricChip(text: Fmt.duration(charge.durationMin))
                 if let battery = Fmt.battery(charge.batteryDetails) {
-                    Label(battery, systemImage: "battery.75percent")
+                    MetricChip(text: battery, tint: .green)
                 }
                 if let cost = charge.displayCost ?? tessieCost {
-                    Label(Fmt.kr(cost), systemImage: "banknote")
+                    MetricChip(text: Fmt.kr(cost), tint: .blue)
                 }
             }
-            .font(.caption)
-            .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 2)
     }

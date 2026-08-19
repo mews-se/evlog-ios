@@ -2,73 +2,6 @@ import SwiftUI
 import MapKit
 import Charts
 
-struct DrivesView: View {
-    let api: APIClient
-    let carID: Int
-    @Binding var path: NavigationPath
-
-    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
-
-    @State private var drives: [Drive] = []
-    @State private var heaterDrives: Set<Int> = []
-    @State private var error: String?
-    @State private var loadedKey: String?
-
-    // server- eller bilbyte i inställningarna ska ogiltigförklara flikens cache
-    private var loadKey: String { "\(api.baseURL)|\(carID)" }
-
-    private var grouped: [(day: Date, drives: [Drive])] {
-        Dictionary(grouping: drives) { Calendar.current.startOfDay(for: $0.startDate) }
-            .sorted { $0.key > $1.key }
-            .map { (day: $0.key, drives: $0.value.sorted { $0.startDate > $1.startDate }) }
-    }
-
-    var body: some View {
-        NavigationStack(path: $path) {
-            Group {
-                if !drives.isEmpty {
-                    List {
-                        ForEach(grouped, id: \.day) { group in
-                            Section(Fmt.day(group.day)) {
-                                ForEach(group.drives) { drive in
-                                    NavigationLink(value: drive.driveId) {
-                                        DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .navigationDestination(for: Int.self) { driveID in
-                        DriveDetailView(api: api, carID: carID, driveID: driveID)
-                    }
-                } else if let error {
-                    ErrorCard(message: error) { Task { await load() } }
-                } else if loadedKey != nil {
-                    ContentUnavailableView("No drives yet", systemImage: "road.lanes")
-                } else {
-                    ProgressView()
-                }
-            }
-            .navigationTitle("Drives")
-            .refreshable { await load() }
-            .task(id: loadKey) { if loadedKey != loadKey { await load() } }
-        }
-    }
-
-    private func load() async {
-        // värmarfrågan går parallellt - annars dyker symbolen upp långt efter listan
-        async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
-        do {
-            drives = try await api.drives(carID: carID)
-            error = nil
-        } catch {
-            if drives.isEmpty { self.error = error.localizedDescription }
-        }
-        loadedKey = loadKey
-        heaterDrives = (try? await heaters) ?? []
-    }
-}
-
 struct DriveRow: View {
     let drive: Drive
     var heaterUsed = false
@@ -87,22 +20,20 @@ struct DriveRow: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
-            HStack(spacing: 12) {
-                Label(Fmt.duration(drive.durationMin), systemImage: "clock")
-                Label(Fmt.pct(drive.efficiencyPct, decimals: 0), systemImage: "leaf")
-                    .foregroundStyle(CarState.efficiencyColor(drive.efficiencyPct))
+            HStack(spacing: 6) {
+                MetricChip(text: Fmt.duration(drive.durationMin))
+                if drive.efficiencyPct != nil {
+                    MetricChip(text: Fmt.pct(drive.efficiencyPct, decimals: 0),
+                               tint: CarState.efficiencyColor(drive.efficiencyPct))
+                }
                 if let battery = Fmt.battery(drive.batteryDetails) {
-                    Label(battery, systemImage: "battery.75percent")
+                    MetricChip(text: battery, tint: .green)
                 }
                 if heaterUsed {
-                    Image(systemName: "battery.100percent")
-                        .foregroundStyle(.red)
+                    MetricChip(icon: "heat.waves", tint: .red)
                         .accessibilityLabel(Text("Battery heater"))
                 }
             }
-            .font(.caption)
-            .foregroundStyle(.tertiary)
-            .labelStyle(.titleAndIcon)
         }
         .padding(.vertical, 2)
     }
