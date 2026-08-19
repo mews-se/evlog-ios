@@ -32,8 +32,8 @@ iOS 17 or later, iPhone only.
 Open an issue first for anything bigger than a fix. It saves you writing code that I then have to
 turn down for reasons that were only in my head.
 
-Branch from `dev` and open the pull request against it. `main` is what has shipped, and it only
-moves when a release does.
+Branch from `dev` and open the pull request against it. `main` follows behind and is what the
+outside sees: the front page, this file, and the source a release is cut from.
 
 Look at the [open milestone](https://github.com/mews-se/evlog-ios/milestones) and the `planned`
 label before you start. What is listed there is either being worked on already or decided, and it
