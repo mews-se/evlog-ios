@@ -32,6 +32,17 @@ iOS 17 or later, iPhone only.
 Open an issue first for anything bigger than a fix. It saves you writing code that I then have to
 turn down for reasons that were only in my head.
 
+Branch from `dev` and open the pull request against it. `main` is what has shipped, and it only
+moves when a release does.
+
+Look at the [open milestone](https://github.com/mews-se/evlog-ios/milestones) and the `planned`
+label before you start. What is listed there is either being worked on already or decided, and it
+is the cheapest way to avoid writing something twice.
+
+Work lands in `dev` and waits there. Releases gather a body of changes rather than going out one at
+a time, so a merged pull request can sit for a while before it reaches the App Store. That is the
+plan, not neglect.
+
 There is no test suite. The simulator is the test, so build and click through the screens your
 change touches, including the ones that only differ when a value is missing — an empty Grafana
 address, a charge without a cost, a drive shorter than a kilometre.
