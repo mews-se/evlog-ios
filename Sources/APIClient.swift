@@ -85,9 +85,11 @@ struct APIClient {
         return payload.drive
     }
 
+    // inkopplingar som aldrig levererade något har ingenting att visa och blåser
+    // upp antalet laddningar. TeslaMates egna dashboards räknar bort dem likadant
     func charges(carID: Int, results: Int = 100) async throws -> [Charge] {
         let payload: ChargesPayload = try await get("/api/v1/cars/\(carID)/charges?show=\(results)")
-        return payload.charges
+        return payload.charges.filter { ($0.chargeEnergyAdded ?? 0) > 0 }
     }
 
     func charge(carID: Int, chargeID: Int) async throws -> Charge {
