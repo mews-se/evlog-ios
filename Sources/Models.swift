@@ -146,6 +146,32 @@ struct Drive: Decodable, Identifiable {
         guard let diff = rangeRated?.rangeDiff, diff > 0, distance >= 1 else { return nil }
         return distance / diff * 100
     }
+
+    // teslamateapi spärrar consumption_net vid dold batteribuffert men lämnar energin obespärrad
+    var consumptionWhPerKm: Double? {
+        if let consumptionNet { return consumptionNet }
+        guard let energyConsumedNet, distance >= 1 else { return nil }
+        return energyConsumedNet / distance * 1000
+    }
+
+    // Grafanas Energy recovered: negativ effekt integrerad över resan. teslamateapi kapar
+    // tidsstämplarna till hel sekund, så summan hamnar några procent från panelens
+    var regenKWh: Double? {
+        guard let points = driveDetails, !points.isEmpty else { return nil }
+        let regen = points
+            .compactMap { p -> (date: Date, power: Double)? in
+                guard let date = p.date, let power = p.power, power < 0 else { return nil }
+                return (date, power)
+            }
+            .sorted { $0.date < $1.date }
+        var total = 0.0
+        for (previous, point) in zip(regen, regen.dropFirst()) {
+            let seconds = point.date.timeIntervalSince(previous.date)
+            // ett glapp betyder att regenereringen upphörde däremellan, inte att den pågick
+            if seconds > 0, seconds < 1.5 { total -= point.power * seconds / 3600 }
+        }
+        return total
+    }
 }
 
 struct RangeDetails: Decodable {

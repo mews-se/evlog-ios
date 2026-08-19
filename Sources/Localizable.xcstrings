@@ -912,6 +912,22 @@
         }
       }
     },
+    "Energy (net)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energy (net)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energi (net)"
+          }
+        }
+      }
+    },
     "Energy added per weekday and hour, across every charge." : {
       "localizations" : {
         "en" : {
@@ -1746,6 +1762,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Realistisk räckvidd"
+          }
+        }
+      }
+    },
+    "Regen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen"
           }
         }
       }

@@ -12,6 +12,15 @@ enum Fmt {
         return value.formatted(.number.precision(.fractionLength(1))) + " kWh"
     }
 
+    // regen ligger under 1 kWh på nio resor av tio, där en decimal kWh döljer mer än den visar
+    static func energy(_ kwh: Double?) -> String {
+        guard let kwh else { return "–" }
+        if abs(kwh) < 1 {
+            return (kwh * 1000).formatted(.number.precision(.fractionLength(0))) + " Wh"
+        }
+        return kwh.formatted(.number.precision(.fractionLength(1))) + " kWh"
+    }
+
     static func kr(_ value: Double?) -> String {
         guard let value else { return "–" }
         return value.formatted(.number.precision(.fractionLength(0))) + " kr"
@@ -104,10 +113,10 @@ enum CarState {
     // TeslaMates skala: 100 % är rated förbrukning, högre är bättre
     static func efficiencyColor(_ percent: Double?) -> Color {
         guard let percent else { return .secondary }
-        // avrunda som visningen gör, annars ser ett utskrivet "100 %" gult ut
+        // avrunda som visningen gör, annars ser ett utskrivet "90 %" gult ut
         let shown = percent.rounded()
-        if shown >= 100 { return .green }
-        if shown >= 85 { return .yellow }
+        if shown >= 90 { return .green }
+        if shown >= 71 { return .yellow }
         return .red
     }
 

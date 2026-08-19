@@ -97,14 +97,20 @@ struct DriveDetailView: View {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
                         StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance", bundle: .current), value: Fmt.km(drive.distance), tint: .blue)
                         StatTile(icon: "clock.fill", title: String(localized: "Duration", bundle: .current), value: Fmt.duration(drive.durationMin), tint: .secondary)
-                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg", bundle: .current), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
+                        SplitStatTile(
+                            leading: .init(icon: "bolt.fill", title: String(localized: "Energy (net)", bundle: .current),
+                                           value: Fmt.energy(drive.energyConsumedNet), tint: .orange),
+                            trailing: .init(icon: "arrow.counterclockwise", title: String(localized: "Regen", bundle: .current),
+                                            value: Fmt.energy(drive.regenKWh), tint: .green))
+                        StatTile(icon: "bolt.car.fill", title: String(localized: "Consumption", bundle: .current), value: Fmt.consumption(drive.consumptionWhPerKm), tint: .purple)
                         StatTile(icon: "leaf.fill", title: String(localized: "Efficiency", bundle: .current), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
                                  tint: CarState.efficiencyColor(drive.efficiencyPct),
                                  valueTint: CarState.efficiencyColor(drive.efficiencyPct))
+                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg", bundle: .current), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                         if drive.batteryHeaterUsed {
-                            StatTile(icon: "battery.100percent", title: String(localized: "Battery heater", bundle: .current),
+                            StatTile(icon: "heat.waves", title: String(localized: "Battery heater", bundle: .current),
                                      value: String(localized: "On during the drive", bundle: .current), tint: .red, valueTint: .red)
                         }
                     }

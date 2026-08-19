@@ -304,6 +304,47 @@ struct StatTile: View {
     }
 }
 
+// energi och regen läses mot varandra, så de delar kort i stället för att stå i var sin ruta
+struct SplitStatTile: View {
+    struct Half {
+        let icon: String
+        let title: String
+        let value: String
+        let tint: Color
+    }
+
+    let leading: Half
+    let trailing: Half
+
+    var body: some View {
+        HStack(spacing: 12) {
+            half(leading)
+            Divider()
+            half(trailing)
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func half(_ side: Half) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Image(systemName: side.icon)
+                .font(.body)
+                .foregroundStyle(side.tint)
+            Text(side.title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(side.value)
+                .font(.callout.weight(.semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
 struct UpdateBanner: View {
     let version: String?
 
