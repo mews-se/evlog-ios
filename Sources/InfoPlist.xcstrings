@@ -1,0 +1,23 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSLocalNetworkUsageDescription" : {
+      "comment" : "Shown by iOS the first time the app reaches the TeslaMate server on the local network.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVLog reads your car's data from your TeslaMate server on the local network."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVLog hämtar bildata från din TeslaMate-server på det lokala nätverket."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

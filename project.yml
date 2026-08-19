@@ -28,5 +28,5 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSAppTransportSecurity:
-          NSAllowsArbitraryLoads: true
-        NSLocalNetworkUsageDescription: EVLog hämtar bildata från din TeslaMate-server på det lokala nätverket.
+          NSAllowsLocalNetworking: true
+        NSLocalNetworkUsageDescription: EVLog reads your car's data from your TeslaMate server on the local network.

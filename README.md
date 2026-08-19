@@ -40,8 +40,9 @@ current charge takes you, using a detour factor derived from your own trips rath
 
 All addresses are configured under Settings in the app.
 
-The app allows plain HTTP so it can reach a server on your own LAN, which is the normal way to run
-TeslaMate. Reaching your instance over HTTPS or through a VPN needs no other change.
+The app allows plain HTTP to your own network: private addresses such as 192.168.x.x and 10.x.x.x,
+`.local` names, and hostnames without a dot. That covers a LAN and a VPN alike. A server you reach
+by a public domain name needs HTTPS, which needs no other change in the app.
 
 ## Adding teslamateapi
 
