@@ -28,6 +28,14 @@ Charging statistics with top locations, AC/DC split and a weekday-by-hour heat m
 **Maps** — every track you have driven over a chosen period, and a range map showing how far the
 current charge takes you, using a detour factor derived from your own trips rather than a guess.
 
+## What's next
+
+The [2.0 milestone](https://github.com/mews-se/evlog-ios/milestone/1) lists what the next release
+is meant to carry, and the [planned](https://github.com/mews-se/evlog-ios/labels/planned) label
+marks the ideas that are agreed rather than merely filed. Releases gather a body of work instead of
+trickling out one change at a time, so most of what is happening is in the branches rather than in
+the release list.
+
 ## What you need
 
 - A running TeslaMate instance
