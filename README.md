@@ -8,7 +8,8 @@ EVLog talks only to servers you run yourself. It never connects to Tesla, there 
 create, and nothing leaves your network.
 
 > Version 1.0 is with Apple for review and is not on the App Store yet. Until it is, building it
-> yourself is the way to run it — see [Building](#building).
+> yourself is the way to run it — see [Building](#building). Every version that reaches the App
+> Store gets a tag and a release here, so `main` running ahead of the store is the normal state.
 
 [Privacy policy](https://mews-se.github.io/evlog-site/privacy/) ·
 [Support](https://mews-se.github.io/evlog-site/support/)
