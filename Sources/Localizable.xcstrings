@@ -1626,7 +1626,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Parkerad %@"
+            "value" : "Parkerad i %@"
           }
         }
       }

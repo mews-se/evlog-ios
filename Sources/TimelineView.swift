@@ -73,6 +73,10 @@ struct TimelineView: View {
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
+                    // navigeringsraden ger segmentet exakt dess innehållsbredd, och då
+                    // blir "Laddningar" klämt mot sin tredjedels kanter. taket är den
+                    // smalaste telefonen som kör iOS 17, 375 punkter minus radens marginaler
+                    .frame(minWidth: 330)
                 }
             }
             .refreshable { await load() }
