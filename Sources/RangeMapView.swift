@@ -4,7 +4,7 @@ import MapKit
 struct RangeMapView: View {
     let center: CLLocationCoordinate2D
     let rangeKm: Double
-    // hur många vägkilometer som går åt per kilometer fågelvägen, ur egna resor
+    // road kilometres spent per kilometre as the crow flies, from own drives
     var detour: Double
 
     @State private var camera: MapCameraPosition
@@ -33,7 +33,7 @@ struct RangeMapView: View {
                     .foregroundStyle(.green.opacity(0.20))
                     .stroke(.green, lineWidth: 2)
                 ForEach(chargers) { charger in
-                    // egen annotation i stället för Marker: ballongen går inte att krympa
+                    // a custom annotation instead of Marker: the balloon cannot be made smaller
                     Annotation(charger.name, coordinate: charger.coordinate) {
                         ZStack {
                             Circle().fill(within(charger) ? .red : .secondary)
@@ -80,7 +80,7 @@ struct RangeMapView: View {
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
         .task {
-            // cachen visas direkt, nätfrågan får komma när den kommer
+            // the cache shows at once, the network answer can arrive when it arrives
             let key = ChargerCache.key(center, rangeKm)
             let cached = ChargerCache.load(key)
             if let cached { chargers = cached.chargers }
@@ -93,7 +93,7 @@ struct RangeMapView: View {
         }
     }
 
-    // avstånd fågelvägen mot den realistiska ringen
+    // straight-line distance against the realistic ring
     private func within(_ charger: Supercharger) -> Bool {
         CLLocation(latitude: charger.coordinate.latitude, longitude: charger.coordinate.longitude)
             .distance(from: CLLocation(latitude: center.latitude, longitude: center.longitude)) <= realistic * 1000

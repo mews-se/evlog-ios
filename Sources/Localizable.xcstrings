@@ -913,6 +913,7 @@
       }
     },
     "Energy (net)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1767,6 +1768,7 @@
       }
     },
     "Regen" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -53,7 +53,7 @@ struct YearSummaryCard: View {
 struct ChargeRow: View {
     let charge: Charge
     var tessieCost: Double? = nil
-    // dagen står redan i sektionsrubriken när raden ligger i tidslinjen
+    // the day is already in the section header when the row sits in the timeline
     var showsDay = true
 
     private var typeColor: Color { charge.isDC ? .red : .green }
@@ -104,7 +104,7 @@ struct ChargeDetailView: View {
 
     @State private var charge: Charge?
     @State private var error: String?
-    // förberäknad vid inläsning, se ChargeCurve.build
+    // precomputed on load, see ChargeCurve.build
     @State private var curve: [ChargeCurve.Sample] = []
 
     private var costEditURL: URL? {
@@ -194,8 +194,8 @@ struct ChargeCurve: View {
         var id: Date { date }
     }
 
-    // dedupliserat per tidsstämpel, se SpeedChart. byggs vid inläsning som
-    // resedetaljens serie — som computed sorterades punkterna om vid varje render
+    // deduplicated per timestamp, see SpeedChart. built on load like the drive
+    // detail's series — as a computed property the points re-sorted on every render
     static func build(_ points: [ChargePoint]) -> [Sample] {
         var byDate: [Date: (power: Double?, level: Int?)] = [:]
         for p in points {

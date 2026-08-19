@@ -13,8 +13,8 @@ struct EVLogApp: App {
     }
 }
 
-// nycklarna och deras standardvärden på ett ställe. literalerna låg utspridda i
-// fem vyer, där samma nyckel kunde få olika default utan att något sa ifrån
+// the keys and their defaults in one place. the literals were spread across five
+// views, where the same key could pick up different defaults with nothing to say so
 enum Pref {
     static let server = (key: "serverURL", value: "")
     static let grafana = (key: "grafanaURL", value: "")
@@ -52,7 +52,7 @@ struct RootView: View {
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
                 .tag(3)
         }
-        // ett flikbyte ska landa på flikens rot, inte där man stod sist
+        // switching tabs should land on the tab's root, not where you last stood
         .onChange(of: selection) { _, _ in
             overviewPath = NavigationPath()
             timelinePath = NavigationPath()

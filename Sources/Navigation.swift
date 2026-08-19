@@ -1,7 +1,7 @@
 import SwiftUI
 
-// ett tydligt < i varje pushad vy: systemets bakåtknapp konkurrerar med
-// kartornas panorering och svepgesten fastnar där
+// a plain < in every pushed view: the system back gesture competes with the maps'
+// panning and gets stuck there
 struct BackButton: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 

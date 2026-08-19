@@ -1,6 +1,6 @@
 import Foundation
 
-// valfri kompletterande källa — fyller i data där TeslaMate saknar den, t.ex. Superchargerkostnader
+// optional supplementary source — fills in data TeslaMate lacks, such as Supercharger costs
 struct TessieClient {
     let token: String
 
@@ -32,13 +32,13 @@ struct TessieClient {
         return payload.results ?? []
     }
 
-    // kostnader för teslamate-laddningar som saknar sådan, matchade på starttid
+    // costs for teslamate charges that have none, matched on start time
     func missingCosts(for charges: [Charge], vin: String) async throws -> [Int: Double] {
         guard let oldest = charges.map(\.startDate).min() else { return [:] }
         let tessieCharges = try await self.charges(vin: vin, from: oldest.addingTimeInterval(-3600))
 
-        // en tessie-laddning får bara matcha en teslamate-laddning - en avbruten
-        // session kan ligga som två processer på teslamate-sidan
+        // one tessie charge may match only one teslamate charge - an interrupted
+        // session can sit as two processes on the teslamate side
         var pool = tessieCharges.filter { $0.cost ?? 0 > 0 && $0.startDate != nil }
         var costs: [Int: Double] = [:]
         for charge in charges where charge.displayCost == nil {
@@ -56,9 +56,9 @@ struct TessieClient {
     }
 }
 
-// laddnings- och statistikfliken kompletterar samma kostnader, så hämtningen bor
-// här i stället för i båda vyerna. vin:et slås upp en gång per server och bil,
-// inte vid varje omladdning
+// the charging and statistics tabs fill in the same costs, so the fetch lives here
+// instead of in both views. the VIN is looked up once per server and car, not on
+// every reload
 enum TessieCosts {
     private static let vins = VINStore()
 
@@ -106,7 +106,7 @@ struct TessieCharge: Decodable {
 
     var startDate: Date? {
         guard let startedAt else { return nil }
-        // tål både sekunder och millisekunder
+        // tolerates both seconds and milliseconds
         return Date(timeIntervalSince1970: startedAt > 1e12 ? startedAt / 1000 : startedAt)
     }
 }

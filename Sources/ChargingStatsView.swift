@@ -8,7 +8,7 @@ struct ChargingStatsView: View {
         charge.displayCost ?? tessieCosts[charge.chargeId] ?? 0
     }
 
-    // MARK: - Laddplatser
+    // MARK: - Charging locations
 
     struct Place: Identifiable {
         let name: String
@@ -48,9 +48,9 @@ struct ChargingStatsView: View {
     private func energy(_ list: [Charge]) -> Double { list.compactMap(\.chargeEnergyAdded).reduce(0, +) }
     private func minutes(_ list: [Charge]) -> Double { list.compactMap(\.durationMin).reduce(0, +) }
 
-    // MARK: - Värmekarta
+    // MARK: - Heatmap
 
-    // veckodag (0 = söndag, som Calendar) mot timme, summerad energi
+    // weekday (0 = Sunday, as Calendar has it) against hour, energy summed
     private var heat: [[Double]] {
         var grid = Array(repeating: Array(repeating: 0.0, count: 24), count: 7)
         let calendar = Calendar.current
@@ -62,7 +62,7 @@ struct ChargingStatsView: View {
         return grid
     }
 
-    // raderna följer veckans början i användarens kalender
+    // the rows follow the first weekday in the user's calendar
     private var orderedDays: [Int] {
         let first = Calendar.current.firstWeekday - 1
         return (0..<7).map { (first + $0) % 7 }
@@ -212,7 +212,7 @@ struct Heatmap: View {
         }
     }
 
-    // tomma celler ska synas som ruta, inte som hål
+    // empty cells should read as a cell, not as a hole
     private func intensity(_ day: Int, _ hour: Int) -> Double {
         guard peak > 0 else { return 0.08 }
         let value = grid[day][hour]

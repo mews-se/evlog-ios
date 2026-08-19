@@ -88,7 +88,7 @@ struct BatteryStatus: Decodable {
     let batteryLevel: Int?
     let usableBatteryLevel: Int?
 
-    // samma uttryck som TeslaMates projected-range-dashboard: räknar upp till 100 %
+    // the same expression as TeslaMate's projected range dashboard: scales up to 100 %
     var projectedRatedRange: Double? {
         guard let range = ratedBatteryRange, let level = usableBatteryLevel ?? batteryLevel, level > 0 else { return nil }
         return range / Double(level) * 100
@@ -134,28 +134,26 @@ struct Drive: Decodable, Identifiable {
     var id: Int { driveId }
     var distance: Double { odometerDetails?.odometerDistance ?? 0 }
 
-    // TeslaMates köreffektivitet: sträcka delat med räckviddstappet.
-    // 100 % = exakt rated förbrukning, över 100 % = bättre än rated.
-    // strömmande positionsrader saknar klimatdata, så bara en delmängd bär flaggan
+    // streamed position rows carry no climate data, so only a subset holds the flag
     var batteryHeaterUsed: Bool {
         driveDetails?.contains { $0.batteryInfo?.batteryHeater == true } ?? false
     }
 
-    // korta rullningar domineras av tomgångsförluster - måttet blir brus under en km
+    // short rolls are dominated by idle losses - the measure is noise under a kilometre
     var efficiencyPct: Double? {
         guard let diff = rangeRated?.rangeDiff, diff > 0, distance >= 1 else { return nil }
         return distance / diff * 100
     }
 
-    // teslamateapi spärrar consumption_net vid dold batteribuffert men lämnar energin obespärrad
+    // teslamateapi gates consumption_net on a hidden battery buffer but leaves the energy ungated
     var consumptionWhPerKm: Double? {
         if let consumptionNet { return consumptionNet }
         guard let energyConsumedNet, distance >= 1 else { return nil }
         return energyConsumedNet / distance * 1000
     }
 
-    // Grafanas Energy recovered: negativ effekt integrerad över resan. teslamateapi kapar
-    // tidsstämplarna till hel sekund, så summan hamnar några procent från panelens
+    // Grafana's Energy recovered: negative power integrated over the drive. teslamateapi
+    // truncates its timestamps to whole seconds, so the sum lands a few percent off the panel's
     var regenKWh: Double? {
         guard let points = driveDetails, !points.isEmpty else { return nil }
         let regen = points
@@ -167,7 +165,7 @@ struct Drive: Decodable, Identifiable {
         var total = 0.0
         for (previous, point) in zip(regen, regen.dropFirst()) {
             let seconds = point.date.timeIntervalSince(previous.date)
-            // ett glapp betyder att regenereringen upphörde däremellan, inte att den pågick
+            // a gap means regen stopped in between, not that it carried on
             if seconds > 0, seconds < 1.5 { total -= point.power * seconds / 3600 }
         }
         return total
@@ -201,8 +199,8 @@ struct DrivePoint: Decodable, Identifiable {
 }
 
 struct PointBattery: Decodable {
-    // climate_state-flaggan, inte charge_states battery_heater_on som aldrig
-    // rapporteras av den här bilen
+    // the climate_state flag, not charge_state's battery_heater_on, which this car
+    // never reports
     let batteryHeater: Bool?
 }
 
@@ -220,7 +218,7 @@ struct SoftwareUpdate: Decodable, Identifiable {
 
     var id: Int { updateId }
 
-    // versionssträngen kan bära en bygghash, den vill notateslaapp inte ha
+    // the version string can carry a build hash, which notateslaapp does not want
     var shortVersion: String? {
         guard let first = version?.components(separatedBy: " ").first, !first.isEmpty else { return nil }
         return first
@@ -260,20 +258,20 @@ struct Charge: Decodable, Identifiable {
 
     var id: Int { chargeId }
 
-    // added/tid, samma semantik som Grafanas Ø Power-kolumn
+    // added/time, the same semantics as Grafana's Ø Power column
     var avgPowerKw: Double? {
         guard let minutes = durationMin, minutes > 0,
               let energy = chargeEnergyAdded ?? chargeEnergyUsed else { return nil }
         return energy / (minutes / 60)
     }
 
-    // teslamateapi serialiserar null-kostnad som 0 — 0 betyder alltså "ej registrerad", inte gratis
+    // teslamateapi serialises a null cost as 0 — so 0 means "not recorded", not free
     var displayCost: Double? {
         guard let cost, cost > 0 else { return nil }
         return cost
     }
 
-    // listan saknar effektdata — snitt över 20 kW kan bara vara DC (AC toppar 11 kW ombord)
+    // the list carries no power data — an average above 20 kW can only be DC (AC tops out at 11 kW on board)
     var isDC: Bool {
         if let points = chargeDetails {
             return points.contains { $0.fastChargerInfo?.fastChargerPresent == true }
@@ -281,7 +279,7 @@ struct Charge: Decodable, Identifiable {
         return (avgPowerKw ?? 0) > 20
     }
 
-    // added/used - resten gick till kylning, värmning och laddförluster
+    // added/used - the rest went to cooling, heating and charging losses
     var efficiency: Double? {
         guard let added = chargeEnergyAdded, let used = chargeEnergyUsed, added > 0, used > 0 else { return nil }
         return added / used

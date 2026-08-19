@@ -57,7 +57,7 @@ struct APIClient {
         return payload.drives
     }
 
-    // teslamateapi kan fela på gamla rader med null-värden (scan error) — hämta sidvis och hoppa över trasiga sidor
+    // teslamateapi can fail on old rows holding nulls (scan error) — page through and skip the broken pages
     func allDrives(carID: Int, pageSize: Int = 500) async throws -> [Drive] {
         var all: [Drive] = []
         var lastError: Error?
@@ -85,8 +85,8 @@ struct APIClient {
         return payload.drive
     }
 
-    // inkopplingar som aldrig levererade något har ingenting att visa och blåser
-    // upp antalet laddningar. TeslaMates egna dashboards räknar bort dem likadant
+    // plug-ins that never delivered anything have nothing to show and inflate the
+    // charge count. TeslaMate's own dashboards drop them the same way
     func charges(carID: Int, results: Int = 100) async throws -> [Charge] {
         let payload: ChargesPayload = try await get("/api/v1/cars/\(carID)/charges?show=\(results)")
         return payload.charges.filter { ($0.chargeEnergyAdded ?? 0) > 0 }

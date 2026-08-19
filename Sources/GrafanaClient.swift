@@ -6,7 +6,7 @@ struct TrackPoint {
     let lon: Double
 }
 
-// positions-tabellen nås inte via teslamateapi — Grafanas datasource-API (anonym viewer) fyller luckan
+// the positions table is not reachable through teslamateapi — Grafana's datasource API (anonymous viewer) fills the gap
 struct GrafanaClient {
     let baseURL: String
 
@@ -54,12 +54,12 @@ struct GrafanaClient {
         return points
     }
 
-    // marketing_name finns bara i databasen, inte i teslamateapi
+    // marketing_name is only in the database, not in teslamateapi
     func marketingName(carID: Int) async throws -> String? {
         try await scalarText("select marketing_name from cars where id = \(carID)")
     }
 
-    // kolumnvis textsvar - anropare får casta till text i SQL:en
+    // column-wise text answer - callers cast to text in the SQL
     func textColumns(_ sql: String) async throws -> [[String?]] {
         let uid = try await datasourceUID()
         let url = try endpoint("/api/ds/query")
@@ -78,7 +78,6 @@ struct GrafanaClient {
         return decoded.results["A"]?.frames.first?.data.values ?? []
     }
 
-    // en enda textcell ur en fråga
     func scalarText(_ sql: String) async throws -> String? {
         let uid = try await datasourceUID()
         let url = try endpoint("/api/ds/query")

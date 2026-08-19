@@ -12,7 +12,7 @@ enum Fmt {
         return value.formatted(.number.precision(.fractionLength(1))) + " kWh"
     }
 
-    // regen ligger under 1 kWh på nio resor av tio, där en decimal kWh döljer mer än den visar
+    // regen is under 1 kWh on nine drives in ten, where one decimal of kWh hides more than it shows
     static func energy(_ kwh: Double?) -> String {
         guard let kwh else { return "–" }
         if abs(kwh) < 1 {
@@ -72,12 +72,12 @@ enum Fmt {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return String(localized: "Today", bundle: .current) }
         if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", bundle: .current) }
-        // bara första bokstaven - .capitalized skulle versalisera månaden mitt i frasen
+        // first letter only - .capitalized would capitalise the month mid-phrase too
         let s = date.formatted(.dateTime.weekday(.wide).day().month().locale(.app))
         return s.prefix(1).uppercased() + s.dropFirst()
     }
 
-    // "12 → 80 %", nil när nivåerna saknas så listraderna kan hoppa över etiketten
+    // "12 → 80 %", nil when the levels are missing so list rows can skip the label
     static func battery(_ details: DriveBattery?) -> String? {
         guard let start = details?.startBatteryLevel, let end = details?.endBatteryLevel else { return nil }
         return "\(start) → \(end) %"
@@ -110,10 +110,10 @@ enum CarState {
         }
     }
 
-    // TeslaMates skala: 100 % är rated förbrukning, högre är bättre
+    // TeslaMate's scale: 100 % is rated consumption, higher is better
     static func efficiencyColor(_ percent: Double?) -> Color {
         guard let percent else { return .secondary }
-        // avrunda som visningen gör, annars ser ett utskrivet "90 %" gult ut
+        // round as the display does, otherwise a printed "90 %" comes out yellow
         let shown = percent.rounded()
         if shown >= 90 { return .green }
         if shown >= 71 { return .yellow }

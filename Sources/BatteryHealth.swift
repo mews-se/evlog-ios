@@ -1,7 +1,7 @@
 import Foundation
 
-// Batterihälsan räknas ut i databasen med TeslaMates egen formel (aux-variabeln i
-// battery-health.json). Egen approximation skulle ge andra siffror än dashboarden.
+// Battery health is computed in the database with TeslaMate's own formula (the aux
+// variable in battery-health.json). Approximating it here would disagree with the dashboard.
 struct BatteryHealth: Decodable {
     let maxRange: Double
     let currentRange: Double

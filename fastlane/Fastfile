@@ -1,8 +1,8 @@
 opt_out_usage
 
-# deliver läser metadatafilerna med processens standardkodning, som är US-ASCII
-# om skalet inte säger annat — och beskrivningen är full av tankstreck. .env
-# räcker inte: Ruby har låst kodningen innan dotenv hinner läsas.
+# deliver reads the metadata files in the process's default encoding, which is
+# US-ASCII unless the shell says otherwise — and the description is full of en
+# dashes. .env is not enough: Ruby locks the encoding before dotenv is read.
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
@@ -39,15 +39,15 @@ platform :ios do
   lane :text do |options|
     expected = File.read("metadata/en-US/description.txt").strip.length
 
-    # deliver hämtar versionens review detail sist i metadatasteget och kraschar
-    # med "No data" på en förstaversion — en känd uppströmsbugg. Uppladdningen
-    # är redan gjord när det smäller, så felet sväljs och ersätts med en riktig
-    # kontroll av vad som faktiskt ligger uppe.
+    # deliver fetches the version's review detail last in the metadata step and
+    # crashes with "No data" on a first version, a known upstream bug. The upload
+    # is already done when it blows up, so the error is swallowed and replaced by
+    # a real check of what actually made it up.
     begin
       deliver(api_key: asc_key, skip_screenshots: true, force: options.fetch(:force, false))
     rescue StandardError => e
       raise e unless e.message.to_s.include?("No data")
-      UI.important("deliver dog på review detail igen — kontrollerar uppladdningen i stället")
+      UI.important("deliver died on review detail again — checking the upload instead")
     end
 
     asc_key
@@ -118,9 +118,9 @@ platform :ios do
   end
 
   desc "Build and upload to TestFlight. Needs a distribution certificate, which Xcode creates on the first run."
-  # Bumpa CFBundleVersion i project.yml före varje ny uppladdning — Apple tar
-  # inte emot samma byggnummer två gånger, och xcodeprojektet genereras om så
-  # en bump där skulle skrivas över.
+  # Bump CFBundleVersion in project.yml before every upload — Apple will not take
+  # the same build number twice, and the Xcode project is regenerated, so a bump
+  # made there would be overwritten.
   lane :beta do
     sh("cd .. && xcodegen generate")
     build_app(

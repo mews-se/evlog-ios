@@ -20,12 +20,12 @@ struct CountryStat: Identifiable {
         text.flatMap { isoDay.date(from: $0) }
     }
 
-    // databasen har namnet på Nominatims språk - appen ska följa sitt eget
+    // the database holds the name in Nominatim's language - the app follows its own
     var displayName: String {
         Locale.app.localizedString(forRegionCode: code) ?? name
     }
 
-    // regional indicator symbols: "se" blir 🇸🇪
+    // regional indicator symbols: "se" becomes 🇸🇪
     var flag: String {
         code.uppercased().unicodeScalars.compactMap {
             UnicodeScalar(127397 + $0.value).map(String.init)
@@ -34,7 +34,7 @@ struct CountryStat: Identifiable {
 }
 
 extension GrafanaClient {
-    // hur många vägkilometer som går åt per kilometer fågelvägen, medianen över egna resor
+    // road kilometres spent per kilometre as the crow flies, the median across own drives
     func detourFactor(carID: Int) async throws -> Double? {
         let sql = """
         select round(percentile_cont(0.5) within group (order by ratio)::numeric, 2)::text
@@ -53,7 +53,7 @@ extension GrafanaClient {
         return try await scalarText(sql).flatMap(Double.init)
     }
 
-    // reselistan saknar klimatdata, så vilka resor som gick med värmare hämtas i klump
+    // the drive list carries no climate data, so the heater drives are fetched in one go
     func heaterDrives(carID: Int) async throws -> Set<Int> {
         let sql = """
         select distinct drive_id::text from positions
@@ -64,7 +64,7 @@ extension GrafanaClient {
         return Set(ids.compactMap { $0.flatMap(Int.init) })
     }
 
-    // länderna bor i addresses.raw (Nominatim), inte i teslamateapi
+    // the countries live in addresses.raw (Nominatim), not in teslamateapi
     func countries(carID: Int) async throws -> [CountryStat] {
         let sql = """
         select

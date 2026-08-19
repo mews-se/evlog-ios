@@ -49,7 +49,7 @@ struct DriveDetailView: View {
     @State private var scrubDate: Date?
     @State private var heldDate: Date?
 
-    // förberäknat vid inläsning — beräkning per gest-tick gör scrubbingen trög på långa resor
+    // precomputed on load — recomputing per gesture tick makes scrubbing sluggish on long drives
     @State private var track: [CLLocationCoordinate2D] = []
     @State private var scrubPoints: [DrivePoint] = []
     @State private var series: [SpeedPoint] = []
@@ -156,7 +156,7 @@ struct DriveDetailView: View {
         return parts.joined(separator: " · ")
     }
 
-    // deduplisera per tidsstämpel (AreaMark staplar annars) och sampla ner för renderingen
+    // deduplicate per timestamp (AreaMark stacks them otherwise) and downsample for rendering
     static func buildSeries(_ points: [DrivePoint]) -> [SpeedPoint] {
         var byDate: [Date: Double] = [:]
         for p in points {
@@ -201,7 +201,7 @@ struct SpeedChart: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            // markören ligger utanför per-punkt-loopen - annars ritas en RuleMark per datapunkt
+            // the marker sits outside the per-point loop - otherwise it draws one RuleMark per point
             Chart {
                 ForEach(series) { point in
                     AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))

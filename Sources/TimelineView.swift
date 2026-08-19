@@ -1,8 +1,9 @@
 import SwiftUI
 
-// resor och laddningar kommer ur samma API men i var sin lista. här ligger de i
-// ett flöde per dag, där parkering är luckan mellan två poster snarare än något
-// med egen källa. segmentet väljer om flödet visar allt eller bara en av sorterna
+// drives and charges come from the same API but in separate lists. here they sit in
+// one flow per day, where parking is the gap between two entries rather than
+// something with a source of its own. the segment picks whether the flow shows
+// everything or only one of the kinds
 struct TimelineView: View {
     let api: APIClient
     let carID: Int
@@ -64,8 +65,8 @@ struct TimelineView: View {
             }
             .navigationTitle("Timeline")
             .navigationBarTitleDisplayMode(.inline)
-            // segmentet ligger i navigeringsraden i stället för ovanför listan:
-            // en inskjuten rad där tar plats från flödet och släcker den stora titeln
+            // the segment sits in the navigation bar rather than above the list:
+            // a row inserted there takes space from the flow and kills the large title
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Picker(String(localized: "Timeline", bundle: .current), selection: $filter) {
@@ -73,9 +74,10 @@ struct TimelineView: View {
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
-                    // navigeringsraden ger segmentet exakt dess innehållsbredd, och då
-                    // blir "Laddningar" klämt mot sin tredjedels kanter. taket är den
-                    // smalaste telefonen som kör iOS 17, 375 punkter minus radens marginaler
+                    // the navigation bar gives the segment exactly its content width, which
+                    // leaves the Swedish "Laddningar" pressed against the edges of its third.
+                    // the ceiling is the narrowest phone running iOS 17, 375 points less the
+                    // bar's margins
                     .frame(minWidth: 330)
                 }
             }
@@ -116,7 +118,7 @@ struct TimelineView: View {
     }
 
     private func load() async {
-        // värmarfrågan går parallellt - annars dyker symbolen upp långt efter listan
+        // the heater query runs in parallel - otherwise the symbol turns up long after the list
         async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         do {
             async let loadedDrives = api.drives(carID: carID, results: 500)
@@ -129,7 +131,7 @@ struct TimelineView: View {
         }
         loadedKey = loadKey
         heaterDrives = (try? await heaters) ?? []
-        // tillägg, aldrig blockerande — misslyckas tyst om Tessie inte nås
+        // additive, never blocking — fails quietly if Tessie is out of reach
         tessieCosts = await TessieCosts.load(api: api, carID: carID, token: tessieToken, for: charges)
     }
 }
@@ -187,8 +189,8 @@ enum TimelineEntry: Identifiable {
         }
     }
 
-    // en parkering hör till dagen den slutar. i fallande ordning hamnar den då
-    // direkt under resan den föregick i stället för överst på en tidigare dag
+    // a park belongs to the day it ends. in descending order that puts it directly
+    // under the drive it came before instead of at the top of an earlier day
     var day: Date {
         if case .park(let park) = self {
             return Calendar.current.startOfDay(for: park.end)
@@ -238,7 +240,7 @@ struct Park {
 
     var minutes: Double { end.timeIntervalSince(start) / 60 }
 
-    // bara fall räknas: en högre nivå efteråt betyder en laddning TeslaMate inte såg
+    // only drops count: a higher level afterwards means a charge TeslaMate did not see
     var drop: Int? {
         guard let from, let to, from > to else { return nil }
         return from - to
@@ -246,7 +248,7 @@ struct Park {
 }
 
 enum Timeline {
-    // kortare uppehåll är av- och påstigning, inte parkering
+    // shorter stops are loading and unloading, not parking
     static let parkThreshold: TimeInterval = 30 * 60
 
     static func build(drives: [Drive], charges: [Charge]) -> [TimelineDay] {
@@ -272,9 +274,9 @@ enum Timeline {
             }
     }
 
-    // listorna räcker olika långt bakåt. bortom den kortaste skulle luckorna se ut
-    // som parkering fast det bara saknas data om vad som hände. gäller bara det
-    // sammanslagna flödet — ett enskilt segment kan visa hela sin lista
+    // the lists reach different distances back. past the shorter one a gap would read
+    // as parking when it is really missing data. this holds for the merged flow only —
+    // a single segment can show its whole list
     private static func cutoff(drives: [Drive], charges: [Charge]) -> Date {
         let oldest = [drives.map(\.startDate).min(), charges.map(\.startDate).min()].compactMap { $0 }
         return oldest.max() ?? .distantPast
@@ -290,9 +292,9 @@ struct ParkRow: View {
     let park: Park
 
     var body: some View {
-        // P:et i spinen säger vad raden är, så ingen egen ikon. färgerna följer
-        // resornas rader - grått på grått kort var inte läsbart. parkeringen är
-        // alltid dagens sista rad och satt annars tätt mot kortkanten
+        // the P on the spine says what the row is, so no icon of its own. the colours
+        // follow the drive rows - grey on a grey card was not readable. a park is always
+        // the day's last row and otherwise sat tight against the card edge
         VStack(alignment: .leading, spacing: 2) {
             HStack(alignment: .firstTextBaseline) {
                 Text("Parked \(Fmt.duration(park.minutes))")
@@ -316,8 +318,8 @@ struct ParkRow: View {
     }
 }
 
-// dagens rubrik bär antalet av varje sort, som en summering utan att något
-// behöver räknas ihop
+// the day heading carries the count of each kind, a summary without anything having
+// to be added up
 struct DayHeader: View {
     let day: TimelineDay
 
@@ -345,8 +347,8 @@ struct DayHeader: View {
     }
 }
 
-// linjen med prickar till vänster om raderna. rader ligger kant i kant utan
-// avskiljare, så linjen löper obruten genom dagen och bryts av nästa rubrik
+// the line with dots to the left of the rows. rows sit edge to edge with no
+// separators, so the line runs unbroken through the day and breaks at the next heading
 struct Spine<Content: View>: View {
     let tint: Color
     var symbol: String? = nil
@@ -382,8 +384,8 @@ struct Spine<Content: View>: View {
     }
 }
 
-// mätvärden som tonade chips i stället för en grå ikonrad - snabbare att läsa
-// när tre siffror står bredvid varandra
+// measures as tinted chips instead of a grey row of icons - quicker to read when
+// three numbers stand side by side
 struct MetricChip: View {
     var text: String? = nil
     var icon: String? = nil

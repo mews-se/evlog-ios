@@ -7,8 +7,8 @@ struct VisitedView: View {
 
     @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
 
-    // kameran sätts redan i init så vyn öppnar på bilen i stället för att
-    // först autozooma ut över alla spår
+    // the camera is set in init so the view opens on the car instead of first
+    // auto-zooming out across every track
     init(carID: Int, current: CLLocationCoordinate2D? = nil) {
         self.carID = carID
         self.current = current
@@ -103,7 +103,7 @@ struct VisitedView: View {
     }
 
     private func load() async {
-        // spåren är avstängda som standard - kartan ska visa var bilen ÄR
+        // the tracks are off by default - the map should show where the car IS
         guard period != .off else {
             segments = []
             error = nil
@@ -122,7 +122,7 @@ struct VisitedView: View {
             if let region = Self.boundingRegion(points) { camera = .region(region) }
             if points.isEmpty { error = String(localized: "No tracks in this period.", bundle: .current) }
         } catch is CancellationError {
-            // ett periodbyte avbröt anropet - efterträdaren äger tillståndet
+            // a period change cancelled the call - the successor owns the state
             return
         } catch let urlError as URLError where urlError.code == .cancelled {
             return
@@ -133,7 +133,7 @@ struct VisitedView: View {
         loading = false
     }
 
-    // ramar in alla punkter med lite luft, så hela perioden syns när den valts
+    // frames every point with a little air, so the whole period shows once picked
     static func boundingRegion(_ points: [TrackPoint]) -> MKCoordinateRegion? {
         guard let first = points.first else { return nil }
         var minLat = first.lat, maxLat = first.lat
@@ -151,7 +151,7 @@ struct VisitedView: View {
         )
     }
 
-    // bryt polylinen vid tidsgap så det inte dras streck mellan separata körningar
+    // break the polyline at time gaps so no line is drawn between separate drives
     static func splitIntoSegments(_ points: [TrackPoint]) -> [[CLLocationCoordinate2D]] {
         var out: [[CLLocationCoordinate2D]] = []
         var current: [CLLocationCoordinate2D] = []

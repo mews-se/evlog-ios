@@ -29,7 +29,7 @@ struct StatsView: View {
             }
         }
 
-        // vad ett klick på en rad bryter ner perioden i
+        // what tapping a row breaks the period down into
         var finer: Calendar.Component {
             switch self {
             case .year: return .month
@@ -47,8 +47,8 @@ struct StatsView: View {
     @State private var partialFailure = false
     @State private var loadedKey: String?
 
-    // server-, bil- eller tessiebyte i inställningarna ska ogiltigförklara flikens
-    // cache — en nyinlagd nyckel syntes annars inte förrän man drog för att uppdatera
+    // changing server, car or Tessie key in settings should invalidate the tab's
+    // cache — a newly entered key otherwise stayed hidden until a pull to refresh
     private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
 
     private var buckets: [StatBucket] {
@@ -119,7 +119,7 @@ struct StatsView: View {
     }
 
     private func load() async {
-        // ett fel i den ena hämtningen ska inte tyst nolla den andras kolumner
+        // an error in one fetch should not silently zero the other's columns
         async let d = api.allDrives(carID: carID)
         async let c = api.charges(carID: carID, results: 5000)
         async let h = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
@@ -152,12 +152,12 @@ struct StatBucket: Identifiable {
 
     var id: Date { period }
 
-    // aggregerad på samma sätt som TeslaMate: summa sträcka delat med summa räckviddstapp
+    // aggregated the way TeslaMate does it: total distance over total range lost
     var efficiencyPct: Double? {
         distance > 0 && rangeDiff > 0 ? distance / rangeDiff * 100 : nil
     }
 
-    // delas av fliken och periodens detaljvy - interval avgränsar till en vald period
+    // shared by the tab and the period detail view - interval narrows it to one period
     static func build(drives: [Drive], charges: [Charge], tessieCosts: [Int: Double],
                       component: Calendar.Component, within interval: DateInterval? = nil) -> [StatBucket] {
         let calendar = Calendar.current
@@ -231,7 +231,7 @@ struct StatBucketRow: View {
             }
             .font(.caption)
             .foregroundStyle(.tertiary)
-            // chevronen i listan äter bredd - raden ska krympa, inte radbrytas
+            // the chevron in the list eats width - the row should shrink, not wrap
             .lineLimit(1)
             .minimumScaleFactor(0.75)
         }
@@ -305,7 +305,7 @@ struct PeriodDetailView: View {
 }
 
 
-// dagsraden i en månad leder hit: resorna den dagen, samma rad som i Drives
+// a day row in a month leads here: that day's drives, the same row as in Drives
 struct DayDrivesView: View {
     let day: Date
     let drives: [Drive]

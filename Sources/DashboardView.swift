@@ -87,9 +87,9 @@ struct DashboardView: View {
         } catch {
             if status == nil { self.error = error.localizedDescription }
         }
-        // tillägg, aldrig blockerande - faller tillbaka på trim-koden om Grafana inte nås
+        // additive, never blocking - falls back on the trim code if Grafana is out of reach
         let grafana = GrafanaClient(baseURL: grafanaURL)
-        // frågorna går parallellt - annars hinner vyn öppnas innan svaren kommer
+        // the queries run in parallel - otherwise the view opens before the answers land
         async let name = grafana.marketingName(carID: carID)
         async let health = grafana.batteryHealth(carID: carID)
         async let lands = grafana.countries(carID: carID)
@@ -162,7 +162,7 @@ struct BatteryCard: View {
 
             HStack {
                 if let model = status.carDetails?.model {
-                    // samma rad som TeslaMates webb: modell + marketing_name
+                    // the same line TeslaMate's web UI shows: model + marketing_name
                     Text(verbatim: "Model \(model)" + (marketingName.map { " \($0)" }
                         ?? (status.carDetails?.trimBadging.map { " \($0.uppercased())" } ?? "")))
                 }
@@ -179,13 +179,13 @@ struct BatteryCard: View {
     }
 }
 
-// platshållare tills vi bestämt vad de två knapparna ska göra
+// placeholder until the two buttons have somewhere to go
 struct StatusGrid: View {
     let status: CarStatus
     var health: BatteryHealth?
     var countries: [CountryStat] = []
 
-    // senast avslutade resan avgör var bilen är nu
+    // the last finished drive is where the car is now
     private var current: CountryStat? {
         countries.max { ($0.lastVisit ?? .distantPast) < ($1.lastVisit ?? .distantPast) }
     }
@@ -304,7 +304,7 @@ struct StatTile: View {
     }
 }
 
-// energi och regen läses mot varandra, så de delar kort i stället för att stå i var sin ruta
+// energy and regen are read against each other, so they share a tile rather than standing apart
 struct SplitStatTile: View {
     struct Half {
         let icon: String

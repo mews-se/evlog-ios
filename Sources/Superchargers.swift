@@ -10,8 +10,8 @@ struct Supercharger: Identifiable, Codable {
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: lat, longitude: lon) }
 }
 
-// laddare flyttar sig sällan, så svaret sparas en vecka och visas direkt vid
-// nästa öppning medan en färsk fråga får ta sin tid i bakgrunden
+// chargers rarely move, so the answer is kept for a week and shown at once on the
+// next open while a fresh query takes its time in the background
 enum ChargerCache {
     private static let maxAge: TimeInterval = 7 * 24 * 3600
 
@@ -20,7 +20,7 @@ enum ChargerCache {
         let chargers: [Supercharger]
     }
 
-    // grov nyckel: rör man sig några kilometer duger samma lista
+    // coarse key: move a few kilometres and the same list still does
     static func key(_ center: CLLocationCoordinate2D, _ radiusKm: Double) -> String {
         String(format: "%.1f_%.1f_%.0f", center.latitude, center.longitude, (radiusKm / 25).rounded() * 25)
     }
@@ -43,9 +43,9 @@ enum ChargerCache {
     }
 }
 
-// Teslas egen platslista svarar 403 utåt. supercharge.info är en öppen
-// community-databas som svarar på ~1,5 s mot Overpass 8-26, och bär status så
-// att planerade och stängda platser kan sorteras bort.
+// Tesla's own site list answers 403 from outside. supercharge.info is an open
+// community database that answers in ~1.5 s against Overpass's 8-26, and carries
+// status so planned and closed sites can be filtered out.
 struct SuperchargeClient {
     static let attribution = "Data from supercharge.info"
 
@@ -77,7 +77,7 @@ struct SuperchargeClient {
             }
     }
 
-    // bara fälten kartan faktiskt använder - resten av svaret hoppas över
+    // only the fields the map actually uses - the rest of the answer is skipped
     private struct Site: Decodable {
         let id: Int
         let name: String

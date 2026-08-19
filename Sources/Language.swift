@@ -1,8 +1,8 @@
 import Foundation
 
-// iOS läser appens språk vid start, så ett byte i inställningarna slår normalt
-// igenom först vid nästa körning. Genom att byta klass på Bundle.main till en
-// som slår upp i det valda .lproj gäller valet direkt i stället.
+// iOS reads the app's language at launch, so a change in settings would normally
+// take until the next run. Swapping the class of Bundle.main for one that looks up
+// the chosen .lproj makes the choice apply straight away instead.
 enum AppLanguage {
     private(set) static var override: Bundle?
     private(set) static var code = Pref.language.value
@@ -23,17 +23,17 @@ private final class LocalizedBundle: Bundle, @unchecked Sendable {
     }
 }
 
-// String(localized:) läser bundlen förbi localizedString(forKey:value:table:) och
-// missar därför klassbytet ovan. Anropen skickar med .current i stället, så de
-// följer språkvalet direkt i stället för först vid nästa start.
+// String(localized:) reads the bundle past localizedString(forKey:value:table:) and
+// so misses the class swap above. The calls pass .current instead, which follows the
+// language choice at once rather than at the next launch.
 extension Bundle {
     static var current: Bundle { AppLanguage.override ?? .main }
 }
 
-// vyer får språkets locale via .environment(\.locale,), men modellkod ligger
-// utanför den och skulle annars läsa systemets språk i stället för appens.
-// regionen behålls: språkvalet ska byta veckodagar och månader, inte göra om
-// tal och valuta för någon som bor kvar där hen bodde
+// views get the language's locale through .environment(\.locale,), but model code
+// sits outside it and would otherwise read the system language instead of the app's.
+// the region is kept: picking a language should change weekdays and months, not
+// rework numbers and currency for someone who still lives where they lived
 extension Locale {
     static var app: Locale {
         guard AppLanguage.code != "system" else { return .current }

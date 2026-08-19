@@ -139,7 +139,7 @@ struct SettingsView: View {
 
     private func loadCars() async {
         cars = (try? await APIClient(baseURL: serverURL).cars()) ?? []
-        // en ensam bil med annat id än det sparade lämnar annars appen på 404 utan väljare
+        // a lone car with an id other than the saved one would otherwise leave the app on a 404 with no picker
         if !cars.isEmpty, !cars.contains(where: { $0.carId == carID }) {
             carID = cars[0].carId
         }
