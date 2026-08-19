@@ -64,7 +64,7 @@ enum Fmt {
         if Calendar.current.isDateInToday(date) { return String(localized: "Today", bundle: .current) }
         if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", bundle: .current) }
         // bara första bokstaven - .capitalized skulle versalisera månaden mitt i frasen
-        let s = date.formatted(.dateTime.weekday(.wide).day().month())
+        let s = date.formatted(.dateTime.weekday(.wide).day().month().locale(.app))
         return s.prefix(1).uppercased() + s.dropFirst()
     }
 
@@ -76,13 +76,13 @@ enum Fmt {
 
     static func date(_ date: Date?) -> String {
         guard let date else { return "–" }
-        return date.formatted(.dateTime.year().month().day())
+        return date.formatted(.dateTime.year().month().day().locale(.app))
     }
 
     static func since(_ date: Date?) -> String {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return time(date) }
-        return date.formatted(.dateTime.day().month().hour().minute())
+        return date.formatted(.dateTime.day().month().hour().minute().locale(.app))
     }
 }
 

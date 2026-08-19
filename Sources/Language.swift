@@ -31,9 +31,15 @@ extension Bundle {
 }
 
 // vyer får språkets locale via .environment(\.locale,), men modellkod ligger
-// utanför den och skulle annars läsa systemets språk i stället för appens
+// utanför den och skulle annars läsa systemets språk i stället för appens.
+// regionen behålls: språkvalet ska byta veckodagar och månader, inte göra om
+// tal och valuta för någon som bor kvar där hen bodde
 extension Locale {
     static var app: Locale {
-        AppLanguage.code == "system" ? .current : Locale(identifier: AppLanguage.code)
+        guard AppLanguage.code != "system" else { return .current }
+        guard let region = Locale.current.region?.identifier else {
+            return Locale(identifier: AppLanguage.code)
+        }
+        return Locale(identifier: "\(AppLanguage.code)_\(region)")
     }
 }
