@@ -22,6 +22,7 @@ struct CarDetails: Decodable {
     let model: String?
     let trimBadging: String?
     let vin: String?
+    let efficiency: Double?
 }
 
 // MARK: - /status
@@ -173,15 +174,21 @@ struct Drive: Decodable, Identifiable {
 }
 
 struct RangeDetails: Decodable {
+    let startRange: Double?
+    let endRange: Double?
     let rangeDiff: Double?
 }
 
 struct OdometerDetails: Decodable {
+    let odometerStart: Double?
+    let odometerEnd: Double?
     let odometerDistance: Double?
 }
 
+// charges carry no usable levels, so those decode nil there
 struct DriveBattery: Decodable {
     let startBatteryLevel: Int?
+    let startUsableBatteryLevel: Int?
     let endBatteryLevel: Int?
 }
 
@@ -250,6 +257,7 @@ struct Charge: Decodable, Identifiable {
     let cost: Double?
     let durationMin: Double?
     let batteryDetails: DriveBattery?
+    let rangeRated: RangeDetails?
     let outsideTempAvg: Double?
     let odometer: Double?
     let latitude: Double?

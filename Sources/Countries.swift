@@ -64,6 +64,18 @@ extension GrafanaClient {
         return Set(ids.compactMap { $0.flatMap(Int.init) })
     }
 
+    // the charge list carries no usable level, so the cold starts are fetched the same way
+    func coldChargeStarts(carID: Int) async throws -> Set<Int> {
+        let sql = """
+        select c.id::text from charging_processes c
+        join positions p on c.position_id = p.id
+        where c.car_id = \(carID) and p.battery_level > p.usable_battery_level
+        """
+        let columns = try await textColumns(sql)
+        guard let ids = columns.first else { return [] }
+        return Set(ids.compactMap { $0.flatMap(Int.init) })
+    }
+
     // the countries live in addresses.raw (Nominatim), not in teslamateapi
     func countries(carID: Int) async throws -> [CountryStat] {
         let sql = """
