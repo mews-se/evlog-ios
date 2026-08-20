@@ -37,7 +37,8 @@ outside sees: the front page, this file, and the source a release is cut from.
 
 Look at the [open milestone](https://github.com/mews-se/evlog-ios/milestones) and the `planned`
 label before you start. What is listed there is either being worked on already or decided, and it
-is the cheapest way to avoid writing something twice.
+is the cheapest way to avoid writing something twice. However, feel free to comment if you feel that
+you want to work on something planned. Planned does not automatically mean me :)
 
 Work lands in `dev` and waits there. Releases gather a body of changes rather than going out one at
 a time, so a merged pull request can sit for a while before it reaches the App Store. That is the
