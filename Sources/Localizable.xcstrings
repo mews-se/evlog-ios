@@ -793,6 +793,22 @@
         }
       }
     },
+    "Drag the chart to read the charge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag the chart to read the charge"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dra i grafen för att läsa laddningen"
+          }
+        }
+      }
+    },
     "Drive" : {
       "extractionState" : "stale",
       "localizations" : {

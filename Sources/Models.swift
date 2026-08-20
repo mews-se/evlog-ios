@@ -302,6 +302,9 @@ struct ChargePoint: Decodable, Identifiable {
     let detailId: Int
     let date: Date?
     let batteryLevel: Int?
+    // the car's own running total for the session, not TeslaMate's per-process figure:
+    // it only goes back to zero when the cable comes out
+    let chargeEnergyAdded: Double?
     let chargerDetails: ChargerDetails?
     let fastChargerInfo: FastChargerInfo?
 

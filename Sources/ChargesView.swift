@@ -18,6 +18,9 @@ struct YearSummaryCard: View {
         guard energy > 0 else { return 0 }
         return year.filter(\.isDC).compactMap(\.energyAdded).reduce(0, +) / energy
     }
+    // taken from the same number so the two halves always make a hundred
+    private var dcPercent: Int { Int((dcShare * 100).rounded()) }
+    private var acPercent: Int { 100 - dcPercent }
     private var partCount: Int { year.reduce(0) { $0 + $1.parts.count } }
 
     private var countValue: String {
@@ -26,21 +29,15 @@ struct YearSummaryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
+            // each half wears the colour it wears everywhere else in the app
             HStack(alignment: .firstTextBaseline) {
                 Text("This year")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                // the same badge the rows below wear, then the share
-                HStack(spacing: 6) {
-                    Text(verbatim: "DC")
-                        .font(.caption2.weight(.bold))
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 1)
-                        .background(Color.red.opacity(0.15), in: Capsule())
-                    Text(verbatim: "\(Int(dcShare * 100)) %")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .foregroundStyle(.red)
+                (Text(verbatim: "\(acPercent) % AC").foregroundColor(.green)
+                    + Text(verbatim: " / ").foregroundColor(.secondary)
+                    + Text(verbatim: "\(dcPercent) % DC").foregroundColor(.red))
+                    .font(.caption)
             }
             HStack {
                 summaryItem(Fmt.kr(cost), String(localized: "Cost", bundle: .current), .blue)
@@ -130,6 +127,16 @@ struct ChargeDetailView: View {
     @State private var error: String?
     // precomputed on load, see ChargeCurve.build
     @State private var curve: [ChargeCurve.Sample] = []
+    @State private var scrubDate: Date?
+    @State private var heldDate: Date?
+
+    // a joined stretch has real gaps in it, so the readout snaps to the nearest
+    // sample and the rule follows it rather than the finger - otherwise the line
+    // stands in a pause showing the power from before it
+    private var scrubSample: ChargeCurve.Sample? {
+        guard let heldDate, !curve.isEmpty else { return nil }
+        return curve.min { abs($0.date.timeIntervalSince(heldDate)) < abs($1.date.timeIntervalSince(heldDate)) }
+    }
 
     // cost editing is per process in TeslaMate, so the link only fits a single charge
     private var costEditURL: URL? {
@@ -184,7 +191,8 @@ struct ChargeDetailView: View {
                     }
 
                     if curve.count > 2 {
-                        ChargeCurve(samples: curve, powerColor: typeColor)
+                        ChargeCurve(samples: curve, powerColor: typeColor, selection: $scrubDate,
+                                    reading: scrubSample)
                     }
                 }
                 .padding(.horizontal)
@@ -199,6 +207,9 @@ struct ChargeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
         .task { await load() }
+        .onChange(of: scrubDate) { _, new in
+            if new != nil { heldDate = new }
+        }
     }
 
     private func load() async {
@@ -223,11 +234,16 @@ struct ChargeDetailView: View {
 struct ChargeCurve: View {
     let samples: [Sample]
     var powerColor: Color = .green
+    @Binding var selection: Date?
+    var reading: Sample?
+
+    private let levelColor = Color.blue
 
     struct Sample: Identifiable {
         let date: Date
         let power: Double?
         let level: Int?
+        let energy: Double?
         let part: Int
 
         var id: Date { date }
@@ -239,18 +255,44 @@ struct ChargeCurve: View {
     // between a joined stretch's charges instead of bridging them
     static func build(_ parts: [Charge]) -> [Sample] {
         var samples: [Sample] = []
+        var carried = 0.0
         for (index, part) in parts.enumerated() {
-            var byDate: [Date: (power: Double?, level: Int?)] = [:]
+            var byDate: [Date: (power: Double?, level: Int?, energy: Double?)] = [:]
             for p in part.chargeDetails ?? [] {
                 guard let d = p.date else { continue }
                 let old = byDate[d]
-                byDate[d] = (power: p.chargerDetails?.chargerPower ?? old?.power, level: p.batteryLevel ?? old?.level)
+                byDate[d] = (power: p.chargerDetails?.chargerPower ?? old?.power,
+                             level: p.batteryLevel ?? old?.level,
+                             energy: p.chargeEnergyAdded ?? old?.energy)
             }
-            samples += byDate.keys.sorted().map {
-                Sample(date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level, part: index)
+            let dates = byDate.keys.sorted()
+            // each part picks up where the last one ended, which both carries a counter
+            // that reset with the cable and closes the tenths of a kilowatt-hour the
+            // samples land either side of a boundary. the stretch then ends on exactly
+            // what the parts add up to, the same figure the tiles show
+            let first = dates.compactMap { byDate[$0]?.energy }.first ?? 0
+            let offset = carried - first
+            samples += dates.map {
+                Sample(date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level,
+                       energy: byDate[$0]!.energy.map { $0 + offset }, part: index)
             }
+            carried = samples.compactMap(\.energy).last ?? carried
         }
         return samples
+    }
+
+    private func readout(_ sample: Sample) -> Text {
+        var text = Text(verbatim: Fmt.time(sample.date)).foregroundColor(.secondary)
+        if let power = sample.power {
+            text = text + Text(verbatim: " · \(Int(power)) kW").foregroundColor(powerColor)
+        }
+        if let level = sample.level {
+            text = text + Text(verbatim: " · \(level) %").foregroundColor(levelColor)
+        }
+        if let energy = sample.energy {
+            text = text + Text(verbatim: " · " + Fmt.kwh(energy)).foregroundColor(.primary)
+        }
+        return text
     }
 
     // hour labels alone go in circles once the stretch passes a day
@@ -261,20 +303,41 @@ struct ChargeCurve: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Charge curve")
-                .font(.subheadline.weight(.semibold))
-            Chart(samples) { point in
-                if let power = point.power {
-                    LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power-\(point.part)"))
-                        .foregroundStyle(powerColor)
-                        .lineStyle(StrokeStyle(lineWidth: 2))
-                }
-                if let level = point.level {
-                    LineMark(x: .value("Time", point.date), y: .value("%", Double(level)), series: .value("Series", "Battery-\(point.part)"))
-                        .foregroundStyle(.blue.opacity(0.6))
-                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 3]))
+            HStack {
+                Text("Charge curve")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                if let reading {
+                    // each figure wears the colour of the line it was read from
+                    readout(reading)
+                        .font(.caption.weight(.medium).monospacedDigit())
+                } else {
+                    Text("Drag the chart to read the charge")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
                 }
             }
+            // the marker sits outside the per-point loop - otherwise it draws one RuleMark per point
+            Chart {
+                ForEach(samples) { point in
+                    if let power = point.power {
+                        LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power-\(point.part)"))
+                            .foregroundStyle(powerColor)
+                            .lineStyle(StrokeStyle(lineWidth: 2))
+                    }
+                    if let level = point.level {
+                        LineMark(x: .value("Time", point.date), y: .value("%", Double(level)), series: .value("Series", "Battery-\(point.part)"))
+                            .foregroundStyle(levelColor.opacity(0.6))
+                            .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 3]))
+                    }
+                }
+                if let reading {
+                    RuleMark(x: .value("Selected", reading.date))
+                        .foregroundStyle(.secondary.opacity(0.6))
+                        .lineStyle(StrokeStyle(lineWidth: 1))
+                }
+            }
+            .chartXSelection(value: $selection)
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4)) {
                     AxisValueLabel(format: spansDays ? .dateTime.weekday(.abbreviated).hour() : .dateTime.hour().minute())
@@ -283,7 +346,7 @@ struct ChargeCurve: View {
             .frame(height: 160)
             HStack(spacing: 16) {
                 Label("Power (kW)", systemImage: "line.diagonal").foregroundStyle(powerColor)
-                Label("Battery (%)", systemImage: "line.diagonal").foregroundStyle(.blue.opacity(0.6))
+                Label("Battery (%)", systemImage: "line.diagonal").foregroundStyle(levelColor.opacity(0.6))
             }
             .font(.caption2)
             .foregroundStyle(.secondary)
