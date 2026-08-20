@@ -308,6 +308,110 @@ struct ChargePoint: Decodable, Identifiable {
     var id: Int { detailId }
 }
 
+// a car left plugged in does not charge once: standby runs off the cable, the level
+// dips, charging resumes, and TeslaMate records a process for every top-up. joined
+// back together the stretch gets numbers that mean something
+struct ChargeGroup: Identifiable {
+    let parts: [Charge]
+
+    var id: Int { parts[0].chargeId }
+    var first: Charge { parts[0] }
+    var last: Charge { parts[parts.count - 1] }
+
+    var startDate: Date { first.startDate }
+    var endDate: Date? { last.endDate }
+    var address: String? { first.address }
+    var isDC: Bool { parts.contains { $0.isDC } }
+
+    var batteryDetails: DriveBattery? {
+        DriveBattery(startBatteryLevel: first.batteryDetails?.startBatteryLevel,
+                     startUsableBatteryLevel: first.batteryDetails?.startUsableBatteryLevel,
+                     endBatteryLevel: last.batteryDetails?.endBatteryLevel)
+    }
+
+    var energyAdded: Double? {
+        let values = parts.compactMap(\.chargeEnergyAdded)
+        return values.isEmpty ? nil : values.reduce(0, +)
+    }
+
+    var energyUsed: Double? {
+        let values = parts.compactMap(\.chargeEnergyUsed)
+        return values.isEmpty ? nil : values.reduce(0, +)
+    }
+
+    var efficiency: Double? {
+        guard let added = energyAdded, let used = energyUsed, added > 0, used > 0 else { return nil }
+        return added / used
+    }
+
+    // active charging only - the gaps in between are standby, not charging
+    var chargeMinutes: Double? {
+        let values = parts.compactMap(\.durationMin)
+        return values.isEmpty ? nil : values.reduce(0, +)
+    }
+
+    var pluggedMinutes: Double? {
+        guard let endDate else { return nil }
+        return endDate.timeIntervalSince(startDate) / 60
+    }
+
+    var maxPowerKw: Double? { parts.compactMap(\.maxPowerKw).max() }
+
+    var avgPowerKw: Double? {
+        guard let minutes = chargeMinutes, minutes > 0, let energy = energyAdded else { return nil }
+        return energy / (minutes / 60)
+    }
+
+    var outsideTempAvg: Double? {
+        let values = parts.compactMap { part -> (temp: Double, weight: Double)? in
+            guard let temp = part.outsideTempAvg else { return nil }
+            return (temp, part.durationMin ?? 1)
+        }
+        let weight = values.reduce(0) { $0 + $1.weight }
+        guard weight > 0 else { return nil }
+        return values.reduce(0) { $0 + $1.temp * $1.weight } / weight
+    }
+
+    func cost(tessieCosts: [Int: Double]) -> Double? {
+        let values = parts.compactMap { $0.displayCost ?? tessieCosts[$0.chargeId] }
+        return values.isEmpty ? nil : values.reduce(0, +)
+    }
+
+    func usesTessieCost(_ tessieCosts: [Int: Double]) -> Bool {
+        parts.contains { $0.displayCost == nil && tessieCosts[$0.chargeId] != nil }
+    }
+
+    // the join rule: same place, no drive in between, and a level that held still.
+    // an unplugged car drifts, a plugged one does not, so the level is the plug signal
+    // and no time cap is needed
+    static func stitch(_ charges: [Charge], drives: [Drive]) -> [ChargeGroup] {
+        let sorted = charges.sorted { $0.startDate < $1.startDate }
+        let driveStarts = drives.map(\.startDate)
+        var groups: [ChargeGroup] = []
+        var current: [Charge] = []
+        for charge in sorted {
+            if let previous = current.last, joins(previous, charge, driveStarts: driveStarts) {
+                current.append(charge)
+            } else {
+                if !current.isEmpty { groups.append(ChargeGroup(parts: current)) }
+                current = [charge]
+            }
+        }
+        if !current.isEmpty { groups.append(ChargeGroup(parts: current)) }
+        return groups
+    }
+
+    private static func joins(_ previous: Charge, _ next: Charge, driveStarts: [Date]) -> Bool {
+        guard let end = previous.endDate,
+              let place = previous.address, place == next.address,
+              let from = previous.batteryDetails?.endBatteryLevel,
+              let to = next.batteryDetails?.startBatteryLevel,
+              from - to <= 1
+        else { return false }
+        return !driveStarts.contains { $0 >= end && $0 <= next.startDate }
+    }
+}
+
 struct FastChargerInfo: Decodable {
     let fastChargerPresent: Bool?
 }

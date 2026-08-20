@@ -3,42 +3,61 @@ import MapKit
 import Charts
 
 struct YearSummaryCard: View {
-    let charges: [Charge]
+    let groups: [ChargeGroup]
     var tessieCosts: [Int: Double] = [:]
 
-    private var year: [Charge] {
-        charges.filter { Calendar.current.isDate($0.startDate, equalTo: .now, toGranularity: .year) }
+    private var year: [ChargeGroup] {
+        groups.filter { Calendar.current.isDate($0.startDate, equalTo: .now, toGranularity: .year) }
     }
 
     private var cost: Double {
-        year.reduce(0) { $0 + ($1.displayCost ?? tessieCosts[$1.chargeId] ?? 0) }
+        year.reduce(0) { $0 + ($1.cost(tessieCosts: tessieCosts) ?? 0) }
     }
-    private var energy: Double { year.compactMap(\.chargeEnergyAdded).reduce(0, +) }
+    private var energy: Double { year.compactMap(\.energyAdded).reduce(0, +) }
     private var dcShare: Double {
         guard energy > 0 else { return 0 }
-        return year.filter(\.isDC).compactMap(\.chargeEnergyAdded).reduce(0, +) / energy
+        return year.filter(\.isDC).compactMap(\.energyAdded).reduce(0, +) / energy
+    }
+    private var partCount: Int { year.reduce(0) { $0 + $1.parts.count } }
+
+    private var countValue: String {
+        partCount > year.count ? "\(year.count) (\(partCount))" : "\(year.count)"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("This year")
-                .font(.subheadline.weight(.semibold))
+            HStack(alignment: .firstTextBaseline) {
+                Text("This year")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                // the same badge the rows below wear, then the share
+                HStack(spacing: 6) {
+                    Text(verbatim: "DC")
+                        .font(.caption2.weight(.bold))
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(Color.red.opacity(0.15), in: Capsule())
+                    Text(verbatim: "\(Int(dcShare * 100)) %")
+                        .font(.subheadline.weight(.semibold))
+                }
+                .foregroundStyle(.red)
+            }
             HStack {
                 summaryItem(Fmt.kr(cost), String(localized: "Cost", bundle: .current), .blue)
                 summaryItem(Fmt.kwh(energy), String(localized: "Energy", bundle: .current), .green)
-                summaryItem("\(year.count)", String(localized: "Charges", bundle: .current), .secondary)
+                // the parenthesis is the processes the joined stretches were made of,
+                // and the tint is neutral - grey means time everywhere else
+                summaryItem(countValue, String(localized: "Charges", bundle: .current), .primary)
             }
-            Text(verbatim: "\(Int(dcShare * 100)) % DC")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
     }
 
+    // the caption centres under its value - hanging off the left edge read as skew
     private func summaryItem(_ value: String, _ title: String, _ tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: 2) {
             Text(value)
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(tint)
@@ -46,46 +65,51 @@ struct YearSummaryCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
     }
 }
 
 struct ChargeRow: View {
-    let charge: Charge
-    var tessieCost: Double? = nil
+    let group: ChargeGroup
+    var tessieCosts: [Int: Double] = [:]
     // the day is already in the section header when the row sits in the timeline
     var showsDay = true
 
-    private var typeColor: Color { charge.isDC ? .red : .green }
+    private var typeColor: Color { group.isDC ? .red : .green }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
-                Text(charge.address ?? String(localized: "Unknown location", bundle: .current))
+                Text(group.address ?? String(localized: "Unknown location", bundle: .current))
                     .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
                 Spacer()
-                Text(verbatim: charge.isDC ? "DC" : "AC")
+                Text(verbatim: group.isDC ? "DC" : "AC")
                     .font(.caption2.weight(.bold))
                     .padding(.horizontal, 5)
                     .padding(.vertical, 1)
                     .background(typeColor.opacity(0.15), in: Capsule())
                     .foregroundStyle(typeColor)
-                Text(verbatim: "+" + Fmt.kwh(charge.chargeEnergyAdded))
+                Text(verbatim: "+" + Fmt.kwh(group.energyAdded))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(typeColor)
             }
             Text(verbatim: showsDay
-                 ? "\(Fmt.day(charge.startDate)) \(Fmt.time(charge.startDate))"
-                 : "\(Fmt.time(charge.startDate)) – \(Fmt.time(charge.endDate))")
+                 ? "\(Fmt.day(group.startDate)) \(Fmt.time(group.startDate))"
+                 : "\(Fmt.time(group.startDate)) – \(Fmt.time(group.endDate))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             HStack(spacing: 6) {
-                MetricChip(text: Fmt.duration(charge.durationMin))
-                if let battery = Fmt.battery(charge.batteryDetails) {
+                // a joined stretch shows the hours it stood connected, a single charge
+                // its charging time - for one part they are the same thing
+                MetricChip(text: Fmt.duration(group.parts.count > 1 ? group.pluggedMinutes : group.chargeMinutes))
+                if group.parts.count > 1 {
+                    MetricChip(text: "×\(group.parts.count)", icon: "bolt.horizontal.fill", tint: typeColor)
+                }
+                if let battery = Fmt.battery(group.batteryDetails) {
                     MetricChip(text: battery, tint: .green)
                 }
-                if let cost = charge.displayCost ?? tessieCost {
+                if let cost = group.cost(tessieCosts: tessieCosts) {
                     MetricChip(text: Fmt.kr(cost), tint: .blue)
                 }
             }
@@ -97,31 +121,34 @@ struct ChargeRow: View {
 struct ChargeDetailView: View {
     let api: APIClient
     let carID: Int
-    let chargeID: Int
-    var tessieCost: Double? = nil
+    let chargeIDs: [Int]
+    var tessieCosts: [Int: Double] = [:]
 
     @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
 
-    @State private var charge: Charge?
+    @State private var group: ChargeGroup?
     @State private var error: String?
     // precomputed on load, see ChargeCurve.build
     @State private var curve: [ChargeCurve.Sample] = []
 
+    // cost editing is per process in TeslaMate, so the link only fits a single charge
     private var costEditURL: URL? {
-        URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + "/charge-cost/\(chargeID)")
+        guard chargeIDs.count == 1, let id = chargeIDs.first else { return nil }
+        return URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + "/charge-cost/\(id)")
     }
 
     var body: some View {
         ScrollView {
-            if let charge {
-                let typeColor: Color = charge.isDC ? .red : .green
+            if let group {
+                let typeColor: Color = group.isDC ? .red : .green
                 VStack(spacing: 16) {
-                    if let lat = charge.latitude, let lon = charge.longitude {
+                    if let located = group.parts.first(where: { $0.latitude != nil && $0.longitude != nil }),
+                       let lat = located.latitude, let lon = located.longitude {
                         Map(initialPosition: .region(MKCoordinateRegion(
                             center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
                             latitudinalMeters: 1200, longitudinalMeters: 1200
                         ))) {
-                            Marker(charge.address ?? "", systemImage: "bolt.fill",
+                            Marker(group.address ?? "", systemImage: "bolt.fill",
                                    coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
                                 .tint(typeColor)
                         }
@@ -131,17 +158,20 @@ struct ChargeDetailView: View {
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "bolt.fill", title: String(localized: "Added", bundle: .current), value: Fmt.kwh(charge.chargeEnergyAdded), tint: typeColor)
-                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Used", bundle: .current), value: Fmt.kwh(charge.chargeEnergyUsed), tint: .orange)
-                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency", bundle: .current), value: Fmt.percent(charge.efficiency), tint: .mint)
-                        StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power", bundle: .current), value: Fmt.kw(charge.maxPowerKw), tint: typeColor)
-                        StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power", bundle: .current), value: Fmt.kw(charge.avgPowerKw), tint: typeColor)
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(charge.batteryDetails) ?? "–", tint: .green)
-                        StatTile(icon: "clock.fill", title: String(localized: "Charge time", bundle: .current), value: Fmt.duration(charge.durationMin), tint: .secondary)
-                        let costTitle = charge.displayCost == nil && tessieCost != nil
+                        StatTile(icon: "bolt.fill", title: String(localized: "Added", bundle: .current), value: Fmt.kwh(group.energyAdded), tint: typeColor)
+                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Used", bundle: .current), value: Fmt.kwh(group.energyUsed), tint: .orange)
+                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency", bundle: .current), value: Fmt.percent(group.efficiency), tint: .mint)
+                        StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power", bundle: .current), value: Fmt.kw(group.maxPowerKw), tint: typeColor)
+                        StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power", bundle: .current), value: Fmt.kw(group.avgPowerKw), tint: typeColor)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(group.batteryDetails) ?? "–", tint: .green)
+                        StatTile(icon: "clock.fill", title: String(localized: "Charge time", bundle: .current), value: Fmt.duration(group.chargeMinutes), tint: .secondary)
+                        if group.parts.count > 1 {
+                            StatTile(icon: "powerplug.fill", title: String(localized: "Plugged in", bundle: .current), value: Fmt.duration(group.pluggedMinutes), tint: .secondary)
+                        }
+                        let costTitle = group.usesTessieCost(tessieCosts)
                             ? String(localized: "Cost", bundle: .current) + " (Tessie)"
                             : String(localized: "Cost", bundle: .current)
-                        let costValue = Fmt.kr(charge.displayCost ?? tessieCost)
+                        let costValue = Fmt.kr(group.cost(tessieCosts: tessieCosts))
                         if let costEditURL {
                             Link(destination: costEditURL) {
                                 StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue, chevron: true)
@@ -150,7 +180,7 @@ struct ChargeDetailView: View {
                         } else {
                             StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue)
                         }
-                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(charge.outsideTempAvg), tint: .teal)
+                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(group.outsideTempAvg), tint: .teal)
                     }
 
                     if curve.count > 2 {
@@ -165,7 +195,7 @@ struct ChargeDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(charge?.address ?? String(localized: "Charge", bundle: .current))
+        .navigationTitle(group?.address ?? String(localized: "Charge", bundle: .current))
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
         .task { await load() }
@@ -173,9 +203,17 @@ struct ChargeDetailView: View {
 
     private func load() async {
         do {
-            let loaded = try await api.charge(carID: carID, chargeID: chargeID)
-            charge = loaded
-            curve = ChargeCurve.build(loaded.chargeDetails ?? [])
+            let parts = try await withThrowingTaskGroup(of: Charge.self) { tasks in
+                for id in chargeIDs {
+                    tasks.addTask { try await api.charge(carID: carID, chargeID: id) }
+                }
+                var loaded: [Charge] = []
+                for try await charge in tasks { loaded.append(charge) }
+                return loaded.sorted { $0.startDate < $1.startDate }
+            }
+            guard !parts.isEmpty else { throw APIError.http(404) }
+            group = ChargeGroup(parts: parts)
+            curve = ChargeCurve.build(parts)
         } catch {
             self.error = error.localizedDescription
         }
@@ -190,20 +228,35 @@ struct ChargeCurve: View {
         let date: Date
         let power: Double?
         let level: Int?
+        let part: Int
 
         var id: Date { date }
     }
 
     // deduplicated per timestamp, see SpeedChart. built on load like the drive
-    // detail's series — as a computed property the points re-sorted on every render
-    static func build(_ points: [ChargePoint]) -> [Sample] {
-        var byDate: [Date: (power: Double?, level: Int?)] = [:]
-        for p in points {
-            guard let d = p.date else { continue }
-            let old = byDate[d]
-            byDate[d] = (power: p.chargerDetails?.chargerPower ?? old?.power, level: p.batteryLevel ?? old?.level)
+    // detail's series — as a computed property the points re-sorted on every render.
+    // the part index keeps the series separate so the line breaks in the gaps
+    // between a joined stretch's charges instead of bridging them
+    static func build(_ parts: [Charge]) -> [Sample] {
+        var samples: [Sample] = []
+        for (index, part) in parts.enumerated() {
+            var byDate: [Date: (power: Double?, level: Int?)] = [:]
+            for p in part.chargeDetails ?? [] {
+                guard let d = p.date else { continue }
+                let old = byDate[d]
+                byDate[d] = (power: p.chargerDetails?.chargerPower ?? old?.power, level: p.batteryLevel ?? old?.level)
+            }
+            samples += byDate.keys.sorted().map {
+                Sample(date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level, part: index)
+            }
         }
-        return byDate.keys.sorted().map { Sample(date: $0, power: byDate[$0]!.power, level: byDate[$0]!.level) }
+        return samples
+    }
+
+    // hour labels alone go in circles once the stretch passes a day
+    private var spansDays: Bool {
+        guard let first = samples.first?.date, let last = samples.last?.date else { return false }
+        return last.timeIntervalSince(first) > 24 * 3600
     }
 
     var body: some View {
@@ -212,19 +265,19 @@ struct ChargeCurve: View {
                 .font(.subheadline.weight(.semibold))
             Chart(samples) { point in
                 if let power = point.power {
-                    LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power"))
+                    LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power-\(point.part)"))
                         .foregroundStyle(powerColor)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                 }
                 if let level = point.level {
-                    LineMark(x: .value("Time", point.date), y: .value("%", Double(level)), series: .value("Series", "Battery"))
+                    LineMark(x: .value("Time", point.date), y: .value("%", Double(level)), series: .value("Series", "Battery-\(point.part)"))
                         .foregroundStyle(.blue.opacity(0.6))
                         .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 3]))
                 }
             }
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4)) {
-                    AxisValueLabel(format: .dateTime.hour().minute())
+                    AxisValueLabel(format: spansDays ? .dateTime.weekday(.abbreviated).hour() : .dateTime.hour().minute())
                 }
             }
             .frame(height: 160)

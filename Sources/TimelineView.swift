@@ -15,6 +15,7 @@ struct TimelineView: View {
     @State private var filter = TimelineFilter.all
     @State private var drives: [Drive] = []
     @State private var charges: [Charge] = []
+    @State private var chargeGroups: [ChargeGroup] = []
     @State private var efficiency: Double?
     @State private var days: [TimelineDay] = []
     @State private var heaterDrives: Set<Int> = []
@@ -32,7 +33,7 @@ struct TimelineView: View {
                     List {
                         if filter == .charges {
                             Section {
-                                YearSummaryCard(charges: charges, tessieCosts: tessieCosts)
+                                YearSummaryCard(groups: chargeGroups, tessieCosts: tessieCosts)
                                     .listRowInsets(EdgeInsets())
                                     .listRowBackground(Color.clear)
                             }
@@ -53,8 +54,8 @@ struct TimelineView: View {
                         switch route {
                         case .drive(let id):
                             DriveDetailView(api: api, carID: carID, driveID: id)
-                        case .charge(let id):
-                            ChargeDetailView(api: api, carID: carID, chargeID: id, tessieCost: tessieCosts[id])
+                        case .charge(let ids):
+                            ChargeDetailView(api: api, carID: carID, chargeIDs: ids, tessieCosts: tessieCosts)
                         }
                     }
                 } else if let error {
@@ -98,10 +99,10 @@ struct TimelineView: View {
                     DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
                 }
             }
-        case .charge(let charge):
-            NavigationLink(value: TimelineRoute.charge(charge.chargeId)) {
-                Spine(tint: charge.isDC ? .red : .green, symbol: "bolt.circle.fill") {
-                    ChargeRow(charge: charge, tessieCost: tessieCosts[charge.chargeId], showsDay: false)
+        case .charge(let group):
+            NavigationLink(value: TimelineRoute.charge(group.parts.map(\.chargeId))) {
+                Spine(tint: group.isDC ? .red : .green, symbol: "bolt.circle.fill") {
+                    ChargeRow(group: group, tessieCosts: tessieCosts, showsDay: false)
                 }
             }
         case .park(let park):
@@ -112,11 +113,12 @@ struct TimelineView: View {
     }
 
     private func rebuild() {
+        chargeGroups = ChargeGroup.stitch(charges, drives: drives)
         switch filter {
-        case .all: days = Timeline.build(drives: drives, charges: charges,
+        case .all: days = Timeline.build(drives: drives, chargeGroups: chargeGroups,
                                          efficiency: efficiency, coldCharges: coldCharges)
         case .drives: days = Timeline.group(drives.map(TimelineEntry.drive))
-        case .charges: days = Timeline.group(charges.map(TimelineEntry.charge))
+        case .charges: days = Timeline.group(chargeGroups.map(TimelineEntry.charge))
         }
     }
 
@@ -172,13 +174,13 @@ struct TimelineDay: Identifiable {
 
 enum TimelineEntry: Identifiable {
     case drive(Drive)
-    case charge(Charge)
+    case charge(ChargeGroup)
     case park(Park)
 
     var id: String {
         switch self {
         case .drive(let drive): return "drive-\(drive.driveId)"
-        case .charge(let charge): return "charge-\(charge.chargeId)"
+        case .charge(let group): return "charge-\(group.id)"
         case .park(let park): return "park-\(Int(park.start.timeIntervalSince1970))"
         }
     }
@@ -196,7 +198,7 @@ enum TimelineEntry: Identifiable {
     var start: Date {
         switch self {
         case .drive(let drive): return drive.startDate
-        case .charge(let charge): return charge.startDate
+        case .charge(let group): return group.startDate
         case .park(let park): return park.start
         }
     }
@@ -213,7 +215,7 @@ enum TimelineEntry: Identifiable {
     var end: Date? {
         switch self {
         case .drive(let drive): return drive.endDate
-        case .charge(let charge): return charge.endDate
+        case .charge(let group): return group.endDate
         case .park(let park): return park.end
         }
     }
@@ -221,7 +223,7 @@ enum TimelineEntry: Identifiable {
     var place: String? {
         switch self {
         case .drive(let drive): return drive.endAddress
-        case .charge(let charge): return charge.address
+        case .charge(let group): return group.address
         case .park(let park): return park.place
         }
     }
@@ -229,7 +231,7 @@ enum TimelineEntry: Identifiable {
     var startLevel: Int? {
         switch self {
         case .drive(let drive): return drive.batteryDetails?.startBatteryLevel
-        case .charge(let charge): return charge.batteryDetails?.startBatteryLevel
+        case .charge(let group): return group.first.batteryDetails?.startBatteryLevel
         case .park(let park): return park.from
         }
     }
@@ -237,7 +239,7 @@ enum TimelineEntry: Identifiable {
     var endLevel: Int? {
         switch self {
         case .drive(let drive): return drive.batteryDetails?.endBatteryLevel
-        case .charge(let charge): return charge.batteryDetails?.endBatteryLevel
+        case .charge(let group): return group.last.batteryDetails?.endBatteryLevel
         case .park(let park): return park.to
         }
     }
@@ -245,7 +247,7 @@ enum TimelineEntry: Identifiable {
     var startRange: Double? {
         switch self {
         case .drive(let drive): return drive.rangeRated?.startRange
-        case .charge(let charge): return charge.rangeRated?.startRange
+        case .charge(let group): return group.first.rangeRated?.startRange
         case .park: return nil
         }
     }
@@ -253,7 +255,7 @@ enum TimelineEntry: Identifiable {
     var endRange: Double? {
         switch self {
         case .drive(let drive): return drive.rangeRated?.endRange
-        case .charge(let charge): return charge.rangeRated?.endRange
+        case .charge(let group): return group.last.rangeRated?.endRange
         case .park: return nil
         }
     }
@@ -261,7 +263,7 @@ enum TimelineEntry: Identifiable {
     var startOdometer: Double? {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerStart
-        case .charge(let charge): return charge.odometer
+        case .charge(let group): return group.first.odometer
         case .park: return nil
         }
     }
@@ -269,7 +271,7 @@ enum TimelineEntry: Identifiable {
     var endOdometer: Double? {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerEnd
-        case .charge(let charge): return charge.odometer
+        case .charge(let group): return group.last.odometer
         case .park: return nil
         }
     }
@@ -313,10 +315,10 @@ enum Timeline {
     // shorter stops are loading and unloading, not parking
     static let parkThreshold: TimeInterval = 30 * 60
 
-    static func build(drives: [Drive], charges: [Charge],
+    static func build(drives: [Drive], chargeGroups: [ChargeGroup],
                       efficiency: Double? = nil, coldCharges: Set<Int>? = nil) -> [TimelineDay] {
-        let cutoff = cutoff(drives: drives, charges: charges)
-        let events = (drives.map(TimelineEntry.drive) + charges.map(TimelineEntry.charge))
+        let cutoff = cutoff(drives: drives, chargeGroups: chargeGroups)
+        let events = (drives.map(TimelineEntry.drive) + chargeGroups.map(TimelineEntry.charge))
             .filter { $0.start >= cutoff }
             .sorted { $0.start < $1.start }
 
@@ -341,9 +343,9 @@ enum Timeline {
         switch after {
         case .drive:
             if after.startsWithReducedRange { return nil }
-        case .charge(let charge):
+        case .charge(let group):
             // whether the pack was cold is only knowable through Grafana - no answer, no figures
-            guard let coldCharges, !coldCharges.contains(charge.chargeId) else { return nil }
+            guard let coldCharges, !coldCharges.contains(group.first.chargeId) else { return nil }
         case .park:
             return nil
         }
@@ -361,15 +363,15 @@ enum Timeline {
     // the lists reach different distances back. past the shorter one a gap would read
     // as parking when it is really missing data. this holds for the merged flow only —
     // a single segment can show its whole list
-    private static func cutoff(drives: [Drive], charges: [Charge]) -> Date {
-        let oldest = [drives.map(\.startDate).min(), charges.map(\.startDate).min()].compactMap { $0 }
+    private static func cutoff(drives: [Drive], chargeGroups: [ChargeGroup]) -> Date {
+        let oldest = [drives.map(\.startDate).min(), chargeGroups.map(\.startDate).min()].compactMap { $0 }
         return oldest.max() ?? .distantPast
     }
 }
 
 enum TimelineRoute: Hashable {
     case drive(Int)
-    case charge(Int)
+    case charge([Int])
 }
 
 struct ParkRow: View {
