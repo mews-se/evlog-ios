@@ -7,9 +7,11 @@ dashboard squeezed onto a small screen.
 EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
 create, and nothing leaves your network.
 
-> Version 1.0 is with Apple for review and is not on the App Store yet. Until it is, building it
-> yourself is the way to run it — see [Building](#building). Every version that reaches the App
-> Store gets a tag and a release here, so `main` running ahead of the store is the normal state.
+[Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911) — free, iOS 17 or
+later. Every version that reaches the App Store gets a
+[tag and a release](https://github.com/mews-se/evlog-ios/releases) here, so `main` running ahead
+of the store is the normal state. To build what is in the store, start from the latest tag; for
+what is coming, see [Building](#building).
 
 [Privacy policy](https://mews-se.github.io/evlog-site/privacy/) ·
 [Support](https://mews-se.github.io/evlog-site/support/)
