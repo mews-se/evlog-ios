@@ -107,8 +107,12 @@ struct ChargingDetails: Decodable {
 
 // MARK: - /drives
 
+// teslamateapi writes null rather than an empty list when nothing matched
 struct DrivesPayload: Decodable {
-    let drives: [Drive]
+    private let list: [Drive]?
+    var drives: [Drive] { list ?? [] }
+
+    enum CodingKeys: String, CodingKey { case list = "drives" }
 }
 
 struct DrivePayload: Decodable {
@@ -240,7 +244,10 @@ struct SoftwareUpdate: Decodable, Identifiable {
 // MARK: - /charges
 
 struct ChargesPayload: Decodable {
-    let charges: [Charge]
+    private let list: [Charge]?
+    var charges: [Charge] { list ?? [] }
+
+    enum CodingKeys: String, CodingKey { case list = "charges" }
 }
 
 struct ChargePayload: Decodable {
