@@ -105,6 +105,22 @@
         }
       }
     },
+    "No data for %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No data for %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen data i %@"
+          }
+        }
+      }
+    },
     "≈ %@ at %@" : {
       "localizations" : {
         "en" : {

@@ -165,6 +165,10 @@ struct TimelineView: View {
             Spine(tint: .secondary, symbol: "parkingsign.circle.fill") {
                 ParkRow(park: park)
             }
+        case .missing(let gap):
+            Spine(tint: Color(.tertiaryLabel), symbol: "questionmark.circle.fill") {
+                MissingRow(gap: gap)
+            }
         }
     }
 
@@ -261,12 +265,14 @@ enum TimelineEntry: Identifiable {
     case drive(Drive)
     case charge(ChargeGroup)
     case park(Park)
+    case missing(Missing)
 
     var id: String {
         switch self {
         case .drive(let drive): return "drive-\(drive.driveId)"
         case .charge(let group): return "charge-\(group.id)"
         case .park(let park): return "park-\(Int(park.start.timeIntervalSince1970))"
+        case .missing(let gap): return "missing-\(Int(gap.start.timeIntervalSince1970))"
         }
     }
 
@@ -285,16 +291,18 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.startDate
         case .charge(let group): return group.startDate
         case .park(let park): return park.start
+        case .missing(let gap): return gap.start
         }
     }
 
-    // a park belongs to the day it ends. in descending order that puts it directly
+    // a gap belongs to the day it ends. in descending order that puts it directly
     // under the drive it came before instead of at the top of an earlier day
     var day: Date {
-        if case .park(let park) = self {
-            return Calendar.current.startOfDay(for: park.end)
+        switch self {
+        case .park(let park): return Calendar.current.startOfDay(for: park.end)
+        case .missing(let gap): return Calendar.current.startOfDay(for: gap.end)
+        default: return Calendar.current.startOfDay(for: start)
         }
-        return Calendar.current.startOfDay(for: start)
     }
 
     var end: Date? {
@@ -302,6 +310,7 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.endDate
         case .charge(let group): return group.endDate
         case .park(let park): return park.end
+        case .missing(let gap): return gap.end
         }
     }
 
@@ -310,6 +319,16 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.endAddress
         case .charge(let group): return group.address
         case .park(let park): return park.place
+        case .missing(let gap): return gap.to
+        }
+    }
+
+    var startPlace: String? {
+        switch self {
+        case .drive(let drive): return drive.startAddress
+        case .charge(let group): return group.address
+        case .park(let park): return park.place
+        case .missing(let gap): return gap.from
         }
     }
 
@@ -318,6 +337,7 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.batteryDetails?.startBatteryLevel
         case .charge(let group): return group.first.batteryDetails?.startBatteryLevel
         case .park(let park): return park.from
+        case .missing: return nil
         }
     }
 
@@ -326,6 +346,7 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.batteryDetails?.endBatteryLevel
         case .charge(let group): return group.last.batteryDetails?.endBatteryLevel
         case .park(let park): return park.to
+        case .missing: return nil
         }
     }
 
@@ -333,7 +354,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.rangeRated?.startRange
         case .charge(let group): return group.first.rangeRated?.startRange
-        case .park: return nil
+        case .park, .missing: return nil
         }
     }
 
@@ -341,7 +362,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.rangeRated?.endRange
         case .charge(let group): return group.last.rangeRated?.endRange
-        case .park: return nil
+        case .park, .missing: return nil
         }
     }
 
@@ -349,7 +370,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerStart
         case .charge(let group): return group.first.odometer
-        case .park: return nil
+        case .park, .missing: return nil
         }
     }
 
@@ -357,7 +378,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerEnd
         case .charge(let group): return group.last.odometer
-        case .park: return nil
+        case .park, .missing: return nil
         }
     }
 
@@ -396,9 +417,24 @@ struct Park {
     }
 }
 
+// a stretch the log does not cover: the car moved, and nothing was recorded while
+// it did. TeslaMate's timeline calls this missing, and this is its rule
+struct Missing {
+    let start: Date
+    let end: Date
+    let from: String?
+    let to: String?
+    let km: Double
+
+    var minutes: Double { end.timeIntervalSince(start) / 60 }
+}
+
 enum Timeline {
     // shorter stops are loading and unloading, not parking
     static let parkThreshold: TimeInterval = 30 * 60
+    // TeslaMate's bound for an unrecorded drive: the odometer moved this far, and the
+    // address changed with it, so a few hundred metres inside one car park stay parking
+    static let missingKm = 0.5
 
     // both lists are complete back to the same point, so a gap between two entries is
     // a gap in the car's day and not one list running out before the other
@@ -409,13 +445,27 @@ enum Timeline {
 
         var all = events
         for (before, after) in zip(events, events.dropFirst()) {
-            guard let from = before.end, after.start.timeIntervalSince(from) >= parkThreshold else { continue }
+            guard let from = before.end else { continue }
+            // a parked row makes a claim about the car standing still. if the odometer
+            // says otherwise, the gap is a drive nobody logged and gets said as such
+            if let moved = movedKm(before: before, after: after) {
+                all.append(.missing(Missing(start: from, end: after.start, from: before.place,
+                                            to: after.startPlace, km: moved)))
+                continue
+            }
+            guard after.start.timeIntervalSince(from) >= parkThreshold else { continue }
             all.append(.park(Park(start: from, end: after.start, place: before.place,
                                   from: before.endLevel, to: after.startLevel,
                                   rangeDiff: gapRangeDiff(before: before, after: after, coldCharges: coldCharges),
                                   efficiency: efficiency)))
         }
         return group(all)
+    }
+
+    private static func movedKm(before: TimelineEntry, after: TimelineEntry) -> Double? {
+        guard let start = before.endOdometer, let end = after.startOdometer,
+              end - start > missingKm, before.place != after.startPlace else { return nil }
+        return end - start
     }
 
     // the guards are TeslaMate's own: a cold pack fakes a loss, a moved car means an
@@ -431,7 +481,7 @@ enum Timeline {
         case .charge(let group):
             // whether the pack was cold is only knowable through Grafana - no answer, no figures
             guard let coldCharges, !coldCharges.contains(group.first.chargeId) else { return nil }
-        case .park:
+        case .park, .missing:
             return nil
         }
         return from - to
@@ -491,6 +541,31 @@ struct ParkRow: View {
             parts.append(Fmt.energy(drain))
         }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+}
+
+struct MissingRow: View {
+    let gap: Missing
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("No data for \(Fmt.duration(gap.minutes))")
+                    .font(.footnote.weight(.medium))
+                Spacer()
+                Text(verbatim: Fmt.km(gap.km))
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            if let from = gap.from, let to = gap.to {
+                Text(verbatim: "\(from) → \(to)")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
+        .padding(.top, 2)
+        .padding(.bottom, 8)
     }
 }
 
