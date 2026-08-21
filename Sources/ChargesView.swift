@@ -201,9 +201,6 @@ struct ChargeDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(group?.address ?? String(localized: "Charge", bundle: .current))
-        .navigationBarTitleDisplayMode(.inline)
-        .appBackButton()
         .task { await load() }
         .onChange(of: scrubDate) { _, new in
             if new != nil { heldDate = new }

@@ -123,9 +123,6 @@ struct DriveDetailView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(drive.map { Fmt.day($0.startDate) } ?? String(localized: "Drive", bundle: .current))
-        .navigationBarTitleDisplayMode(.inline)
-        .appBackButton()
         .task { await load() }
         .onChange(of: scrubDate) { _, new in
             if new != nil { heldDate = new }

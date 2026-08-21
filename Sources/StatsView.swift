@@ -109,8 +109,8 @@ struct StatsView: View {
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
                 }
             }
-            .navigationDestination(for: Int.self) { driveID in
-                DriveDetailView(api: api, carID: carID, driveID: driveID)
+            .navigationDestination(for: DetailRoute.self) { route in
+                DetailPager(api: api, carID: carID, route: route)
             }
             .navigationTitle("Statistics")
             .refreshable { await load() }
@@ -322,9 +322,10 @@ struct DayDrivesView: View {
             if ofDay.isEmpty {
                 ContentUnavailableView("No drives this day", systemImage: "road.lanes")
             } else {
+                let run = ofDay.map { DetailTarget.drive(id: $0.driveId, day: $0.startDate) }
                 List {
-                    ForEach(ofDay) { drive in
-                        NavigationLink(value: drive.driveId) {
+                    ForEach(Array(ofDay.enumerated()), id: \.element.id) { i, drive in
+                        NavigationLink(value: DetailRoute(targets: run, index: i)) {
                             DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
                         }
                     }

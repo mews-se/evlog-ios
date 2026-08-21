@@ -19,6 +19,9 @@ struct TimelineView: View {
     @State private var chargeGroups: [ChargeGroup] = []
     @State private var efficiency: Double?
     @State private var days: [TimelineDay] = []
+    // the flow as a run of details, and where each row sits in it
+    @State private var targets: [DetailTarget] = []
+    @State private var targetIndex: [String: Int] = [:]
     @State private var heaterDrives: Set<Int> = []
     @State private var coldCharges: Set<Int>?
     @State private var tessieCosts: [Int: Double] = [:]
@@ -60,13 +63,8 @@ struct TimelineView: View {
                                 .multilineTextAlignment(.center)
                         }
                     }
-                    .navigationDestination(for: TimelineRoute.self) { route in
-                        switch route {
-                        case .drive(let id):
-                            DriveDetailView(api: api, carID: carID, driveID: id)
-                        case .charge(let ids):
-                            ChargeDetailView(api: api, carID: carID, chargeIDs: ids, tessieCosts: tessieCosts)
-                        }
+                    .navigationDestination(for: DetailRoute.self) { route in
+                        DetailPager(api: api, carID: carID, route: route, tessieCosts: tessieCosts)
                     }
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
@@ -150,13 +148,13 @@ struct TimelineView: View {
     private func row(_ entry: TimelineEntry) -> some View {
         switch entry {
         case .drive(let drive):
-            NavigationLink(value: TimelineRoute.drive(drive.driveId)) {
+            NavigationLink(value: DetailRoute(targets: targets, index: targetIndex[entry.id] ?? 0)) {
                 Spine(tint: .blue, symbol: "car.circle.fill") {
                     DriveRow(drive: drive, heaterUsed: heaterDrives.contains(drive.driveId))
                 }
             }
         case .charge(let group):
-            NavigationLink(value: TimelineRoute.charge(group.parts.map(\.chargeId))) {
+            NavigationLink(value: DetailRoute(targets: targets, index: targetIndex[entry.id] ?? 0)) {
                 Spine(tint: group.isDC ? .red : .green, symbol: "bolt.circle.fill") {
                     ChargeRow(group: group, tessieCosts: tessieCosts, showsDay: false)
                 }
@@ -180,6 +178,15 @@ struct TimelineView: View {
         case .drives: days = Timeline.group(drives.map(TimelineEntry.drive))
         case .charges: days = Timeline.group(chargeGroups.map(TimelineEntry.charge))
         }
+        var run: [DetailTarget] = []
+        var at: [String: Int] = [:]
+        for entry in days.flatMap(\.entries) {
+            guard let target = entry.target else { continue }
+            at[entry.id] = run.count
+            run.append(target)
+        }
+        targets = run
+        targetIndex = at
     }
 
     private func load() async {
@@ -279,6 +286,15 @@ enum TimelineEntry: Identifiable {
     var isDrive: Bool {
         if case .drive = self { return true }
         return false
+    }
+
+    // gaps have no page of their own and are skipped when swiping through the day
+    var target: DetailTarget? {
+        switch self {
+        case .drive(let drive): return .drive(id: drive.driveId, day: drive.startDate)
+        case .charge(let group): return .charge(ids: group.parts.map(\.chargeId), address: group.address)
+        case .park, .missing: return nil
+        }
     }
 
     var isCharge: Bool {
@@ -494,11 +510,6 @@ enum Timeline {
                 TimelineDay(date: day.key, entries: day.value.sorted { $0.start > $1.start })
             }
     }
-}
-
-enum TimelineRoute: Hashable {
-    case drive(Int)
-    case charge([Int])
 }
 
 struct ParkRow: View {
