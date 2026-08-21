@@ -255,6 +255,23 @@
         }
       }
     },
+    "All time" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All time"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All data"
+          }
+        }
+      }
+    },
     "API key" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -605,6 +622,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Laddstatistik"
+          }
+        }
+      }
+    },
+    "Choose a longer period above." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a longer period above."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Välj en längre period här ovanför."
           }
         }
       }
@@ -1044,6 +1077,22 @@
         }
       }
     },
+    "From %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Från %@"
+          }
+        }
+      }
+    },
     "Installed" : {
       "localizations" : {
         "en" : {
@@ -1105,6 +1154,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Språk"
+          }
+        }
+      }
+    },
+    "Last month" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last month"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senaste månaden"
+          }
+        }
+      }
+    },
+    "Last week" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last week"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senaste veckan"
           }
         }
       }
@@ -1463,6 +1546,23 @@
         }
       }
     },
+    "Nothing in this period" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing in this period"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inget under perioden"
+          }
+        }
+      }
+    },
     "Off" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1510,6 +1610,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "Older entries are outside the period." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Older entries are outside the period."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Äldre poster ligger utanför perioden."
           }
         }
       }
@@ -2086,6 +2203,23 @@
         }
       }
     },
+    "That is everything TeslaMate has recorded." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That is everything TeslaMate has recorded."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Det är allt TeslaMate har registrerat."
+          }
+        }
+      }
+    },
     "The code is there to read, build and change." : {
       "localizations" : {
         "en" : {
@@ -2136,6 +2270,7 @@
       }
     },
     "This year" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -2,36 +2,34 @@ import SwiftUI
 import MapKit
 import Charts
 
-struct YearSummaryCard: View {
+// the charges the flow shows, added up. the title is the period they were picked by
+struct ChargeSummaryCard: View {
+    let title: LocalizedStringKey
     let groups: [ChargeGroup]
     var tessieCosts: [Int: Double] = [:]
 
-    private var year: [ChargeGroup] {
-        groups.filter { Calendar.current.isDate($0.startDate, equalTo: .now, toGranularity: .year) }
-    }
-
     private var cost: Double {
-        year.reduce(0) { $0 + ($1.cost(tessieCosts: tessieCosts) ?? 0) }
+        groups.reduce(0) { $0 + ($1.cost(tessieCosts: tessieCosts) ?? 0) }
     }
-    private var energy: Double { year.compactMap(\.energyAdded).reduce(0, +) }
+    private var energy: Double { groups.compactMap(\.energyAdded).reduce(0, +) }
     private var dcShare: Double {
         guard energy > 0 else { return 0 }
-        return year.filter(\.isDC).compactMap(\.energyAdded).reduce(0, +) / energy
+        return groups.filter(\.isDC).compactMap(\.energyAdded).reduce(0, +) / energy
     }
     // taken from the same number so the two halves always make a hundred
     private var dcPercent: Int { Int((dcShare * 100).rounded()) }
     private var acPercent: Int { 100 - dcPercent }
-    private var partCount: Int { year.reduce(0) { $0 + $1.parts.count } }
+    private var partCount: Int { groups.reduce(0) { $0 + $1.parts.count } }
 
     private var countValue: String {
-        partCount > year.count ? "\(year.count) (\(partCount))" : "\(year.count)"
+        partCount > groups.count ? "\(groups.count) (\(partCount))" : "\(groups.count)"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // each half wears the colour it wears everywhere else in the app
             HStack(alignment: .firstTextBaseline) {
-                Text("This year")
+                Text(title)
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 (Text(verbatim: "\(acPercent) % AC").foregroundColor(.green)

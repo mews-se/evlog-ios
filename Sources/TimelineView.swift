@@ -3,7 +3,7 @@ import SwiftUI
 // drives and charges come from the same API but in separate lists. here they sit in
 // one flow per day, where parking is the gap between two entries rather than
 // something with a source of its own. the segment picks whether the flow shows
-// everything or only one of the kinds
+// everything or only one of the kinds, the period how far back it reaches
 struct TimelineView: View {
     let api: APIClient
     let carID: Int
@@ -11,6 +11,7 @@ struct TimelineView: View {
 
     @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
+    @AppStorage(Pref.timelinePeriod.key) private var periodKey = Pref.timelinePeriod.value
 
     @State private var filter = TimelineFilter.all
     @State private var drives: [Drive] = []
@@ -23,8 +24,10 @@ struct TimelineView: View {
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
     @State private var loadedKey: String?
+    @State private var loading = false
 
-    private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
+    private var period: TimelinePeriod { TimelinePeriod(rawValue: periodKey) ?? .month }
+    private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)|\(periodKey)" }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -33,7 +36,7 @@ struct TimelineView: View {
                     List {
                         if filter == .charges {
                             Section {
-                                YearSummaryCard(groups: chargeGroups, tessieCosts: tessieCosts)
+                                ChargeSummaryCard(title: period.title, groups: chargeGroups, tessieCosts: tessieCosts)
                                     .listRowInsets(EdgeInsets())
                                     .listRowBackground(Color.clear)
                             }
@@ -49,6 +52,13 @@ struct TimelineView: View {
                                 DayHeader(day: day)
                             }
                         }
+                        // the flow says where it stops instead of just stopping
+                        Section {} footer: {
+                            Text(period == .all ? "That is everything TeslaMate has recorded."
+                                                : "Older entries are outside the period.")
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
+                        }
                     }
                     .navigationDestination(for: TimelineRoute.self) { route in
                         switch route {
@@ -61,15 +71,24 @@ struct TimelineView: View {
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
                 } else if loadedKey != nil {
-                    ContentUnavailableView("No activity yet", systemImage: "calendar.day.timeline.left")
+                    if period == .all {
+                        ContentUnavailableView("No activity yet", systemImage: "calendar.day.timeline.left")
+                    } else {
+                        ContentUnavailableView("Nothing in this period", systemImage: "calendar.day.timeline.left",
+                                               description: Text("Choose a longer period above."))
+                    }
                 } else {
                     ProgressView()
                 }
             }
+            // the period sits above the list rather than in the bar, which the segment
+            // already fills on the narrowest phones. it stays put when the list is empty,
+            // since that is exactly when it needs changing
+            .safeAreaInset(edge: .top, spacing: 0) { periodBar }
             .navigationTitle("Timeline")
             .navigationBarTitleDisplayMode(.inline)
-            // the segment sits in the navigation bar rather than above the list:
-            // a row inserted there takes space from the flow and kills the large title
+            // the segment sits in the navigation bar rather than above the list, where
+            // the period row already takes its share of the flow
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Picker(String(localized: "Timeline", bundle: .current), selection: $filter) {
@@ -88,6 +107,43 @@ struct TimelineView: View {
             .task(id: loadKey) { if loadedKey != loadKey { await load() } }
             .onChange(of: filter) { _, _ in rebuild() }
         }
+    }
+
+    private var periodBar: some View {
+        HStack {
+            Menu {
+                Picker(String(localized: "Period", bundle: .current), selection: $periodKey) {
+                    ForEach(TimelinePeriod.allCases, id: \.rawValue) { Text($0.title) }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "calendar")
+                    Text(period.title)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .imageScale(.small)
+                }
+                .font(.subheadline.weight(.medium))
+            }
+            Spacer()
+            if loading {
+                ProgressView()
+                    .controlSize(.small)
+            } else if let from = reachesBack {
+                Text("From \(Fmt.shortDate(from))")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(.bar)
+    }
+
+    // a bounded period reaches back to its own start; everything reaches to the
+    // oldest entry there is, which is only known once it has been loaded
+    private var reachesBack: Date? {
+        if let start = period.start() { return start }
+        return days.last?.entries.last?.start
     }
 
     @ViewBuilder
@@ -123,12 +179,14 @@ struct TimelineView: View {
     }
 
     private func load() async {
+        let since = period.start()
+        loading = true
         // the heater query runs in parallel - otherwise the symbol turns up long after the list
         async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         async let colds = GrafanaClient(baseURL: grafanaURL).coldChargeStarts(carID: carID)
         do {
-            async let loadedDrives = api.drives(carID: carID, results: 500)
-            async let loadedCharges = api.charges(carID: carID, results: 500)
+            async let loadedDrives = api.drives(carID: carID, since: since)
+            async let loadedCharges = api.charges(carID: carID, since: since)
             // the park rows turn range loss into kWh through the car's efficiency constant
             async let loadedCars = api.cars()
             (drives, charges) = try await (loadedDrives, loadedCharges)
@@ -136,8 +194,11 @@ struct TimelineView: View {
             rebuild()
             error = nil
         } catch {
+            // a period picked mid-load cancels this one, and that is not a failure to show
+            if Task.isCancelled { return }
             if days.isEmpty { self.error = error.localizedDescription }
         }
+        loading = false
         loadedKey = loadKey
         heaterDrives = (try? await heaters) ?? []
         // park figures are baked in at build time, so a late answer needs a rebuild
@@ -158,6 +219,30 @@ enum TimelineFilter: CaseIterable {
         case .all: return "All"
         case .drives: return "Drives"
         case .charges: return "Charges"
+        }
+    }
+}
+
+enum TimelinePeriod: String, CaseIterable {
+    case week, month, year, all
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .week: return "Last week"
+        case .month: return "Last month"
+        case .year: return "This year"
+        case .all: return "All time"
+        }
+    }
+
+    // where the flow starts; nil reaches back through everything there is
+    func start(now: Date = .now, calendar: Calendar = .current) -> Date? {
+        let today = calendar.startOfDay(for: now)
+        switch self {
+        case .week: return calendar.date(byAdding: .day, value: -7, to: today)
+        case .month: return calendar.date(byAdding: .month, value: -1, to: today)
+        case .year: return calendar.dateInterval(of: .year, for: now)?.start
+        case .all: return nil
         }
     }
 }
@@ -315,11 +400,11 @@ enum Timeline {
     // shorter stops are loading and unloading, not parking
     static let parkThreshold: TimeInterval = 30 * 60
 
+    // both lists are complete back to the same point, so a gap between two entries is
+    // a gap in the car's day and not one list running out before the other
     static func build(drives: [Drive], chargeGroups: [ChargeGroup],
                       efficiency: Double? = nil, coldCharges: Set<Int>? = nil) -> [TimelineDay] {
-        let cutoff = cutoff(drives: drives, chargeGroups: chargeGroups)
         let events = (drives.map(TimelineEntry.drive) + chargeGroups.map(TimelineEntry.charge))
-            .filter { $0.start >= cutoff }
             .sorted { $0.start < $1.start }
 
         var all = events
@@ -358,14 +443,6 @@ enum Timeline {
             .map { day in
                 TimelineDay(date: day.key, entries: day.value.sorted { $0.start > $1.start })
             }
-    }
-
-    // the lists reach different distances back. past the shorter one a gap would read
-    // as parking when it is really missing data. this holds for the merged flow only —
-    // a single segment can show its whole list
-    private static func cutoff(drives: [Drive], chargeGroups: [ChargeGroup]) -> Date {
-        let oldest = [drives.map(\.startDate).min(), chargeGroups.map(\.startDate).min()].compactMap { $0 }
-        return oldest.max() ?? .distantPast
     }
 }
 

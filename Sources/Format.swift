@@ -88,6 +88,14 @@ enum Fmt {
         return date.formatted(.dateTime.year().month().day().locale(.app))
     }
 
+    // the year only when it is not this one
+    static func shortDate(_ date: Date) -> String {
+        if Calendar.current.isDate(date, equalTo: .now, toGranularity: .year) {
+            return date.formatted(.dateTime.day().month().locale(.app))
+        }
+        return self.date(date)
+    }
+
     static func since(_ date: Date?) -> String {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return time(date) }

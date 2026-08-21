@@ -22,6 +22,7 @@ enum Pref {
     static let tessieToken = (key: "tessieToken", value: "")
     static let language = (key: "appLanguage", value: "system")
     static let carID = (key: "carID", value: 1)
+    static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)
 }
 
 struct RootView: View {

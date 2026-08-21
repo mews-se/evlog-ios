@@ -120,8 +120,8 @@ struct StatsView: View {
 
     private func load() async {
         // an error in one fetch should not silently zero the other's columns
-        async let d = api.allDrives(carID: carID)
-        async let c = api.charges(carID: carID, results: 5000)
+        async let d = api.drives(carID: carID)
+        async let c = api.charges(carID: carID)
         async let h = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         var failure: String?
         heaterDrives = (try? await h) ?? []
