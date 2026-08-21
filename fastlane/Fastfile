@@ -29,12 +29,14 @@ platform :ios do
   desc "Push everything the store page needs: text, then screenshots, then a read-back."
   lane :metadata do |options|
     force = options.fetch(:force, false)
-    text(force: force)
-    screenshots(force: force)
+    text(force: force, version: options[:version])
+    screenshots(force: force, version: options[:version])
     dedupe
     state
   end
 
+  # pass version:X.Y to create that version in App Store Connect when the only one
+  # there is live; without it deliver edits the version that is already editable
   desc "Push store text only."
   lane :text do |options|
     expected = File.read("metadata/en-US/description.txt").strip.length
@@ -44,7 +46,8 @@ platform :ios do
     # is already done when it blows up, so the error is swallowed and replaced by
     # a real check of what actually made it up.
     begin
-      deliver(api_key: asc_key, skip_screenshots: true, force: options.fetch(:force, false))
+      deliver(api_key: asc_key, skip_screenshots: true, force: options.fetch(:force, false),
+              app_version: options[:version])
     rescue StandardError => e
       raise e unless e.message.to_s.include?("No data")
       UI.important("deliver died on review detail again — checking the upload instead")
@@ -58,7 +61,8 @@ platform :ios do
 
   desc "Push screenshots only. Skips the metadata step that the bug lives in."
   lane :screenshots do |options|
-    deliver(api_key: asc_key, skip_metadata: true, force: options.fetch(:force, false))
+    deliver(api_key: asc_key, skip_metadata: true, force: options.fetch(:force, false),
+            app_version: options[:version])
   end
 
   desc "Remove duplicate screenshots that a retried upload can leave behind."
