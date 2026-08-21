@@ -82,18 +82,25 @@ platform :ios do
   desc "Report what App Store Connect currently holds. Reads, never writes."
   lane :state do
     asc_key
-    version = edit_version
-    UI.success("Version #{version.version_string} · #{version.app_store_state}")
-    begin
-      build = version.build
-      UI.message("Build attached: #{build ? "build #{build.version}" : "none"}")
-    rescue StandardError => e
-      UI.message("Build attached: could not read (#{e.class})")
-    end
-    version.get_app_store_version_localizations.each do |loc|
-      UI.message("#{loc.locale}: description #{loc.description.to_s.length} chars, keywords #{loc.keywords.to_s.length} chars")
-      loc.get_app_screenshot_sets.each do |set|
-        UI.message("  #{set.screenshot_display_type}: #{set.app_screenshots.count} screenshots")
+    app = Spaceship::ConnectAPI::App.find(APP_ID)
+    UI.user_error!("No app found for #{APP_ID}") if app.nil?
+    # once the only version is live there is nothing editable, and vice versa
+    # before the first release, so both are asked for and whichever exist are shown
+    versions = [app.get_live_app_store_version, app.get_edit_app_store_version].compact.uniq(&:id)
+    UI.user_error!("No version on App Store Connect") if versions.empty?
+    versions.each do |version|
+      UI.success("Version #{version.version_string} · #{version.app_store_state}")
+      begin
+        build = version.build
+        UI.message("Build attached: #{build ? "build #{build.version}" : "none"}")
+      rescue StandardError => e
+        UI.message("Build attached: could not read (#{e.class})")
+      end
+      version.get_app_store_version_localizations.each do |loc|
+        UI.message("#{loc.locale}: description #{loc.description.to_s.length} chars, keywords #{loc.keywords.to_s.length} chars")
+        loc.get_app_screenshot_sets.each do |set|
+          UI.message("  #{set.screenshot_display_type}: #{set.app_screenshots.count} screenshots")
+        end
       end
     end
   end
