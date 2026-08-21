@@ -3,19 +3,19 @@ EVLog is a native iPhone client for your own TeslaMate server. It reads the data
 It talks only to servers you run yourself. It never connects to Tesla, there is no account to create, no service in between, and nothing leaves your network.
 
 OVERVIEW
-Battery ring with range, lock state, Sentry, location, inside and outside temperature, degradation, software version, and how long ago the car was last heard from.
+Battery ring with range, lock state, Sentry, location, inside and outside temperature, degradation, software version, and how long ago the car was last heard from. From here you reach a map of every place the car has been over a chosen period, and a range map showing how far the current charge takes you — using a detour factor derived from your own trips rather than a guess.
+
+TIMELINE
+Drives, charges and the parking in between, as one flow per day, going back as far as you choose: the last week, the last month, this year or everything. A parked row says how long the car stood and what it cost the battery. When the odometer shows the car moved while nothing was logged, the row says so instead of pretending the car stood still. Swipe left and right inside a drive or a charge to step through the day without going back to the list.
 
 DRIVES
-Grouped by day, each with the route on a map and a speed graph you can drag along to follow the car through the trip. Efficiency is shown as a percentage of rated consumption, and drives where the battery heater ran are marked — that is often what explains a cold day's consumption.
+The route on a map and a speed graph you can drag along to follow the car through the trip, with energy and regen, consumption, and efficiency as a percentage of rated consumption. Drives where the battery heater ran are marked — that is often what explains a cold day's consumption.
 
 CHARGES
-Sessions split into AC and DC, with charge curves, added energy, average power and cost. Charging costs TeslaMate never receives from Tesla can be filled in automatically from Tessie, if you use it.
+AC and DC told apart, the charging curve with a readout under your finger, added and used energy, average and peak power, and cost. A car left plugged in across several charging processes is shown as one charge. Charging costs TeslaMate never receives from Tesla can be filled in automatically from Tessie, if you use it.
 
 STATISTICS
 Week, month and year, drilling from a period down to a single day and the drives it contains. Charging statistics with top locations, AC/DC split, and a weekday-by-hour heat map.
-
-MAPS
-Every track you have driven over a chosen period, and a range map showing how far the current charge takes you — using a detour factor derived from your own trips rather than a guess.
 
 FREE AND OPEN SOURCE
 No ads, no in-app purchases, no analytics, no accounts. The source is on GitHub under the MIT licence.

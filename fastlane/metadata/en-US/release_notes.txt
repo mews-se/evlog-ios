@@ -1,0 +1,11 @@
+Drives and Charges have become one Timeline. Each day reads as a flow: the drives, the charges, and the parking in between, with a row for every stop that says how long the car stood and what it cost the battery. When the odometer shows the car moved while nothing was logged, the row says so instead of pretending the car stood still.
+
+You choose how far back the timeline reaches: the last week, the last month, this year or everything. A short period stays a small, quick load; the whole history is only fetched when you ask for it.
+
+Swipe left and right inside a drive or a charge to step through the day without going back to the list.
+
+A car left plugged in across several charging processes now shows as one charge, and dragging along the charging curve reads out the time, the power, the battery level and how much had gone in by then.
+
+Drive details show energy and regen side by side, and consumption in Wh/km.
+
+Plug-ins that never delivered anything no longer count as charges, and the dates in the list follow the language picked in the app.

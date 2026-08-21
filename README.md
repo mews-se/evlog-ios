@@ -19,24 +19,31 @@ what is coming, see [Building](#building).
 ## What it does
 
 **Overview** — battery ring with range, lock state, location, temperatures, Sentry, degradation,
-countries visited, software version and time since last contact.
+countries visited, software version and time since last contact. From here you reach a map of
+every place the car has been over a chosen period, and a range map showing how far the current
+charge takes you, using a detour factor derived from your own trips rather than a guess.
 
-**Drives** — grouped by day, each with a route map, a speed graph you can scrub, and efficiency as
-a percentage of rated consumption. Drives where the battery heater ran are marked, since that is
-often what explains a cold day's consumption.
+**Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
+as you choose: the last week, the last month, this year or everything. A parked row says how long
+the car stood and what it cost the battery. When the odometer shows the car moved while nothing
+was logged, the row says so instead of pretending the car stood still. Swipe left and right inside
+a drive or a charge to step through the day without going back to the list.
 
-**Charges** — session list separating AC from DC, with charge curves, added energy, cost and
-average power. Costs TeslaMate does not have can be filled in from Tessie if you use it.
+**Drives** — a route map, a speed graph you can drag along to follow the car, energy and regen,
+consumption, and efficiency as a percentage of rated consumption. Drives where the battery heater
+ran are marked, since that is often what explains a cold day's consumption.
+
+**Charges** — AC and DC told apart, the charging curve with a readout under your finger, added
+and used energy, average and peak power, and cost. A car left plugged in across several charging
+processes is shown as one charge. Costs TeslaMate does not have can be filled in from Tessie if you
+use it.
 
 **Statistics** — week, month and year, drilling down from period to day to individual drives.
 Charging statistics with top locations, AC/DC split and a weekday-by-hour heat map.
 
-**Maps** — every track you have driven over a chosen period, and a range map showing how far the
-current charge takes you, using a detour factor derived from your own trips rather than a guess.
-
 ## What's next
 
-The [2.0 milestone](https://github.com/mews-se/evlog-ios/milestone/1) lists what the next release
+The [open milestone](https://github.com/mews-se/evlog-ios/milestones) lists what the next release
 is meant to carry, and the [planned](https://github.com/mews-se/evlog-ios/labels/planned) label
 marks the ideas that are agreed rather than merely filed. Releases gather a body of work instead of
 trickling out one change at a time, so most of what is happening is in the branches rather than in
