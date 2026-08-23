@@ -77,7 +77,7 @@ struct UpdateRow: View {
                             .foregroundStyle(.green)
                     }
                 }
-                Text(Fmt.date(update.endDate ?? update.startDate))
+                Text(verbatim: Fmt.date(update.endDate ?? update.startDate))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

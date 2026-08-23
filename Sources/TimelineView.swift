@@ -57,8 +57,8 @@ struct TimelineView: View {
                         }
                         // the flow says where it stops instead of just stopping
                         Section {} footer: {
-                            Text(period == .all ? "That is everything TeslaMate has recorded."
-                                                : "Older entries are outside the period.")
+                            (period == .all ? Text("That is everything TeslaMate has recorded.")
+                                            : Text("Older entries are outside the period."))
                                 .frame(maxWidth: .infinity)
                                 .multilineTextAlignment(.center)
                         }
@@ -546,7 +546,7 @@ struct ParkRow: View {
                 }
             }
             if let place = park.place {
-                Text(place)
+                Text(verbatim: place)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -602,7 +602,7 @@ struct DayHeader: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Text(Fmt.day(day.date))
+            Text(verbatim: Fmt.day(day.date))
             Spacer()
             if day.driveCount > 0 {
                 count(day.driveCount, icon: "road.lanes")

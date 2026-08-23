@@ -215,7 +215,7 @@ struct StatBucketRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(PeriodTitle.text(bucket.period, component))
+            Text(verbatim: PeriodTitle.text(bucket.period, component))
                 .font(.subheadline.weight(.semibold))
             HStack {
                 item(Fmt.km(bucket.distance, decimals: 0), .blue)
@@ -223,8 +223,8 @@ struct StatBucketRow: View {
                 item(bucket.cost > 0 ? Fmt.kr(bucket.cost) : "–", .primary)
             }
             HStack(spacing: 10) {
-                Label("\(bucket.driveCount)", systemImage: "road.lanes")
-                Label("\(bucket.chargeCount)", systemImage: "bolt")
+                Label { Text(verbatim: "\(bucket.driveCount)") } icon: { Image(systemName: "road.lanes") }
+                Label { Text(verbatim: "\(bucket.chargeCount)") } icon: { Image(systemName: "bolt") }
                 Label(Fmt.duration(bucket.driveMinutes), systemImage: "clock")
                 if let efficiency = bucket.efficiencyPct {
                     Label(Fmt.pct(efficiency, decimals: 0), systemImage: "leaf")
@@ -241,7 +241,7 @@ struct StatBucketRow: View {
     }
 
     private func item(_ value: String, _ tint: Color) -> some View {
-        Text(value)
+        Text(verbatim: value)
             .font(.callout.weight(.semibold).monospacedDigit())
             .foregroundStyle(tint)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -297,7 +297,7 @@ struct PeriodDetailView: View {
                     }
                 }
             } header: {
-                Text(granularity.finer == .month ? "By month" : "By day")
+                granularity.finer == .month ? Text("By month") : Text("By day")
             }
         }
         .navigationTitle(PeriodTitle.text(period, granularity.component))

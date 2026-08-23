@@ -173,15 +173,15 @@ struct PlaceRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(name)
+                Text(verbatim: name)
                     .font(.subheadline)
                     .lineLimit(1)
-                Text(detail)
+                Text(verbatim: detail)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Text(value)
+            Text(verbatim: value)
                 .font(.callout.weight(.semibold).monospacedDigit())
                 .foregroundStyle(tint)
         }
@@ -231,7 +231,7 @@ struct Heatmap: View {
         VStack(alignment: .leading, spacing: 3) {
             ForEach(days, id: \.self) { day in
                 HStack(spacing: 2) {
-                    Text(Calendar.current.veryShortWeekdaySymbols[day])
+                    Text(verbatim: Calendar.current.veryShortWeekdaySymbols[day])
                         .font(.system(size: 9))
                         .foregroundStyle(.secondary)
                         .frame(width: 14, alignment: .leading)
@@ -246,7 +246,7 @@ struct Heatmap: View {
             HStack(spacing: 2) {
                 Color.clear.frame(width: 14, height: 1)
                 ForEach(0..<24, id: \.self) { hour in
-                    Text(hour % 6 == 0 ? "\(hour)" : "")
+                    Text(verbatim: hour % 6 == 0 ? "\(hour)" : "")
                         .font(.system(size: 8))
                         .foregroundStyle(.tertiary)
                         .frame(maxWidth: .infinity)

@@ -120,10 +120,10 @@ struct BatteryCard: View {
                     )
                     .rotationEffect(.degrees(-90))
                 VStack(spacing: 2) {
-                    Text(level.map { "\($0)%" } ?? "–")
+                    Text(verbatim: level.map { "\($0)%" } ?? "–")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                     if let range = status.batteryDetails?.ratedBatteryRange {
-                        Text(Fmt.km(range, decimals: 0))
+                        Text(verbatim: Fmt.km(range, decimals: 0))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -168,7 +168,7 @@ struct BatteryCard: View {
                 }
                 Spacer()
                 if let odo = status.odometer {
-                    Text(Fmt.km(odo, decimals: 0))
+                    Text(verbatim: Fmt.km(odo, decimals: 0))
                 }
             }
             .font(.footnote)
@@ -289,10 +289,10 @@ struct StatTile: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            Text(title)
+            Text(verbatim: title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(value)
+            Text(verbatim: value)
                 .font(.callout.weight(.semibold))
                 .foregroundStyle(valueTint ?? .primary)
                 .lineLimit(1)
@@ -331,12 +331,12 @@ struct SplitStatTile: View {
             Image(systemName: side.icon)
                 .font(.body)
                 .foregroundStyle(side.tint)
-            Text(side.title)
+            Text(verbatim: side.title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-            Text(side.value)
+            Text(verbatim: side.value)
                 .font(.callout.weight(.semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)

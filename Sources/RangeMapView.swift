@@ -106,9 +106,9 @@ struct RangeMapView: View {
                 .overlay(Circle().stroke(color, style: StrokeStyle(lineWidth: 2, dash: filled ? [] : [3, 2])))
                 .frame(width: 16, height: 16)
             VStack(alignment: .leading, spacing: 1) {
-                Text(value)
+                Text(verbatim: value)
                     .font(.callout.weight(.semibold).monospacedDigit())
-                Text(title)
+                Text(verbatim: title)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

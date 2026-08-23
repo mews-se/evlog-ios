@@ -12,7 +12,7 @@ struct DriveRow: View {
                 Text(verbatim: "\(Fmt.time(drive.startDate)) – \(Fmt.time(drive.endDate))")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Text(Fmt.km(drive.distance))
+                Text(verbatim: Fmt.km(drive.distance))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.blue)
             }
@@ -189,7 +189,7 @@ struct SpeedChart: View {
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 if let label {
-                    Text(label)
+                    Text(verbatim: label)
                         .font(.caption.weight(.medium).monospacedDigit())
                         .foregroundStyle(.blue)
                 } else {
@@ -201,14 +201,14 @@ struct SpeedChart: View {
             // the marker sits outside the per-point loop - otherwise it draws one RuleMark per point
             Chart {
                 ForEach(series) { point in
-                    AreaMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
+                    AreaMark(x: .value("Time", point.date), y: .value("km/h" as String, point.speed))
                         .foregroundStyle(.blue.opacity(0.15).gradient)
-                    LineMark(x: .value("Time", point.date), y: .value("km/h", point.speed))
+                    LineMark(x: .value("Time", point.date), y: .value("km/h" as String, point.speed))
                         .foregroundStyle(.blue)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                 }
                 if let marker {
-                    RuleMark(x: .value("Selected", marker))
+                    RuleMark(x: .value("Selected" as String, marker))
                         .foregroundStyle(.blue.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1))
                 }

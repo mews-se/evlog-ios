@@ -18,7 +18,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("http://server:8080", text: $serverURL)
+                    TextField("http://server:8080" as String, text: $serverURL)
                         .keyboardType(.URL)
                         .focused($editing)
                         .autocorrectionDisabled()
@@ -27,7 +27,7 @@ struct SettingsView: View {
                         Task { await testConnection() }
                     }
                     if let testResult {
-                        Text(testResult)
+                        Text(verbatim: testResult)
                             .font(.footnote)
                             .foregroundStyle(testResult.hasPrefix("✓") ? .green : .red)
                     }
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    TextField("http://server:3000", text: $grafanaURL)
+                    TextField("http://server:3000" as String, text: $grafanaURL)
                         .keyboardType(.URL)
                         .focused($editing)
                         .autocorrectionDisabled()
@@ -50,7 +50,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    TextField("http://server:4000", text: $teslamateURL)
+                    TextField("http://server:4000" as String, text: $teslamateURL)
                         .keyboardType(.URL)
                         .focused($editing)
                         .autocorrectionDisabled()
@@ -83,7 +83,7 @@ struct SettingsView: View {
                         }
                     }
                     if let tessieResult {
-                        Text(tessieResult)
+                        Text(verbatim: tessieResult)
                             .font(.footnote)
                             .foregroundStyle(tessieResult.hasPrefix("✓") ? .green : .red)
                     }

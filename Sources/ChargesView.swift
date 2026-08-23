@@ -53,10 +53,10 @@ struct ChargeSummaryCard: View {
     // the caption centres under its value - hanging off the left edge read as skew
     private func summaryItem(_ value: String, _ title: String, _ tint: Color) -> some View {
         VStack(spacing: 2) {
-            Text(value)
+            Text(verbatim: value)
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(tint)
-            Text(title)
+            Text(verbatim: title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -82,7 +82,7 @@ struct ChargeRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
-                Text(headline)
+                Text(verbatim: headline)
                     .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
                 Spacer()
@@ -321,18 +321,18 @@ struct ChargeCurve: View {
             Chart {
                 ForEach(samples) { point in
                     if let power = point.power {
-                        LineMark(x: .value("Time", point.date), y: .value("kW", power), series: .value("Series", "Power-\(point.part)"))
+                        LineMark(x: .value("Time", point.date), y: .value("kW" as String, power), series: .value("Series" as String, "Power-\(point.part)"))
                             .foregroundStyle(powerColor)
                             .lineStyle(StrokeStyle(lineWidth: 2))
                     }
                     if let level = point.level {
-                        LineMark(x: .value("Time", point.date), y: .value("%", Double(level)), series: .value("Series", "Battery-\(point.part)"))
+                        LineMark(x: .value("Time", point.date), y: .value("%" as String, Double(level)), series: .value("Series" as String, "Battery-\(point.part)"))
                             .foregroundStyle(levelColor.opacity(0.6))
                             .lineStyle(StrokeStyle(lineWidth: 2, dash: [4, 3]))
                     }
                 }
                 if let reading {
-                    RuleMark(x: .value("Selected", reading.date))
+                    RuleMark(x: .value("Selected" as String, reading.date))
                         .foregroundStyle(.secondary.opacity(0.6))
                         .lineStyle(StrokeStyle(lineWidth: 1))
                 }

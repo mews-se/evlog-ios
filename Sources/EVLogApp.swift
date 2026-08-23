@@ -88,7 +88,7 @@ struct ErrorCard: View {
             Image(systemName: "wifi.exclamationmark")
                 .font(.largeTitle)
                 .foregroundStyle(.secondary)
-            Text(message)
+            Text(verbatim: message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             Button("Try again", action: retry)
