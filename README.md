@@ -25,9 +25,10 @@ charge takes you, using a detour factor derived from your own trips rather than 
 
 **Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
-the car stood and what it cost the battery. When the odometer shows the car moved while nothing
-was logged, the row says so instead of pretending the car stood still. Swipe left and right inside
-a drive or a charge to step through the day without going back to the list.
+the car stood and what it cost the battery, and a short stop gets one too if it cost anything. When
+the odometer shows the car moved while nothing was logged, the row says so instead of pretending the
+car stood still. Swipe left and right inside a drive or a charge to step through the day without
+going back to the list.
 
 **Drives** — a route map, a speed graph you can drag along to follow the car, energy and regen,
 consumption, and efficiency as a percentage of rated consumption. Drives where the battery heater
@@ -39,7 +40,8 @@ processes is shown as one charge. Costs TeslaMate does not have can be filled in
 use it.
 
 **Statistics** — week, month and year, drilling down from period to day to individual drives.
-Charging statistics with top locations, AC/DC split and a weekday-by-hour heat map.
+Charging statistics with top locations that open into the charges behind them, AC/DC split and a
+weekday-by-hour heat map.
 
 ## What's next
 
