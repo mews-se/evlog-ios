@@ -431,6 +431,12 @@ struct Park {
         guard let rangeDiff, let efficiency else { return nil }
         return rangeDiff * efficiency
     }
+
+    // a short stop earns a row by what it cost, not by how long it took. the level is
+    // too coarse to notice - range is a hundred times finer and already does the sums
+    var costsEnough: Bool {
+        (drainKWh ?? 0) >= Timeline.shortStopFloorKWh
+    }
 }
 
 // a stretch the log does not cover: the car moved, and nothing was recorded while
@@ -446,8 +452,15 @@ struct Missing {
 }
 
 enum Timeline {
-    // shorter stops are loading and unloading, not parking
+    // shorter stops are loading and unloading, not parking - unless the battery paid
+    // for them, which the climate or Sentry can manage in twenty minutes
     static let parkThreshold: TimeInterval = 30 * 60
+    // below this a short stop's loss is rounding and the row would be noise
+    static let shortStopFloorKWh = 0.05
+    // the range readout settles for a few minutes after a drive, and that shows up as
+    // kilowatts over a gap of a minute or two. a stop shorter than this is not parking,
+    // whatever the figures say
+    static let shortStopMinimum: TimeInterval = 5 * 60
     // TeslaMate's bound for an unrecorded drive: the odometer moved this far, and the
     // address changed with it, so a few hundred metres inside one car park stay parking
     static let missingKm = 0.5
@@ -469,11 +482,13 @@ enum Timeline {
                                             to: after.startPlace, km: moved)))
                 continue
             }
-            guard after.start.timeIntervalSince(from) >= parkThreshold else { continue }
-            all.append(.park(Park(start: from, end: after.start, place: before.place,
-                                  from: before.endLevel, to: after.startLevel,
-                                  rangeDiff: gapRangeDiff(before: before, after: after, coldCharges: coldCharges),
-                                  efficiency: efficiency)))
+            let park = Park(start: from, end: after.start, place: before.place,
+                            from: before.endLevel, to: after.startLevel,
+                            rangeDiff: gapRangeDiff(before: before, after: after, coldCharges: coldCharges),
+                            efficiency: efficiency)
+            let stood = after.start.timeIntervalSince(from)
+            guard stood >= parkThreshold || (stood >= shortStopMinimum && park.costsEnough) else { continue }
+            all.append(.park(park))
         }
         return group(all)
     }
