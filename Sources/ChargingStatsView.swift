@@ -72,7 +72,9 @@ struct ChargingStatsView: View {
         List {
             Section {
                 ForEach(topByEnergy) { place in
-                    PlaceRow(name: place.name, detail: "\(place.count)", value: Fmt.kwh(place.energy), tint: .green)
+                    NavigationLink(value: StatsRoute.place(place.name)) {
+                        PlaceRow(name: place.name, detail: "\(place.count)", value: Fmt.kwh(place.energy), tint: .green)
+                    }
                 }
             } header: {
                 Text("Most energy")
@@ -81,7 +83,9 @@ struct ChargingStatsView: View {
             if !topByCost.isEmpty {
                 Section {
                     ForEach(topByCost) { place in
-                        PlaceRow(name: place.name, detail: Fmt.kwh(place.energy), value: Fmt.kr(place.cost), tint: .blue)
+                        NavigationLink(value: StatsRoute.place(place.name)) {
+                            PlaceRow(name: place.name, detail: Fmt.kwh(place.energy), value: Fmt.kr(place.cost), tint: .blue)
+                        }
                     }
                 } header: {
                     Text("Most expensive")
@@ -116,6 +120,45 @@ struct ChargingStatsView: View {
             }
         }
         .navigationTitle("Charging statistics")
+        .navigationBarTitleDisplayMode(.inline)
+        .appBackButton()
+    }
+}
+
+// a ranked place leads here: every charge there, with the row's totals on top so
+// nothing has to be added up by hand. both rankings come to the same page, since a
+// place is a place and the two lists are only different ways in
+struct PlaceChargesView: View {
+    let name: String
+    let charges: [Charge]
+    let drives: [Drive]
+    var tessieCosts: [Int: Double] = [:]
+
+    // the same filter the ranking was built from, joined the way the timeline joins
+    private var groups: [ChargeGroup] {
+        let unknown = String(localized: "Unknown location", bundle: .current)
+        let here = charges.filter { ($0.address ?? unknown) == name }
+        return ChargeGroup.stitch(here, drives: drives).sorted { $0.startDate > $1.startDate }
+    }
+
+    var body: some View {
+        let groups = groups
+        let run = groups.map { DetailTarget.charge(ids: $0.parts.map(\.chargeId), address: $0.address) }
+        List {
+            Section {
+                ChargeSummaryCard(title: "Total", groups: groups, tessieCosts: tessieCosts)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
+            Section {
+                ForEach(Array(groups.enumerated()), id: \.element.id) { i, group in
+                    NavigationLink(value: DetailRoute(targets: run, index: i)) {
+                        ChargeRow(group: group, tessieCosts: tessieCosts, showsPlace: false)
+                    }
+                }
+            }
+        }
+        .navigationTitle(name)
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
     }

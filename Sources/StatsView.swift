@@ -107,10 +107,12 @@ struct StatsView: View {
                     DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
                 case .charging:
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
+                case let .place(name):
+                    PlaceChargesView(name: name, charges: charges, drives: drives, tessieCosts: tessieCosts)
                 }
             }
             .navigationDestination(for: DetailRoute.self) { route in
-                DetailPager(api: api, carID: carID, route: route)
+                DetailPager(api: api, carID: carID, route: route, tessieCosts: tessieCosts)
             }
             .navigationTitle("Statistics")
             .refreshable { await load() }

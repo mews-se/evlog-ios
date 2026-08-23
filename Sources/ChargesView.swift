@@ -67,15 +67,22 @@ struct ChargeSummaryCard: View {
 struct ChargeRow: View {
     let group: ChargeGroup
     var tessieCosts: [Int: Double] = [:]
-    // the day is already in the section header when the row sits in the timeline
-    var showsDay = true
+    // in the timeline the day is the section header, so the place is the headline. in
+    // a place's own list the place is the title, so the day takes the headline instead
+    var showsPlace = true
 
     private var typeColor: Color { group.isDC ? .red : .green }
+
+    private var headline: String {
+        showsPlace
+            ? group.address ?? String(localized: "Unknown location", bundle: .current)
+            : Fmt.day(group.startDate)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
-                Text(group.address ?? String(localized: "Unknown location", bundle: .current))
+                Text(headline)
                     .font(.subheadline.weight(.semibold))
                     .lineLimit(1)
                 Spacer()
@@ -89,9 +96,7 @@ struct ChargeRow: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(typeColor)
             }
-            Text(verbatim: showsDay
-                 ? "\(Fmt.day(group.startDate)) \(Fmt.time(group.startDate))"
-                 : "\(Fmt.time(group.startDate)) – \(Fmt.time(group.endDate))")
+            Text(verbatim: "\(Fmt.time(group.startDate)) – \(Fmt.time(group.endDate))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             HStack(spacing: 6) {

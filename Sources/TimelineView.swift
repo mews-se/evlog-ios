@@ -156,7 +156,7 @@ struct TimelineView: View {
         case .charge(let group):
             NavigationLink(value: DetailRoute(targets: targets, index: targetIndex[entry.id] ?? 0)) {
                 Spine(tint: group.isDC ? .red : .green, symbol: "bolt.circle.fill") {
-                    ChargeRow(group: group, tessieCosts: tessieCosts, showsDay: false)
+                    ChargeRow(group: group, tessieCosts: tessieCosts)
                 }
             }
         case .park(let park):
