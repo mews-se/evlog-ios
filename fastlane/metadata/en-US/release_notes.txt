@@ -2,4 +2,6 @@ A short stop that cost the battery something now shows as a parked row, instead 
 
 Tap a place in charging statistics to see the charges behind it.
 
-Lists that reach back past New Year now say which year a day belongs to.
+Average charging power is now measured on the charger's side, so a steady 11 kW charge reads 11 kW.
+
+Lists that reach back past New Year now say which year a day belongs to, and month names in statistics follow the language picked in the app.
