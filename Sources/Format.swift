@@ -72,8 +72,12 @@ enum Fmt {
         guard let date else { return "–" }
         if Calendar.current.isDateInToday(date) { return String(localized: "Today", bundle: .current) }
         if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", bundle: .current) }
+        // the year only when it is not this one - a list going back far enough would
+        // otherwise show two Decembers with nothing to tell them apart
+        let s = Calendar.current.isDate(date, equalTo: .now, toGranularity: .year)
+            ? date.formatted(.dateTime.weekday(.wide).day().month().locale(.app))
+            : date.formatted(.dateTime.weekday(.wide).day().month().year().locale(.app))
         // first letter only - .capitalized would capitalise the month mid-phrase too
-        let s = date.formatted(.dateTime.weekday(.wide).day().month().locale(.app))
         return s.prefix(1).uppercased() + s.dropFirst()
     }
 
