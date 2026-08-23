@@ -116,7 +116,9 @@ enum CarState {
         case "online": return (String(localized: "Online", bundle: .current), .primary, "car.fill")
         case "asleep": return (String(localized: "Asleep", bundle: .current), .secondary, "moon.zzz.fill")
         case "suspended": return (String(localized: "Falling asleep", bundle: .current), .secondary, "moon.fill")
-        case "offline": return (String(localized: "Offline", bundle: .current), .orange, "antenna.radiowaves.left.and.right.slash")
+        // newer cars report offline whenever they sleep, so from the outside it is the same
+        // rest as asleep and wears the same moon. the word stays TeslaMate's
+        case "offline": return (String(localized: "Offline", bundle: .current), .secondary, "moon.zzz.fill")
         case "updating": return (String(localized: "Updating", bundle: .current), .purple, "arrow.down.circle.fill")
         default: return (state ?? String(localized: "Unknown", bundle: .current), .secondary, "questionmark.circle")
         }

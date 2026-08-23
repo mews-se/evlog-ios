@@ -1249,6 +1249,22 @@
         }
       }
     },
+    "No connection to the server" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No connection to the server"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen kontakt med servern"
+          }
+        }
+      }
+    },
     "No countries yet" : {
       "localizations" : {
         "en" : {

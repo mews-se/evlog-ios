@@ -10,6 +10,9 @@ struct DashboardView: View {
 
     @State private var status: CarStatus?
     @State private var error: String?
+    // whether the last refresh reached the server - the cards keep the last answer
+    // either way, so this is the only place a lost connection shows
+    @State private var reachable = true
     @State private var marketingName: String?
     @State private var batteryHealth: BatteryHealth?
     @State private var countries: [CountryStat] = []
@@ -65,7 +68,15 @@ struct DashboardView: View {
             .navigationTitle(status?.displayName ?? String(localized: "Overview", bundle: .current))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if let state = status?.state {
+                // the antenna is about the server, the rest of the icons about the car
+                if !reachable {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.orange)
+                            .accessibilityLabel(Text("No connection to the server"))
+                    }
+                } else if let state = status?.state {
                     let s = CarState.label(state, charging: status?.chargingDetails?.chargingState)
                     ToolbarItem(placement: .topBarTrailing) {
                         Image(systemName: s.icon)
@@ -84,7 +95,9 @@ struct DashboardView: View {
         do {
             status = try await api.status(carID: carID)
             error = nil
+            reachable = true
         } catch {
+            reachable = false
             if status == nil { self.error = error.localizedDescription }
         }
         // additive, never blocking - falls back on the trim code if Grafana is out of reach
