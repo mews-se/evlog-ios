@@ -200,7 +200,7 @@ enum PeriodTitle {
             let year = Calendar.current.component(.yearForWeekOfYear, from: date)
             return String(localized: "Week", bundle: .current) + " \(week), \(year)"
         case .month:
-            return date.formatted(.dateTime.month(.wide).year()).capitalized
+            return date.formatted(.dateTime.month(.wide).year().locale(.app)).capitalized
         case .year:
             return date.formatted(.dateTime.year())
         default:
