@@ -5,3 +5,5 @@ Tap a place in charging statistics to see the charges behind it.
 Average charging power is now measured on the charger's side, so a steady 11 kW charge reads 11 kW.
 
 Lists that reach back past New Year now say which year a day belongs to, and month names in statistics follow the language picked in the app.
+
+The antenna in the corner now means the app cannot reach your server; a sleeping car shows a moon.
