@@ -273,10 +273,12 @@ struct Charge: Decodable, Identifiable {
 
     var id: Int { chargeId }
 
-    // added/time, the same semantics as Grafana's Ø Power column
+    // what the charger delivered over the time it ran, the same side of the on-board
+    // charger as the max, so a steady 11 kW AC charge reads 11 and not the 10 that
+    // reached the battery. TeslaMate's own column divides the added energy instead
     var avgPowerKw: Double? {
         guard let minutes = durationMin, minutes > 0,
-              let energy = chargeEnergyAdded ?? chargeEnergyUsed else { return nil }
+              let energy = chargeEnergyUsed ?? chargeEnergyAdded else { return nil }
         return energy / (minutes / 60)
     }
 
@@ -368,7 +370,7 @@ struct ChargeGroup: Identifiable {
     var maxPowerKw: Double? { parts.compactMap(\.maxPowerKw).max() }
 
     var avgPowerKw: Double? {
-        guard let minutes = chargeMinutes, minutes > 0, let energy = energyAdded else { return nil }
+        guard let minutes = chargeMinutes, minutes > 0, let energy = energyUsed ?? energyAdded else { return nil }
         return energy / (minutes / 60)
     }
 
