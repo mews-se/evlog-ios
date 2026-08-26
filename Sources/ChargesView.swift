@@ -38,11 +38,11 @@ struct ChargeSummaryCard: View {
                     .font(.caption)
             }
             HStack {
-                summaryItem(Fmt.kr(cost), String(localized: "Cost", bundle: .current), .blue)
-                summaryItem(Fmt.kwh(energy), String(localized: "Energy", bundle: .current), .green)
+                summaryItem(Fmt.kr(cost), String(localized: "Cost"), .blue)
+                summaryItem(Fmt.kwh(energy), String(localized: "Energy"), .green)
                 // the parenthesis is the processes the joined stretches were made of,
                 // and the tint is neutral - grey means time everywhere else
-                summaryItem(countValue, String(localized: "Charges", bundle: .current), .primary)
+                summaryItem(countValue, String(localized: "Charges"), .primary)
             }
         }
         .padding(16)
@@ -75,7 +75,7 @@ struct ChargeRow: View {
 
     private var headline: String {
         showsPlace
-            ? group.address ?? String(localized: "Unknown location", bundle: .current)
+            ? group.address ?? String(localized: "Unknown location")
             : Fmt.day(group.startDate)
     }
 
@@ -168,19 +168,19 @@ struct ChargeDetailView: View {
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "bolt.fill", title: String(localized: "Added", bundle: .current), value: Fmt.kwh(group.energyAdded), tint: typeColor)
-                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Used", bundle: .current), value: Fmt.kwh(group.energyUsed), tint: .orange)
-                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency", bundle: .current), value: Fmt.percent(group.efficiency), tint: .mint)
-                        StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power", bundle: .current), value: Fmt.kw(group.maxPowerKw), tint: typeColor)
-                        StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power", bundle: .current), value: Fmt.kw(group.avgPowerKw), tint: typeColor)
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(group.batteryDetails) ?? "–", tint: .green)
-                        StatTile(icon: "clock.fill", title: String(localized: "Charge time", bundle: .current), value: Fmt.duration(group.chargeMinutes), tint: .secondary)
+                        StatTile(icon: "bolt.fill", title: String(localized: "Added"), value: Fmt.kwh(group.energyAdded), tint: typeColor)
+                        StatTile(icon: "bolt.badge.clock", title: String(localized: "Used"), value: Fmt.kwh(group.energyUsed), tint: .orange)
+                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency"), value: Fmt.percent(group.efficiency), tint: .mint)
+                        StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power"), value: Fmt.kw(group.maxPowerKw), tint: typeColor)
+                        StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(group.avgPowerKw), tint: typeColor)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(group.batteryDetails) ?? "–", tint: .green)
+                        StatTile(icon: "clock.fill", title: String(localized: "Charge time"), value: Fmt.duration(group.chargeMinutes), tint: .secondary)
                         if group.parts.count > 1 {
-                            StatTile(icon: "powerplug.fill", title: String(localized: "Plugged in", bundle: .current), value: Fmt.duration(group.pluggedMinutes), tint: .secondary)
+                            StatTile(icon: "powerplug.fill", title: String(localized: "Plugged in"), value: Fmt.duration(group.pluggedMinutes), tint: .secondary)
                         }
                         let costTitle = group.usesTessieCost(tessieCosts)
-                            ? String(localized: "Cost", bundle: .current) + " (Tessie)"
-                            : String(localized: "Cost", bundle: .current)
+                            ? String(localized: "Cost") + " (Tessie)"
+                            : String(localized: "Cost")
                         let costValue = Fmt.kr(group.cost(tessieCosts: tessieCosts))
                         if let costEditURL {
                             Link(destination: costEditURL) {
@@ -190,7 +190,7 @@ struct ChargeDetailView: View {
                         } else {
                             StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue)
                         }
-                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(group.outsideTempAvg), tint: .teal)
+                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(group.outsideTempAvg), tint: .teal)
                     }
 
                     if curve.count > 2 {

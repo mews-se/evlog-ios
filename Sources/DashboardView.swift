@@ -67,7 +67,7 @@ struct DashboardView: View {
                     }
                 }
             }
-            .navigationTitle(status?.displayName ?? String(localized: "Overview", bundle: .current))
+            .navigationTitle(status?.displayName ?? String(localized: "Overview"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 // the name opens the spec sheet - the chevron is the only hint it is a button
@@ -160,7 +160,7 @@ struct BatteryCard: View {
                     Text(verbatim: level.map { "\($0)%" } ?? "–")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                     if let range = status.batteryDetails?.ratedBatteryRange {
-                        Text(verbatim: Fmt.km(range, decimals: 0))
+                        Text(verbatim: Fmt.distance(range, decimals: 0))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -170,7 +170,7 @@ struct BatteryCard: View {
             .padding(.top, 2)
 
             if let projected = status.batteryDetails?.projectedRatedRange {
-                Text("≈ \(Fmt.km(projected, decimals: 0)) at \(Fmt.pct(100, decimals: 0))")
+                Text("≈ \(Fmt.distance(projected, decimals: 0)) at \(Fmt.pct(100, decimals: 0))")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -205,7 +205,7 @@ struct BatteryCard: View {
                 }
                 Spacer()
                 if let odo = status.odometer {
-                    Text(verbatim: Fmt.km(odo, decimals: 0))
+                    Text(verbatim: Fmt.distance(odo, decimals: 0))
                 }
             }
             .font(.footnote)
@@ -231,16 +231,16 @@ struct StatusGrid: View {
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
             StatTile(
                 icon: status.carStatus?.locked == true ? "lock.fill" : "lock.open.fill",
-                title: String(localized: "Lock", bundle: .current),
-                value: status.carStatus?.locked == true ? String(localized: "Locked", bundle: .current) : String(localized: "Unlocked", bundle: .current),
+                title: String(localized: "Lock"),
+                value: status.carStatus?.locked == true ? String(localized: "Locked") : String(localized: "Unlocked"),
                 tint: status.carStatus?.locked == true ? .green : .orange
             )
             NavigationLink(value: OverviewRoute.visited(lat: status.carGeodata?.latitude,
                                                         lon: status.carGeodata?.longitude)) {
                 StatTile(
                     icon: "mappin.and.ellipse",
-                    title: String(localized: "Location", bundle: .current),
-                    value: status.carGeodata?.geofence?.isEmpty == false ? status.carGeodata!.geofence! : String(localized: "Unknown", bundle: .current),
+                    title: String(localized: "Location"),
+                    value: status.carGeodata?.geofence?.isEmpty == false ? status.carGeodata!.geofence! : String(localized: "Unknown"),
                     tint: .blue,
                     chevron: true
                 )
@@ -248,20 +248,20 @@ struct StatusGrid: View {
             .buttonStyle(.plain)
             StatTile(
                 icon: "thermometer.medium",
-                title: String(localized: "Outside / inside", bundle: .current),
+                title: String(localized: "Outside / inside"),
                 value: "\(Fmt.temp(status.climateDetails?.outsideTemp)) / \(Fmt.temp(status.climateDetails?.insideTemp))",
                 tint: .teal
             )
             StatTile(
                 icon: "shield.fill",
                 title: "Sentry",
-                value: status.carStatus?.sentryMode == true ? String(localized: "On", bundle: .current) : String(localized: "Off", bundle: .current),
+                value: status.carStatus?.sentryMode == true ? String(localized: "On") : String(localized: "Off"),
                 tint: status.carStatus?.sentryMode == true ? .red : .secondary
             )
             NavigationLink(value: OverviewRoute.batteryHealth) {
                 StatTile(
                     icon: "battery.100percent.bolt",
-                    title: String(localized: "Degradation", bundle: .current),
+                    title: String(localized: "Degradation"),
                     value: Fmt.pct(health?.degradation),
                     tint: .teal,
                     chevron: true
@@ -272,7 +272,7 @@ struct StatusGrid: View {
             NavigationLink(value: OverviewRoute.countries) {
                 StatTile(
                     icon: "globe",
-                    title: String(localized: "Countries", bundle: .current),
+                    title: String(localized: "Countries"),
                     value: current.map { "\($0.flag) \($0.displayName)" } ?? "–",
                     tint: .indigo,
                     chevron: true
@@ -283,7 +283,7 @@ struct StatusGrid: View {
             NavigationLink(value: OverviewRoute.software(version: status.carVersions?.version)) {
                 StatTile(
                     icon: "cpu",
-                    title: String(localized: "Software", bundle: .current),
+                    title: String(localized: "Software"),
                     value: status.carVersions?.version?.components(separatedBy: " ").first ?? "–",
                     tint: .purple,
                     chevron: true
@@ -301,7 +301,7 @@ struct StatusGrid: View {
 
     private var statusSinceTitle: String {
         let state = CarState.label(status.state, charging: status.chargingDetails?.chargingState).text
-        return String(localized: "\(state) since", bundle: .current)
+        return String(localized: "\(state) since")
     }
 }
 

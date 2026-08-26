@@ -5,8 +5,8 @@ struct SettingsView: View {
     @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
     @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
-    @AppStorage(Pref.language.key) private var appLanguage = Pref.language.value
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
+    @AppStorage(Pref.units.key) private var units = Pref.units.value
 
     @FocusState private var editing: Bool
 
@@ -72,7 +72,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    TextField(String(localized: "API key", bundle: .current), text: $tessieToken)
+                    TextField(String(localized: "API key"), text: $tessieToken)
                         .focused($editing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
@@ -94,13 +94,12 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Picker("Language", selection: $appLanguage) {
-                        Text("System").tag("system")
-                        Text(verbatim: "English").tag("en")
-                        Text(verbatim: "Svenska").tag("sv")
+                    Picker("Units", selection: $units) {
+                        Text("Metric").tag("metric")
+                        Text("Imperial").tag("imperial")
                     }
-                } header: {
-                    Text("Language")
+                } footer: {
+                    Text("The region sets the default. TeslaMate's data is metric either way; this only changes what is shown.")
                 }
 
                 Section {
@@ -115,14 +114,6 @@ struct SettingsView: View {
                 }
             }
             .task { await loadCars() }
-            .onChange(of: appLanguage) { _, new in
-                if new == "system" {
-                    UserDefaults.standard.removeObject(forKey: "AppleLanguages")
-                } else {
-                    UserDefaults.standard.set([new], forKey: "AppleLanguages")
-                }
-                AppLanguage.apply(new)
-            }
         }
     }
 
@@ -131,7 +122,7 @@ struct SettingsView: View {
             let cars = try await APIClient(baseURL: serverURL).cars()
             self.cars = cars
             let names = cars.map(\.name).joined(separator: ", ")
-            testResult = String(localized: "✓ Connected – found \(names)", bundle: .current)
+            testResult = String(localized: "✓ Connected – found \(names)")
         } catch {
             testResult = "✗ \(error.localizedDescription)"
         }
@@ -149,7 +140,7 @@ struct SettingsView: View {
         do {
             let vehicles = try await TessieClient(token: tessieToken).vehicles()
             let names = vehicles.compactMap { $0.lastState?.displayName ?? $0.vin }.joined(separator: ", ")
-            tessieResult = String(localized: "✓ Connected – found \(names)", bundle: .current)
+            tessieResult = String(localized: "✓ Connected – found \(names)")
         } catch {
             tessieResult = "✗ \(error.localizedDescription)"
         }

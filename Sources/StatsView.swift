@@ -198,7 +198,7 @@ enum PeriodTitle {
         case .weekOfYear:
             let week = Calendar.current.component(.weekOfYear, from: date)
             let year = Calendar.current.component(.yearForWeekOfYear, from: date)
-            return String(localized: "Week", bundle: .current) + " \(week), \(year)"
+            return String(localized: "Week") + " \(week), \(year)"
         case .month:
             return date.formatted(.dateTime.month(.wide).year().locale(.app)).capitalized
         case .year:
@@ -218,7 +218,7 @@ struct StatBucketRow: View {
             Text(verbatim: PeriodTitle.text(bucket.period, component))
                 .font(.subheadline.weight(.semibold))
             HStack {
-                item(Fmt.km(bucket.distance, decimals: 0), .blue)
+                item(Fmt.distance(bucket.distance, decimals: 0), .blue)
                 item(Fmt.kwh(bucket.energyAdded), .green)
                 item(bucket.cost > 0 ? Fmt.kr(bucket.cost) : "–", .primary)
             }

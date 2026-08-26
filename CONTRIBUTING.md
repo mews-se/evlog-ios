@@ -53,17 +53,18 @@ obvious from the diff.
 
 ## Strings
 
-All user-facing text lives in `Sources/Localizable.xcstrings` with both `en` and `sv`. English is
-the source language and doubles as the key, but every key still needs an explicit `en` entry:
-without one there is no English bundle to switch to, and the in-app language picker silently stays
-in Swedish.
+All user-facing text lives in `Sources/Localizable.xcstrings` and is English only. English doubles
+as the key, but every key still carries an explicit `en` entry so the catalog and the compiler's
+extraction stay in step. Plain `String(localized:)` does the job.
 
-Use `String(localized:, bundle: .current)` rather than plain `String(localized:)`. The language
-picker works by pointing `Bundle.main` at the chosen `.lproj`, and only the `bundle:` form goes
-through the lookup that respects it.
+The app shipped with a Swedish translation up to 2.1 and dropped it in #38: keeping two languages
+correct takes more time than one developer has. If you want to bring a language and keep its texts
+alive over time, open an issue first.
 
-Established terms stay put. Sentry is Sentry. Where TeslaMate already has Swedish wording for
-something, that wording is the reference.
+Units follow the setting in the app, not the strings: TeslaMate's data is metric, and the imperial
+mode converts at display time only.
+
+Established terms stay put. Sentry is Sentry.
 
 ## Naming
 

@@ -8,10 +8,10 @@ enum APIError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .noServer: return String(localized: "No server yet. Add your TeslaMate API address under Settings.", bundle: .current)
-        case .noGrafana: return String(localized: "No Grafana address yet. Add it under Settings to see this.", bundle: .current)
-        case .badURL: return String(localized: "Invalid server URL. Check the settings.", bundle: .current)
-        case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).", bundle: .current)
+        case .noServer: return String(localized: "No server yet. Add your TeslaMate API address under Settings.")
+        case .noGrafana: return String(localized: "No Grafana address yet. Add it under Settings to see this.")
+        case .badURL: return String(localized: "Invalid server URL. Check the settings.")
+        case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).")
         }
     }
 }

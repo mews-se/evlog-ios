@@ -49,8 +49,7 @@ body:
       label: Anything else
       description: |
         Whatever you happen to know. Useful if you have it: your iPhone and
-        iOS version, your TeslaMate and teslamateapi versions, whether the
-        app was set to English or Swedish, whether a pull to refresh changes
-        anything, and how to reproduce it.
+        iOS version, your TeslaMate and teslamateapi versions, whether a
+        pull to refresh changes anything, and how to reproduce it.
     validations:
       required: false

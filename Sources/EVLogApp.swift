@@ -2,10 +2,6 @@ import SwiftUI
 
 @main
 struct EVLogApp: App {
-    init() {
-        AppLanguage.apply(UserDefaults.standard.string(forKey: Pref.language.key) ?? Pref.language.value)
-    }
-
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -20,7 +16,7 @@ enum Pref {
     static let grafana = (key: "grafanaURL", value: "")
     static let teslamate = (key: "teslamateURL", value: "")
     static let tessieToken = (key: "tessieToken", value: "")
-    static let language = (key: "appLanguage", value: "system")
+    static let units = (key: "units", value: Locale.current.measurementSystem == .metric ? "metric" : "imperial")
     static let carID = (key: "carID", value: 1)
     static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)
 }
@@ -29,7 +25,9 @@ struct RootView: View {
     @AppStorage(Pref.server.key) private var serverURL = Pref.server.value
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
 
-    @AppStorage(Pref.language.key) private var appLanguage = Pref.language.value
+    // formatted strings read the choice outside SwiftUI's view state, so a change
+    // rebuilds the tree the way the language picker used to
+    @AppStorage(Pref.units.key) private var units = Pref.units.value
 
     @State private var selection = 0
     @State private var overviewPath = NavigationPath()
@@ -59,7 +57,7 @@ struct RootView: View {
             timelinePath = NavigationPath()
             statsPath = NavigationPath()
         }
-        .id(appLanguage)
+        .id(units)
         .environment(\.locale, .app)
     }
 }

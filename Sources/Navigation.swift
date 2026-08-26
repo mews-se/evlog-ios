@@ -81,7 +81,7 @@ struct DetailPager: View {
     private var title: String {
         switch route.targets[index] {
         case .drive(_, let day): return Fmt.day(day)
-        case .charge(_, let address): return address ?? String(localized: "Charge", bundle: .current)
+        case .charge(_, let address): return address ?? String(localized: "Charge")
         }
     }
 }

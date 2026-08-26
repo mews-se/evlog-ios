@@ -21,12 +21,6 @@
             "state" : "translated",
             "value" : "EVLog reads your car's data from your TeslaMate server on the local network."
           }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EVLog hämtar bildata från din TeslaMate-server på det lokala nätverket."
-          }
         }
       }
     }

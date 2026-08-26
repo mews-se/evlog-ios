@@ -22,7 +22,7 @@ struct CountriesView: View {
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
-                                Text(verbatim: Fmt.km(country.km, decimals: 0))
+                                Text(verbatim: Fmt.distance(country.km, decimals: 0))
                                     .font(.callout.weight(.semibold).monospacedDigit())
                                     .foregroundStyle(.blue)
                             }

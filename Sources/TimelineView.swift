@@ -89,15 +89,14 @@ struct TimelineView: View {
             // the period row already takes its share of the flow
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Picker(String(localized: "Timeline", bundle: .current), selection: $filter) {
+                    Picker(String(localized: "Timeline"), selection: $filter) {
                         ForEach(TimelineFilter.allCases, id: \.self) { Text($0.title) }
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
                     // the navigation bar gives the segment exactly its content width, which
-                    // leaves the Swedish "Laddningar" pressed against the edges of its third.
-                    // the ceiling is the narrowest phone running iOS 17, 375 points less the
-                    // bar's margins
+                    // presses the longest title against the edges of its third. the ceiling
+                    // is the narrowest phone running iOS 17, 375 points less the bar's margins
                     .frame(minWidth: 330)
                 }
             }
@@ -110,7 +109,7 @@ struct TimelineView: View {
     private var periodBar: some View {
         HStack {
             Menu {
-                Picker(String(localized: "Period", bundle: .current), selection: $periodKey) {
+                Picker(String(localized: "Period"), selection: $periodKey) {
                     ForEach(TimelinePeriod.allCases, id: \.rawValue) { Text($0.title) }
                 }
             } label: {
@@ -579,7 +578,7 @@ struct MissingRow: View {
                 Text("No data for \(Fmt.duration(gap.minutes))")
                     .font(.footnote.weight(.medium))
                 Spacer()
-                Text(verbatim: Fmt.km(gap.km))
+                Text(verbatim: Fmt.distance(gap.km))
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(.secondary)
             }

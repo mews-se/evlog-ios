@@ -26,6 +26,6 @@ WHAT YOU NEED
 • Optionally Grafana, used for the visited-places map, battery health and a few queries the API does not expose
 • Optionally a Tessie API key, only to fill in charging costs TeslaMate never records
 
-English and Swedish, light and dark.
+Light and dark, metric and imperial.
 
 This app is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.

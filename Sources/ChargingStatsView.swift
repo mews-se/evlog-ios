@@ -22,7 +22,7 @@ struct ChargingStatsView: View {
     private var places: [Place] {
         var byName: [String: Place] = [:]
         for charge in charges {
-            let name = charge.address ?? String(localized: "Unknown location", bundle: .current)
+            let name = charge.address ?? String(localized: "Unknown location")
             var place = byName[name] ?? Place(name: name)
             place.energy += charge.chargeEnergyAdded ?? 0
             place.cost += cost(of: charge)
@@ -94,15 +94,15 @@ struct ChargingStatsView: View {
 
             Section {
                 SplitBar(acEnergy: energy(ac), dcEnergy: energy(dc))
-                LabeledContent(String(localized: "Energy", bundle: .current)) {
+                LabeledContent(String(localized: "Energy")) {
                     Text(verbatim: "\(Fmt.kwh(energy(ac))) / \(Fmt.kwh(energy(dc)))")
                         .monospacedDigit()
                 }
-                LabeledContent(String(localized: "Time", bundle: .current)) {
+                LabeledContent(String(localized: "Time")) {
                     Text(verbatim: "\(Fmt.duration(minutes(ac))) / \(Fmt.duration(minutes(dc)))")
                         .monospacedDigit()
                 }
-                LabeledContent(String(localized: "Charges", bundle: .current)) {
+                LabeledContent(String(localized: "Charges")) {
                     Text(verbatim: "\(ac.count) / \(dc.count)")
                         .monospacedDigit()
                 }
@@ -136,7 +136,7 @@ struct PlaceChargesView: View {
 
     // the same filter the ranking was built from, joined the way the timeline joins
     private var groups: [ChargeGroup] {
-        let unknown = String(localized: "Unknown location", bundle: .current)
+        let unknown = String(localized: "Unknown location")
         let here = charges.filter { ($0.address ?? unknown) == name }
         return ChargeGroup.stitch(here, drives: drives).sorted { $0.startDate > $1.startDate }
     }

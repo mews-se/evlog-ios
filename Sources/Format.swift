@@ -1,10 +1,39 @@
 import Foundation
 import SwiftUI
 
+// teslamate serves metric; the choice only changes what the numbers say on screen
+enum Units {
+    static let kmPerMile = 1.609344
+
+    static var imperial: Bool {
+        (UserDefaults.standard.string(forKey: Pref.units.key) ?? Pref.units.value) == "imperial"
+    }
+
+    static var speedSuffix: String { imperial ? "mph" : "km/h" }
+
+    static func distance(_ km: Double) -> Double {
+        imperial ? km / kmPerMile : km
+    }
+
+    static func temperature(_ celsius: Double) -> Double {
+        imperial ? celsius * 9 / 5 + 32 : celsius
+    }
+}
+
 enum Fmt {
-    static func km(_ value: Double?, decimals: Int = 1) -> String {
+    static func distance(_ value: Double?, decimals: Int = 1) -> String {
         guard let value else { return "–" }
-        return value.formatted(.number.precision(.fractionLength(decimals))) + " km"
+        return Units.distance(value).formatted(.number.precision(.fractionLength(decimals)))
+            + (Units.imperial ? " mi" : " km")
+    }
+
+    static func speed(_ kmh: Double?) -> String {
+        guard let kmh else { return "–" }
+        return "\(Int(Units.distance(kmh).rounded())) " + Units.speedSuffix
+    }
+
+    static func speedPair(_ max: Double?, _ avg: Double?) -> String {
+        "\(Int(Units.distance(max ?? 0).rounded())) / \(Int(Units.distance(avg ?? 0).rounded())) " + Units.speedSuffix
     }
 
     static func kwh(_ value: Double?) -> String {
@@ -28,7 +57,7 @@ enum Fmt {
 
     static func temp(_ value: Double?) -> String {
         guard let value else { return "–" }
-        return value.formatted(.number.precision(.fractionLength(0))) + "°"
+        return Units.temperature(value).formatted(.number.precision(.fractionLength(0))) + "°"
     }
 
     static func kw(_ value: Double?) -> String {
@@ -39,7 +68,9 @@ enum Fmt {
 
     static func consumption(_ whPerKm: Double?) -> String {
         guard let whPerKm else { return "–" }
-        return whPerKm.formatted(.number.precision(.fractionLength(0))) + " Wh/km"
+        let value = Units.imperial ? whPerKm * Units.kmPerMile : whPerKm
+        return value.formatted(.number.precision(.fractionLength(0)))
+            + (Units.imperial ? " Wh/mi" : " Wh/km")
     }
 
     static func percent(_ fraction: Double?) -> String {
@@ -70,8 +101,8 @@ enum Fmt {
 
     static func day(_ date: Date?) -> String {
         guard let date else { return "–" }
-        if Calendar.current.isDateInToday(date) { return String(localized: "Today", bundle: .current) }
-        if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", bundle: .current) }
+        if Calendar.current.isDateInToday(date) { return String(localized: "Today") }
+        if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday") }
         // the year only when it is not this one - a list going back far enough would
         // otherwise show two Decembers with nothing to tell them apart
         let s = Calendar.current.isDate(date, equalTo: .now, toGranularity: .year)
@@ -109,18 +140,18 @@ enum Fmt {
 
 enum CarState {
     static func label(_ state: String?, charging: String?) -> (text: String, color: Color, icon: String) {
-        if charging == "Charging" { return (String(localized: "Charging", bundle: .current), .green, "bolt.fill") }
+        if charging == "Charging" { return (String(localized: "Charging"), .green, "bolt.fill") }
         switch state {
-        case "driving": return (String(localized: "Driving", bundle: .current), .blue, "steeringwheel")
-        case "charging": return (String(localized: "Charging", bundle: .current), .green, "bolt.fill")
-        case "online": return (String(localized: "Online", bundle: .current), .primary, "car.fill")
-        case "asleep": return (String(localized: "Asleep", bundle: .current), .secondary, "moon.zzz.fill")
-        case "suspended": return (String(localized: "Falling asleep", bundle: .current), .secondary, "moon.fill")
+        case "driving": return (String(localized: "Driving"), .blue, "steeringwheel")
+        case "charging": return (String(localized: "Charging"), .green, "bolt.fill")
+        case "online": return (String(localized: "Online"), .primary, "car.fill")
+        case "asleep": return (String(localized: "Asleep"), .secondary, "moon.zzz.fill")
+        case "suspended": return (String(localized: "Falling asleep"), .secondary, "moon.fill")
         // newer cars report offline whenever they sleep, so from the outside it is the same
         // rest as asleep and wears the same moon. the word stays TeslaMate's
-        case "offline": return (String(localized: "Offline", bundle: .current), .secondary, "moon.zzz.fill")
-        case "updating": return (String(localized: "Updating", bundle: .current), .purple, "arrow.down.circle.fill")
-        default: return (state ?? String(localized: "Unknown", bundle: .current), .secondary, "questionmark.circle")
+        case "offline": return (String(localized: "Offline"), .secondary, "moon.zzz.fill")
+        case "updating": return (String(localized: "Updating"), .purple, "arrow.down.circle.fill")
+        default: return (state ?? String(localized: "Unknown"), .secondary, "questionmark.circle")
         }
     }
 

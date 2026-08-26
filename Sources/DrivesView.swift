@@ -12,11 +12,11 @@ struct DriveRow: View {
                 Text(verbatim: "\(Fmt.time(drive.startDate)) – \(Fmt.time(drive.endDate))")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Text(verbatim: Fmt.km(drive.distance))
+                Text(verbatim: Fmt.distance(drive.distance))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.blue)
             }
-            Text(verbatim: "\(drive.startAddress ?? String(localized: "Unknown", bundle: .current)) → \(drive.endAddress ?? String(localized: "Unknown", bundle: .current))")
+            Text(verbatim: "\(drive.startAddress ?? String(localized: "Unknown")) → \(drive.endAddress ?? String(localized: "Unknown"))")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -95,23 +95,23 @@ struct DriveDetailView: View {
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance", bundle: .current), value: Fmt.km(drive.distance), tint: .blue)
-                        StatTile(icon: "clock.fill", title: String(localized: "Duration", bundle: .current), value: Fmt.duration(drive.durationMin), tint: .secondary)
+                        StatTile(icon: "point.topleft.down.to.point.bottomright.curvepath", title: String(localized: "Distance"), value: Fmt.distance(drive.distance), tint: .blue)
+                        StatTile(icon: "clock.fill", title: String(localized: "Duration"), value: Fmt.duration(drive.durationMin), tint: .secondary)
                         SplitStatTile(
-                            leading: .init(icon: "bolt.fill", title: String(localized: "Energy (net)", bundle: .current),
+                            leading: .init(icon: "bolt.fill", title: String(localized: "Energy (net)"),
                                            value: Fmt.energy(drive.energyConsumedNet), tint: .orange),
-                            trailing: .init(icon: "arrow.counterclockwise", title: String(localized: "Regen", bundle: .current),
+                            trailing: .init(icon: "arrow.counterclockwise", title: String(localized: "Regen"),
                                             value: Fmt.energy(drive.regenKWh), tint: .green))
-                        StatTile(icon: "bolt.car.fill", title: String(localized: "Consumption", bundle: .current), value: Fmt.consumption(drive.consumptionWhPerKm), tint: .purple)
-                        StatTile(icon: "leaf.fill", title: String(localized: "Efficiency", bundle: .current), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
+                        StatTile(icon: "bolt.car.fill", title: String(localized: "Consumption"), value: Fmt.consumption(drive.consumptionWhPerKm), tint: .purple)
+                        StatTile(icon: "leaf.fill", title: String(localized: "Efficiency"), value: Fmt.pct(drive.efficiencyPct, decimals: 0),
                                  tint: CarState.efficiencyColor(drive.efficiencyPct),
                                  valueTint: CarState.efficiencyColor(drive.efficiencyPct))
-                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg", bundle: .current), value: "\(Int(drive.speedMax ?? 0)) / \(Int(drive.speedAvg ?? 0)) km/h", tint: .orange)
-                        StatTile(icon: "battery.75percent", title: String(localized: "Battery", bundle: .current), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
-                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp", bundle: .current), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
+                        StatTile(icon: "gauge.with.dots.needle.67percent", title: String(localized: "Max / avg"), value: Fmt.speedPair(drive.speedMax, drive.speedAvg), tint: .orange)
+                        StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(drive.batteryDetails) ?? "–", tint: .green)
+                        StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(drive.outsideTempAvg), tint: .teal)
                         if drive.batteryHeaterUsed {
-                            StatTile(icon: "heat.waves", title: String(localized: "Battery heater", bundle: .current),
-                                     value: String(localized: "On during the drive", bundle: .current), tint: .red, valueTint: .red)
+                            StatTile(icon: "heat.waves", title: String(localized: "Battery heater"),
+                                     value: String(localized: "On during the drive"), tint: .red, valueTint: .red)
                         }
                     }
                 }
@@ -147,7 +147,7 @@ struct DriveDetailView: View {
 
     private func scrubLabel(_ p: DrivePoint) -> String {
         var parts = [Fmt.time(p.date)]
-        if let speed = p.speed { parts.append("\(Int(speed)) km/h") }
+        if let speed = p.speed { parts.append(Fmt.speed(speed)) }
         if let power = p.power { parts.append("\(Int(power)) kW") }
         if let level = p.batteryLevel { parts.append("\(level) %") }
         return parts.joined(separator: " · ")
@@ -201,9 +201,9 @@ struct SpeedChart: View {
             // the marker sits outside the per-point loop - otherwise it draws one RuleMark per point
             Chart {
                 ForEach(series) { point in
-                    AreaMark(x: .value("Time", point.date), y: .value("km/h" as String, point.speed))
+                    AreaMark(x: .value("Time", point.date), y: .value("Speed" as String, Units.distance(point.speed)))
                         .foregroundStyle(.blue.opacity(0.15).gradient)
-                    LineMark(x: .value("Time", point.date), y: .value("km/h" as String, point.speed))
+                    LineMark(x: .value("Time", point.date), y: .value("Speed" as String, Units.distance(point.speed)))
                         .foregroundStyle(.blue)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                 }

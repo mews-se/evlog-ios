@@ -111,7 +111,7 @@ struct CarSpecView: View {
             ("Trim", (status?.carDetails?.trimBadging ?? car?.carDetails?.trimBadging)?.uppercased()),
             ("VIN", status?.carDetails?.vin ?? car?.carDetails?.vin),
             ("Efficiency", (status?.carDetails?.efficiency ?? car?.carDetails?.efficiency).map {
-                "\(Int(($0 * 1000).rounded())) Wh/km"
+                Fmt.consumption($0 * 1000)
             }),
         ])
     }
