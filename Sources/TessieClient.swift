@@ -26,6 +26,13 @@ struct TessieClient {
         return payload.results ?? []
     }
 
+    // a lone vehicle answers even when teslamate carries no VIN to match against
+    func vehicle(vin: String?) async throws -> TessieVehicle? {
+        let all = try await vehicles()
+        if let vin, let match = all.first(where: { $0.vin == vin }) { return match }
+        return all.count == 1 ? all.first : nil
+    }
+
     func charges(vin: String, from: Date) async throws -> [TessieCharge] {
         let epoch = Int(from.timeIntervalSince1970)
         let payload: TessieChargesResponse = try await get("/\(vin)/charges?from=\(epoch)")
@@ -93,6 +100,37 @@ struct TessieVehicle: Decodable {
 
 struct TessieVehicleState: Decodable {
     let displayName: String?
+    let vehicleConfig: TessieVehicleConfig?
+    let chargeState: TessieChargeState?
+}
+
+// the only field read out of the big live blocks - a fact, not moment-to-moment state
+struct TessieChargeState: Decodable {
+    let lifetimeEnergyUsed: Double?
+}
+
+// the configuration block the car reports about itself, raw option-code style values
+struct TessieVehicleConfig: Decodable {
+    let carType: String?
+    let frontDriveUnit: String?
+    let rearDriveUnit: String?
+    let performancePackage: String?
+    let hasLudicrousMode: Bool?
+    let hasAirSuspension: Bool?
+    let exteriorColor: String?
+    let exteriorTrim: String?
+    let roofColor: String?
+    let wheelType: String?
+    let spoilerType: String?
+    let headlampType: String?
+    let interiorTrimType: String?
+    let rearSeatHeaters: Int?
+    let hasSeatCooling: Bool?
+    let thirdRowSeats: String?
+    let chargePortType: String?
+    let motorizedChargePort: Bool?
+    let driverAssist: String?
+    let efficiencyPackage: String?
 }
 
 struct TessieChargesResponse: Decodable {

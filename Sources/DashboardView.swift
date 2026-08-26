@@ -7,7 +7,9 @@ struct DashboardView: View {
     @Binding var path: NavigationPath
 
     @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
+    @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
 
+    @State private var showSpec = false
     @State private var status: CarStatus?
     @State private var error: String?
     // whether the last refresh reached the server - the cards keep the last answer
@@ -68,6 +70,24 @@ struct DashboardView: View {
             .navigationTitle(status?.displayName ?? String(localized: "Overview", bundle: .current))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                // the name opens the spec sheet - the chevron is the only hint it is a button
+                if let name = status?.displayName {
+                    ToolbarItem(placement: .principal) {
+                        Button {
+                            showSpec = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(verbatim: name)
+                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+                                Image(systemName: "chevron.down")
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
                 // the antenna is about the server, the rest of the icons about the car
                 if !reachable {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -88,6 +108,10 @@ struct DashboardView: View {
             }
             .refreshable { await load() }
             .task { await load() }
+            .sheet(isPresented: $showSpec) {
+                CarSpecView(api: api, carID: carID, status: status,
+                            marketingName: marketingName, token: tessieToken)
+            }
         }
     }
 

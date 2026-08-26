@@ -2338,6 +2338,54 @@
           }
         }
       }
+    },
+    "Add a Tessie API key in Settings and the car itself fills in the rest." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a Tessie API key in Settings and the car itself fills in the rest."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lägg in en Tessie API-nyckel i Inställningar så fyller bilen själv i resten."
+          }
+        }
+      }
+    },
+    "Tessie didn't answer, so this is what TeslaMate knows." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tessie didn't answer, so this is what TeslaMate knows."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tessie svarade inte, så det här är vad TeslaMate vet."
+          }
+        }
+      }
+    },
+    "From the car, via Tessie." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From the car, via Tessie."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Från bilen, via Tessie."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

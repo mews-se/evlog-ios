@@ -14,8 +14,27 @@ struct Car: Decodable, Identifiable {
     let carId: Int
     let name: String
     let carDetails: CarDetails?
+    let carExterior: CarExterior?
+    let teslamateDetails: TeslaMateDetails?
+    let teslamateStats: TeslaMateStats?
 
     var id: Int { carId }
+}
+
+struct CarExterior: Decodable {
+    let exteriorColor: String?
+    let spoilerType: String?
+    let wheelType: String?
+}
+
+struct TeslaMateDetails: Decodable {
+    let insertedAt: String?
+}
+
+struct TeslaMateStats: Decodable {
+    let totalCharges: Int?
+    let totalDrives: Int?
+    let totalUpdates: Int?
 }
 
 struct CarDetails: Decodable {
