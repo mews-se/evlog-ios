@@ -19,6 +19,7 @@ enum Pref {
     static let units = (key: "units", value: Locale.current.measurementSystem == .metric ? "metric" : "imperial")
     static let carID = (key: "carID", value: 1)
     static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)
+    static let demoMode = (key: "demoMode", value: false)
 }
 
 struct RootView: View {
@@ -28,6 +29,7 @@ struct RootView: View {
     // formatted strings read the choice outside SwiftUI's view state, so a change
     // rebuilds the tree the way the language picker used to
     @AppStorage(Pref.units.key) private var units = Pref.units.value
+    @AppStorage(Pref.demoMode.key) private var demoMode = Pref.demoMode.value
 
     @State private var selection = 0
     @State private var overviewPath = NavigationPath()
@@ -57,7 +59,8 @@ struct RootView: View {
             timelinePath = NavigationPath()
             statsPath = NavigationPath()
         }
-        .id(units)
+        // flipping units or demo rebuilds the tree so every view reloads its data
+        .id("\(units)|\(demoMode)|\(serverURL.isEmpty)")
         .environment(\.locale, .app)
     }
 }

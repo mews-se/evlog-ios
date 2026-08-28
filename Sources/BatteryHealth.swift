@@ -31,6 +31,7 @@ struct BatteryHealth: Decodable {
 
 extension GrafanaClient {
     func batteryHealth(carID: Int) async throws -> BatteryHealth? {
+        if demo { return Demo.batteryHealth }
         let sql = #"""
 WITH Aux as (
     SELECT 

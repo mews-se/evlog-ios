@@ -36,6 +36,7 @@ struct CountryStat: Identifiable {
 extension GrafanaClient {
     // road kilometres spent per kilometre as the crow flies, the median across own drives
     func detourFactor(carID: Int) async throws -> Double? {
+        if demo { return Demo.detourFactor }
         let sql = """
         select round(percentile_cont(0.5) within group (order by ratio)::numeric, 2)::text
         from (
@@ -55,6 +56,7 @@ extension GrafanaClient {
 
     // the drive list carries no climate data, so the heater drives are fetched in one go
     func heaterDrives(carID: Int) async throws -> Set<Int> {
+        if demo { return Demo.heaterDrives }
         let sql = """
         select distinct drive_id::text from positions
         where car_id = \(carID) and battery_heater and drive_id is not null
@@ -67,6 +69,7 @@ extension GrafanaClient {
     // the charge rows get their heater mark the same way. the samples carry no
     // car of their own - that lives on the process
     func heaterCharges(carID: Int) async throws -> Set<Int> {
+        if demo { return Demo.heaterCharges }
         let sql = """
         select distinct s.charging_process_id::text from charges s
         join charging_processes c on c.id = s.charging_process_id
@@ -80,6 +83,7 @@ extension GrafanaClient {
     // climate is absent from the charge samples, but the positions logged through the
     // window carry the flag at roughly five minute intervals - so minutes, not seconds
     func climateMinutes(carID: Int, from: Date, to: Date) async throws -> Double? {
+        if demo { return Demo.climateMinutes(from: from, to: to) }
         let sql = """
         select round(sum(gap) / 60)::text from (
           select extract(epoch from date - lag(date) over (order by date)) as gap,
@@ -103,6 +107,7 @@ extension GrafanaClient {
 
     // the charge list carries no usable level, so the cold starts are fetched the same way
     func coldChargeStarts(carID: Int) async throws -> Set<Int> {
+        if demo { return Demo.coldChargeStarts }
         let sql = """
         select c.id::text from charging_processes c
         join positions p on c.position_id = p.id
@@ -115,6 +120,7 @@ extension GrafanaClient {
 
     // the countries live in addresses.raw (Nominatim), not in teslamateapi
     func countries(carID: Int) async throws -> [CountryStat] {
+        if demo { return Demo.countries }
         let sql = """
         select
           a.raw->'address'->>'country_code' as code,

@@ -18,6 +18,7 @@ enum APIError: LocalizedError {
 
 struct APIClient {
     let baseURL: String
+    var demo: Bool = Demo.isActive
 
     private static let decoder: JSONDecoder = {
         let d = JSONDecoder()
@@ -27,6 +28,9 @@ struct APIClient {
     }()
 
     private func get<T: Decodable>(_ path: String) async throws -> T {
+        if demo {
+            return try Self.decoder.decode(Envelope<T>.self, from: Demo.payload(for: path)).data
+        }
         let root = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
         if root.isEmpty { throw APIError.noServer }
         guard let url = URL(string: root + path) else { throw APIError.badURL }

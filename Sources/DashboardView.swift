@@ -77,9 +77,10 @@ struct DashboardView: View {
                             showSpec = true
                         } label: {
                             HStack(spacing: 4) {
+                                // the warning colour keeps canned data from passing as a car
                                 Text(verbatim: name)
                                     .font(.headline)
-                                    .foregroundStyle(.primary)
+                                    .foregroundStyle(api.demo ? AnyShapeStyle(.orange) : AnyShapeStyle(.primary))
                                 Image(systemName: "chevron.down")
                                     .font(.caption2.weight(.bold))
                                     .foregroundStyle(.secondary)

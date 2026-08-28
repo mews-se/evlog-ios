@@ -12,6 +12,7 @@ targets:
     sources:
       - Sources
       - Resources/Assets.xcassets
+      - Resources/Demo
     settings:
       base:
         SWIFT_VERSION: "5.9"

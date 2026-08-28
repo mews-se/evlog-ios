@@ -9,6 +9,7 @@ struct TrackPoint {
 // the positions table is not reachable through teslamateapi — Grafana's datasource API (anonymous viewer) fills the gap
 struct GrafanaClient {
     let baseURL: String
+    var demo: Bool = Demo.isActive
 
     private var root: String {
         baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
@@ -21,6 +22,8 @@ struct GrafanaClient {
     }
 
     func positions(carID: Int, condition: String, sampleSeconds: Int) async throws -> [TrackPoint] {
+        // every demo period holds the same three weeks, so the condition carries nothing
+        if demo { return Demo.trackPoints() }
         let uid = try await datasourceUID()
         let sql = """
         select extract(epoch from date) as t, latitude, longitude from positions \
@@ -56,7 +59,8 @@ struct GrafanaClient {
 
     // marketing_name is only in the database, not in teslamateapi
     func marketingName(carID: Int) async throws -> String? {
-        try await scalarText("select marketing_name from cars where id = \(carID)")
+        if demo { return Demo.marketingName }
+        return try await scalarText("select marketing_name from cars where id = \(carID)")
     }
 
     // column-wise text answer - callers cast to text in the SQL

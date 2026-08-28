@@ -51,6 +51,16 @@
         }
       }
     },
+    "Built-in example data instead of a server. The app starts here until a TeslaMate API address is in place." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in example data instead of a server. The app starts here until a TeslaMate API address is in place."
+          }
+        }
+      }
+    },
     "Charge complete · %@" : {
       "localizations" : {
         "en" : {
@@ -67,6 +77,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging stopped · %@"
+          }
+        }
+      }
+    },
+    "Demo mode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demo mode"
           }
         }
       }

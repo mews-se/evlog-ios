@@ -1,0 +1,1 @@
+{"data":{"cars":[{"car_id":1,"name":"Demo","car_details":{"model":"3","trim_badging":"LR","vin":"5YJ3DEM0M0DE00000","efficiency":0.152},"car_exterior":{"exterior_color":"DeepBlue","spoiler_type":"None","wheel_type":"Pinwheel18"},"teslamate_details":{"inserted_at":"2026-08-08T07:00:00Z"},"teslamate_stats":{"total_charges":6,"total_drives":33,"total_updates":1}}]}}
