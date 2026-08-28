@@ -19,10 +19,13 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 
 ## What it does
 
-**Overview** — battery ring with range, lock state, location, temperatures, Sentry, degradation,
-countries visited, software version and time since last contact. From here you reach a map of
-every place the car has been over a chosen period, and a range map showing how far the current
-charge takes you, using a detour factor derived from your own trips rather than a guess.
+**Overview** — battery ring with range, what the cable is doing right now, TeslaMate's own status
+glyphs for preconditioning, open doors and windows, tyre pressure and more, lock state, location,
+temperatures, Sentry, degradation, countries visited, software version and time since last contact.
+The car's name opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own
+configuration. From here you reach a map of every place the car has been over a chosen period, and
+a range map showing how far the current charge takes you, using a detour factor derived from your
+own trips rather than a guess.
 
 **Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
@@ -36,13 +39,17 @@ consumption, and efficiency as a percentage of rated consumption. Drives where t
 ran are marked, since that is often what explains a cold day's consumption.
 
 **Charges** — AC and DC told apart, the charging curve with a readout under your finger, added
-and used energy, average and peak power, and cost. A car left plugged in across several charging
-processes is shown as one charge. Costs TeslaMate does not have can be filled in from Tessie if you
-use it.
+and used energy, average and peak power, cost, and what the battery heater and cabin climate drew
+while the car charged. A car left plugged in across several charging processes is shown as one
+charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
 **Statistics** — week, month and year, drilling down from period to day to individual drives.
 Charging statistics with top locations that open into the charges behind them, AC/DC split and a
 weekday-by-hour heat map.
+
+**Demo mode** — with no server configured the app starts in three weeks of built-in example data,
+so every screen above can be tried before anything is set up. A switch in Settings takes you back
+there any time, and the title says DEMO MODE whenever the data is canned.
 
 ## What's next
 
@@ -62,7 +69,8 @@ the release list.
 - Optionally a [Tessie](https://tessie.com) API key, only to fill in charging costs that TeslaMate
   never records
 
-All addresses are configured under Settings in the app.
+All addresses are configured under Settings in the app. Until a server address is in place the app
+runs in demo mode, so there is something to look at before there is anything to connect to.
 
 The app allows plain HTTP to your own network: private addresses such as 192.168.x.x and 10.x.x.x,
 `.local` names, and hostnames without a dot. That covers a LAN and a VPN alike. A server you reach
