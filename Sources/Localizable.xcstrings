@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ added · %lld kW · %@ left" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ added · %lld kW · %@ left"
+          }
+        }
+      }
+    },
     "%@ since" : {
       "localizations" : {
         "en" : {
@@ -41,12 +51,152 @@
         }
       }
     },
+    "Charge complete · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge complete · %@"
+          }
+        }
+      }
+    },
+    "Charging stopped · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charging stopped · %@"
+          }
+        }
+      }
+    },
+    "Dog Mode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dog Mode"
+          }
+        }
+      }
+    },
+    "Doors open" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doors open"
+          }
+        }
+      }
+    },
+    "Driver present" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver present"
+          }
+        }
+      }
+    },
+    "Health check failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health check failed"
+          }
+        }
+      }
+    },
+    "Low tyre pressure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low tyre pressure"
+          }
+        }
+      }
+    },
     "No data for %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No data for %@"
+          }
+        }
+      }
+    },
+    "Plugged in · no power" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plugged in · no power"
+          }
+        }
+      }
+    },
+    "Plugged in · starts at %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plugged in · starts at %@"
+          }
+        }
+      }
+    },
+    "Preconditioning" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preconditioning"
+          }
+        }
+      }
+    },
+    "Reduced battery range" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reduced battery range"
+          }
+        }
+      }
+    },
+    "Software update available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Software update available"
+          }
+        }
+      }
+    },
+    "Starting to charge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting to charge"
+          }
+        }
+      }
+    },
+    "Windows open" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows open"
           }
         }
       }

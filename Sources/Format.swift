@@ -140,7 +140,8 @@ enum Fmt {
 
 enum CarState {
     static func label(_ state: String?, charging: String?) -> (text: String, color: Color, icon: String) {
-        if charging == "Charging" { return (String(localized: "Charging"), .green, "bolt.fill") }
+        // teslamateapi lowercases the charging state on its way through
+        if charging?.lowercased() == "charging" { return (String(localized: "Charging"), .green, "bolt.fill") }
         switch state {
         case "driving": return (String(localized: "Driving"), .blue, "steeringwheel")
         case "charging": return (String(localized: "Charging"), .green, "bolt.fill")

@@ -63,6 +63,7 @@ struct CarStatus: Decodable {
     let climateDetails: ClimateDetails?
     let batteryDetails: BatteryStatus?
     let chargingDetails: ChargingDetails?
+    let tpmsDetails: TpmsDetails?
 }
 
 struct CarFlags: Decodable {
@@ -99,6 +100,7 @@ struct ClimateDetails: Decodable {
     let insideTemp: Double?
     let outsideTemp: Double?
     let isPreconditioning: Bool?
+    let climateKeeperMode: String?
 }
 
 struct BatteryStatus: Decodable {
@@ -122,6 +124,27 @@ struct ChargingDetails: Decodable {
     let chargeLimitSoc: Int?
     let chargerPower: Double?
     let timeToFullCharge: Double?
+    // kept as text: the feed's "none" is year one with an odd offset, not null
+    let scheduledChargingStartTime: String?
+
+    var scheduledStart: Date? {
+        guard let raw = scheduledChargingStartTime,
+              let date = ISO8601DateFormatter().date(from: raw),
+              date.timeIntervalSince1970 > 0 else { return nil }
+        return date
+    }
+}
+
+struct TpmsDetails: Decodable {
+    let tpmsSoftWarningFl: Bool?
+    let tpmsSoftWarningFr: Bool?
+    let tpmsSoftWarningRl: Bool?
+    let tpmsSoftWarningRr: Bool?
+
+    var anyWarning: Bool {
+        [tpmsSoftWarningFl, tpmsSoftWarningFr, tpmsSoftWarningRl, tpmsSoftWarningRr]
+            .contains { $0 == true }
+    }
 }
 
 // MARK: - /drives

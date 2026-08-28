@@ -144,6 +144,120 @@ struct BatteryCard: View {
 
     private var level: Int? { status.batteryDetails?.usableBatteryLevel ?? status.batteryDetails?.batteryLevel }
 
+    private var showsCable: Bool {
+        let state = status.chargingDetails?.chargingState?.lowercased() ?? ""
+        return ["charging", "starting", "complete", "stopped", "nopower"].contains(state)
+            || status.chargingDetails?.pluggedIn == true
+    }
+
+    private var styledCableLine: some View {
+        cableLine
+            .font(.subheadline.weight(.medium))
+            .lineLimit(1)
+    }
+
+    @ViewBuilder private func glyphRow(_ glyphs: [(icon: String, color: Color, label: String)]) -> some View {
+        if !glyphs.isEmpty {
+            HStack(spacing: 8) {
+                ForEach(glyphs, id: \.icon) { glyph in
+                    if glyph.icon == "fan.fill" {
+                        // the page's one moving part: the blades turn while preconditioning runs
+                        Image(systemName: glyph.icon)
+                            .symbolEffect(.rotate, options: .repeat(.continuous))
+                            .foregroundStyle(glyph.color)
+                            .accessibilityLabel(Text(verbatim: glyph.label))
+                    } else {
+                        Image(systemName: glyph.icon)
+                            .foregroundStyle(glyph.color)
+                            .accessibilityLabel(Text(verbatim: glyph.label))
+                    }
+                }
+            }
+            .font(.footnote.weight(.semibold))
+        }
+    }
+
+    // the state name decides which line shows, not the percentage. teslamateapi
+    // lowercases the states on their way through
+    @ViewBuilder private var cableLine: some View {
+        let charging = status.chargingDetails
+        switch charging?.chargingState?.lowercased() {
+        case "charging":
+            let added = Fmt.kwh(charging?.chargeEnergyAdded)
+            let power = charging?.chargerPower.map { Int($0) } ?? 0
+            if let hours = charging?.timeToFullCharge, hours > 0 {
+                Label("\(added) added · \(power) kW · \(Fmt.duration(hours * 60)) left", systemImage: "bolt.fill")
+                    .foregroundStyle(.green)
+            } else {
+                Label("\(added) added · \(power) kW", systemImage: "bolt.fill")
+                    .foregroundStyle(.green)
+            }
+        case "starting":
+            Label("Starting to charge", systemImage: "bolt.fill")
+                .foregroundStyle(.green)
+        case "complete":
+            Label("Charge complete · \(Fmt.pct((charging?.chargeLimitSoc ?? level).map(Double.init), decimals: 0))", systemImage: "bolt.badge.checkmark")
+                .foregroundStyle(.green)
+        case "stopped":
+            if let start = charging?.scheduledStart {
+                Label("Plugged in · starts at \(Fmt.time(start))", systemImage: "bolt.badge.clock")
+                    .foregroundStyle(.secondary)
+            } else {
+                Label("Charging stopped · \(Fmt.pct(level.map(Double.init), decimals: 0))", systemImage: "bolt.slash")
+                    .foregroundStyle(.secondary)
+            }
+        case "nopower":
+            Label("Plugged in · no power", systemImage: "powerplug.fill")
+                .foregroundStyle(.orange)
+        default:
+            if charging?.pluggedIn == true {
+                Label("Plugged in", systemImage: "powerplug.fill")
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    // TeslaMate's own icon row, with its conditions: off simply does not appear.
+    // service mode is missing from the status feed, the map marker's job belongs
+    // to the location card, and the lock and sentry cards already say their piece
+    private var glyphs: [(icon: String, color: Color, label: String)] {
+        var row: [(icon: String, color: Color, label: String)] = []
+        let flags = status.carStatus
+        let climate = status.climateDetails
+        if climate?.isPreconditioning == true {
+            row.append(("fan.fill", .secondary, String(localized: "Preconditioning")))
+        }
+        if climate?.climateKeeperMode == "dog" {
+            row.append(("dog.fill", .secondary, String(localized: "Dog Mode")))
+        }
+        if let full = status.batteryDetails?.batteryLevel,
+           let usable = status.batteryDetails?.usableBatteryLevel, full - usable > 2 {
+            row.append(("snowflake", .cyan, String(localized: "Reduced battery range")))
+        }
+        if status.state != "driving", flags?.isUserPresent == true {
+            row.append(("person.fill", .secondary, String(localized: "Driver present")))
+        }
+        if status.chargingDetails?.pluggedIn == true {
+            row.append(("powerplug.fill", .secondary, String(localized: "Plugged in")))
+        }
+        if flags?.windowsOpen == true {
+            row.append(("window.vertical.open", .secondary, String(localized: "Windows open")))
+        }
+        if flags?.doorsOpen == true {
+            row.append(("car.top.door.front.left.open", .secondary, String(localized: "Doors open")))
+        }
+        if status.carVersions?.updateAvailable == true {
+            row.append(("gift.fill", .secondary, String(localized: "Software update available")))
+        }
+        if status.tpmsDetails?.anyWarning == true {
+            row.append(("tirepressure", .orange, String(localized: "Low tyre pressure")))
+        }
+        if flags?.healthy == false {
+            row.append(("exclamationmark.square.fill", .red, String(localized: "Health check failed")))
+        }
+        return row
+    }
+
     var body: some View {
         VStack(spacing: 14) {
             ZStack {
@@ -175,16 +289,19 @@ struct BatteryCard: View {
                     .foregroundStyle(.secondary)
             }
 
-            if status.chargingDetails?.chargingState == "Charging" {
-                let power = status.chargingDetails?.chargerPower
-                let added = status.chargingDetails?.chargeEnergyAdded
-                Label("\(Fmt.kwh(added)) added · \(power.map { Int($0) } ?? 0) kW", systemImage: "bolt.fill")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.green)
-            } else if status.chargingDetails?.pluggedIn == true {
-                Label("Plugged in", systemImage: "powerplug.fill")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.secondary)
+            let glyphs = self.glyphs
+            if showsCable || !glyphs.isEmpty {
+                // beside each other when the line is short, stacked when it is not
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) {
+                        styledCableLine
+                        glyphRow(glyphs)
+                    }
+                    VStack(spacing: 8) {
+                        styledCableLine
+                        glyphRow(glyphs)
+                    }
+                }
             }
 
             HStack {
@@ -252,8 +369,9 @@ struct StatusGrid: View {
                 value: "\(Fmt.temp(status.climateDetails?.outsideTemp)) / \(Fmt.temp(status.climateDetails?.insideTemp))",
                 tint: .teal
             )
+            // the dot Tesla's own UI uses: filled and red on watch, dotted at rest
             StatTile(
-                icon: "shield.fill",
+                icon: status.carStatus?.sentryMode == true ? "circle.inset.filled" : "circle.dotted",
                 title: "Sentry",
                 value: status.carStatus?.sentryMode == true ? String(localized: "On") : String(localized: "Off"),
                 tint: status.carStatus?.sentryMode == true ? .red : .secondary
