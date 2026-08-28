@@ -70,7 +70,8 @@ enum TessieCosts {
     private static let vins = VINStore()
 
     static func load(api: APIClient, carID: Int, token: String, for charges: [Charge]) async -> [Int: Double] {
-        guard !token.isEmpty, !charges.isEmpty else { return [:] }
+        // the demo carries its own costs - the key stays idle there
+        guard !token.isEmpty, !charges.isEmpty, !api.demo else { return [:] }
         guard let vin = await vins.vin(api: api, carID: carID) else { return [:] }
         return (try? await TessieClient(token: token).missingCosts(for: charges, vin: vin)) ?? [:]
     }

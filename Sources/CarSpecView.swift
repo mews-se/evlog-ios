@@ -81,12 +81,15 @@ struct CarSpecView: View {
                         ("Spoiler", pretty(car?.carExterior?.spoilerType)),
                     ])
                     specSection("Lifetime", lifetimeRows)
-                    Section {
-                    } footer: {
-                        if tessieFailed {
-                            Text("Tessie didn't answer, so this is what TeslaMate knows.")
-                        } else {
-                            Text("Add a Tessie API key in Settings and the car itself fills in the rest.")
+                    // the demo keeps the key idle, so it makes no promise about it
+                    if !api.demo {
+                        Section {
+                        } footer: {
+                            if tessieFailed {
+                                Text("Tessie didn't answer, so this is what TeslaMate knows.")
+                            } else {
+                                Text("Add a Tessie API key in Settings and the car itself fills in the rest.")
+                            }
                         }
                     }
                 }
@@ -148,7 +151,8 @@ struct CarSpecView: View {
 
     private func load() async {
         car = (try? await api.cars())?.first { $0.carId == carID }
-        guard !token.isEmpty else {
+        // a stored key must not reach past the demo - tessie would answer with the real car
+        guard !token.isEmpty, !api.demo else {
             phase = .short(tessieFailed: false)
             return
         }
