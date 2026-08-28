@@ -25,7 +25,7 @@ The Xcode project is generated from `project.yml` and not committed, so run `xco
 again after adding a file or editing that file. A new source file that is not in the generated
 project does not fail loudly — it simply is not compiled.
 
-iOS 17 or later, iPhone only.
+iOS 18 or later, iPhone only.
 
 ## Before you open a pull request
 

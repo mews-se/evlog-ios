@@ -7,7 +7,7 @@ dashboard squeezed onto a small screen.
 EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
 create, and nothing leaves your network.
 
-[Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911) — free, iOS 17 or
+[Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911) — free, iOS 18 or
 later. Every version that reaches the App Store gets a
 [tag and a release](https://github.com/mews-se/evlog-ios/releases) here. `main` holds the build
 most recently sent to Apple — normally the one in the store, marked by the latest tag — while new
@@ -112,7 +112,7 @@ brew install xcodegen
 xcodegen generate
 ```
 
-iOS 17 or later, iPhone only.
+iOS 18 or later, iPhone only.
 
 That is enough to build and run it in the simulator. To put it on your own iPhone, change
 `DEVELOPMENT_TEAM` in `project.yml` first — the identifier in the file is mine, and Xcode will not
