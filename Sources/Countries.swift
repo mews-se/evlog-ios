@@ -64,6 +64,43 @@ extension GrafanaClient {
         return Set(ids.compactMap { $0.flatMap(Int.init) })
     }
 
+    // the charge rows get their heater mark the same way. the samples carry no
+    // car of their own - that lives on the process
+    func heaterCharges(carID: Int) async throws -> Set<Int> {
+        let sql = """
+        select distinct s.charging_process_id::text from charges s
+        join charging_processes c on c.id = s.charging_process_id
+        where c.car_id = \(carID) and s.battery_heater
+        """
+        let columns = try await textColumns(sql)
+        guard let ids = columns.first else { return [] }
+        return Set(ids.compactMap { $0.flatMap(Int.init) })
+    }
+
+    // climate is absent from the charge samples, but the positions logged through the
+    // window carry the flag at roughly five minute intervals - so minutes, not seconds
+    func climateMinutes(carID: Int, from: Date, to: Date) async throws -> Double? {
+        let sql = """
+        select round(sum(gap) / 60)::text from (
+          select extract(epoch from date - lag(date) over (order by date)) as gap,
+                 lag(is_climate_on) over (order by date) as was_on
+          from positions
+          where car_id = \(carID) and drive_id is null
+            and date between '\(Self.sqlDate(from))' and '\(Self.sqlDate(to))'
+        ) t where was_on and gap < 600
+        """
+        return try await scalarText(sql).flatMap(Double.init)
+    }
+
+    // positions store naive UTC timestamps
+    private static func sqlDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.string(from: date)
+    }
+
     // the charge list carries no usable level, so the cold starts are fetched the same way
     func coldChargeStarts(carID: Int) async throws -> Set<Int> {
         let sql = """

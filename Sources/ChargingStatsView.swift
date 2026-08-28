@@ -133,6 +133,7 @@ struct PlaceChargesView: View {
     let charges: [Charge]
     let drives: [Drive]
     var tessieCosts: [Int: Double] = [:]
+    var heaterCharges: Set<Int> = []
 
     // the same filter the ranking was built from, joined the way the timeline joins
     private var groups: [ChargeGroup] {
@@ -153,7 +154,8 @@ struct PlaceChargesView: View {
             Section {
                 ForEach(Array(groups.enumerated()), id: \.element.id) { i, group in
                     NavigationLink(value: DetailRoute(targets: run, index: i)) {
-                        ChargeRow(group: group, tessieCosts: tessieCosts, showsPlace: false)
+                        ChargeRow(group: group, tessieCosts: tessieCosts, showsPlace: false,
+                                  heaterUsed: group.parts.contains { heaterCharges.contains($0.chargeId) })
                     }
                 }
             }

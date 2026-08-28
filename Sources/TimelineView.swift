@@ -23,6 +23,7 @@ struct TimelineView: View {
     @State private var targets: [DetailTarget] = []
     @State private var targetIndex: [String: Int] = [:]
     @State private var heaterDrives: Set<Int> = []
+    @State private var heaterCharges: Set<Int> = []
     @State private var coldCharges: Set<Int>?
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
@@ -155,7 +156,8 @@ struct TimelineView: View {
         case .charge(let group):
             NavigationLink(value: DetailRoute(targets: targets, index: targetIndex[entry.id] ?? 0)) {
                 Spine(tint: group.isDC ? .red : .green, symbol: "bolt.circle.fill") {
-                    ChargeRow(group: group, tessieCosts: tessieCosts)
+                    ChargeRow(group: group, tessieCosts: tessieCosts,
+                              heaterUsed: group.parts.contains { heaterCharges.contains($0.chargeId) })
                 }
             }
         case .park(let park):
@@ -191,8 +193,9 @@ struct TimelineView: View {
     private func load() async {
         let since = period.start()
         loading = true
-        // the heater query runs in parallel - otherwise the symbol turns up long after the list
+        // the heater queries run in parallel - otherwise the symbols turn up long after the list
         async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
+        async let heatedCharges = GrafanaClient(baseURL: grafanaURL).heaterCharges(carID: carID)
         async let colds = GrafanaClient(baseURL: grafanaURL).coldChargeStarts(carID: carID)
         do {
             async let loadedDrives = api.drives(carID: carID, since: since)
@@ -211,6 +214,7 @@ struct TimelineView: View {
         loading = false
         loadedKey = loadKey
         heaterDrives = (try? await heaters) ?? []
+        heaterCharges = (try? await heatedCharges) ?? []
         // park figures are baked in at build time, so a late answer needs a rebuild
         if let answered = try? await colds {
             coldCharges = answered

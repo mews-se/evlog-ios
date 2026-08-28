@@ -324,6 +324,20 @@ struct Charge: Decodable, Identifiable {
     var maxPowerKw: Double? {
         chargeDetails?.compactMap { $0.chargerDetails?.chargerPower }.max()
     }
+
+    // the heater flag rides the charge's own samples, so the minutes cost no extra
+    // request. gaps between flagged samples count as heating; a long one does not
+    var batteryHeaterMinutes: Double? {
+        let heated = (chargeDetails ?? [])
+            .compactMap { $0.batteryInfo?.batteryHeater == true ? $0.date : nil }
+            .sorted()
+        var seconds = 0.0
+        for (previous, date) in zip(heated, heated.dropFirst()) {
+            let gap = date.timeIntervalSince(previous)
+            if gap > 0, gap < 120 { seconds += gap }
+        }
+        return seconds > 0 ? seconds / 60 : nil
+    }
 }
 
 struct ChargePoint: Decodable, Identifiable {
@@ -335,6 +349,7 @@ struct ChargePoint: Decodable, Identifiable {
     let chargeEnergyAdded: Double?
     let chargerDetails: ChargerDetails?
     let fastChargerInfo: FastChargerInfo?
+    let batteryInfo: PointBattery?
 
     var id: Int { detailId }
 }
@@ -387,6 +402,11 @@ struct ChargeGroup: Identifiable {
     }
 
     var maxPowerKw: Double? { parts.compactMap(\.maxPowerKw).max() }
+
+    var batteryHeaterMinutes: Double? {
+        let values = parts.compactMap(\.batteryHeaterMinutes)
+        return values.isEmpty ? nil : values.reduce(0, +)
+    }
 
     var avgPowerKw: Double? {
         guard let minutes = chargeMinutes, minutes > 0, let energy = energyUsed ?? energyAdded else { return nil }

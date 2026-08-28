@@ -43,6 +43,7 @@ struct StatsView: View {
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var heaterDrives: Set<Int> = []
+    @State private var heaterCharges: Set<Int> = []
     @State private var error: String?
     @State private var partialFailure = false
     @State private var loadedKey: String?
@@ -108,7 +109,8 @@ struct StatsView: View {
                 case .charging:
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
                 case let .place(name):
-                    PlaceChargesView(name: name, charges: charges, drives: drives, tessieCosts: tessieCosts)
+                    PlaceChargesView(name: name, charges: charges, drives: drives,
+                                     tessieCosts: tessieCosts, heaterCharges: heaterCharges)
                 }
             }
             .navigationDestination(for: DetailRoute.self) { route in
@@ -125,8 +127,10 @@ struct StatsView: View {
         async let d = api.drives(carID: carID)
         async let c = api.charges(carID: carID)
         async let h = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
+        async let hc = GrafanaClient(baseURL: grafanaURL).heaterCharges(carID: carID)
         var failure: String?
         heaterDrives = (try? await h) ?? []
+        heaterCharges = (try? await hc) ?? []
         do { drives = try await d } catch { failure = error.localizedDescription }
         do { charges = try await c } catch { failure = failure ?? error.localizedDescription }
         if drives.isEmpty && charges.isEmpty {

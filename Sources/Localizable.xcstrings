@@ -351,6 +351,16 @@
         }
       }
     },
+    "Climate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Climate"
+          }
+        }
+      }
+    },
     "Consumption" : {
       "localizations" : {
         "en" : {

@@ -70,6 +70,7 @@ struct ChargeRow: View {
     // in the timeline the day is the section header, so the place is the headline. in
     // a place's own list the place is the title, so the day takes the headline instead
     var showsPlace = true
+    var heaterUsed = false
 
     private var typeColor: Color { group.isDC ? .red : .green }
 
@@ -112,6 +113,10 @@ struct ChargeRow: View {
                 if let cost = group.cost(tessieCosts: tessieCosts) {
                     MetricChip(text: Fmt.kr(cost), tint: .blue)
                 }
+                if heaterUsed {
+                    MetricChip(icon: "heat.waves", tint: .red)
+                        .accessibilityLabel(Text("Battery heater"))
+                }
             }
         }
         .padding(.vertical, 2)
@@ -125,8 +130,10 @@ struct ChargeDetailView: View {
     var tessieCosts: [Int: Double] = [:]
 
     @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
+    @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
 
     @State private var group: ChargeGroup?
+    @State private var climateMinutes: Double?
     @State private var error: String?
     // precomputed on load, see ChargeCurve.build
     @State private var curve: [ChargeCurve.Sample] = []
@@ -191,6 +198,13 @@ struct ChargeDetailView: View {
                             StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue)
                         }
                         StatTile(icon: "thermometer.medium", title: String(localized: "Outside temp"), value: Fmt.temp(group.outsideTempAvg), tint: .teal)
+                        if let heater = group.batteryHeaterMinutes {
+                            StatTile(icon: "heat.waves", title: String(localized: "Battery heater"), value: Fmt.duration(heater), tint: .red)
+                        }
+                        // read at five minute intervals, so the figure is a rough one
+                        if let climate = climateMinutes, climate > 0 {
+                            StatTile(icon: "fan.fill", title: String(localized: "Climate"), value: "~" + Fmt.duration(climate), tint: .cyan)
+                        }
                     }
 
                     if curve.count > 2 {
@@ -227,6 +241,11 @@ struct ChargeDetailView: View {
             curve = ChargeCurve.build(parts)
         } catch {
             self.error = error.localizedDescription
+        }
+        // the cabin draw is only visible through Grafana - additive, never blocking
+        if let group, let end = group.endDate {
+            climateMinutes = try? await GrafanaClient(baseURL: grafanaURL)
+                .climateMinutes(carID: carID, from: group.startDate, to: end)
         }
     }
 }
