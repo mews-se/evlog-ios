@@ -1,25 +1,17 @@
 import Foundation
 
-// Battery health is computed in the database with TeslaMate's own formula (the aux
-// variable in battery-health.json). Approximating it here would disagree with the dashboard.
-struct BatteryHealth: Decodable {
+// deliberately not the dashboard's query — TeslaMate is AGPL-licensed, this app is MIT
+struct BatteryHealth {
     let maxRange: Double
     let currentRange: Double
-    let maxCapacity: Double
-    let currentCapacity: Double
-    let ratedEfficiency: Double
+    let kwhPerKm: Double
 
-    enum CodingKeys: String, CodingKey {
-        case maxRange = "MaxRange"
-        case currentRange = "CurrentRange"
-        case maxCapacity = "MaxCapacity"
-        case currentCapacity = "CurrentCapacity"
-        case ratedEfficiency = "RatedEfficiency"
-    }
+    var maxCapacity: Double { maxRange * kwhPerKm }
+    var currentCapacity: Double { currentRange * kwhPerKm }
 
     var degradation: Double? {
-        guard maxCapacity > 0, currentCapacity > 1 else { return nil }
-        return max(0, 100 - currentCapacity * 100 / maxCapacity)
+        guard maxRange > 0 else { return nil }
+        return max(0, 100 - currentRange * 100 / maxRange)
     }
 
     var health: Double? {
@@ -30,152 +22,44 @@ struct BatteryHealth: Decodable {
 }
 
 extension GrafanaClient {
+    // every finished charge leaves a reading: the rated range at its last sample, scaled to
+    // a full battery. "when new" is the 98th percentile of all readings, "now" the average of
+    // the twenty most recent, and capacity is range times the car's kWh-per-rated-km constant
+    // (with a median over well-formed charges as the fallback when the constant is missing)
     func batteryHealth(carID: Int) async throws -> BatteryHealth? {
         if demo { return Demo.batteryHealth }
-        let sql = #"""
-WITH Aux as (
-    SELECT 
-        car_id,
-        COALESCE(derived_efficiency, car_efficiency) AS efficiency
-    FROM (
-        SELECT
-            ROUND((charge_energy_added / NULLIF(end_rated_range_km - start_rated_range_km, 0))::numeric, 3) * 100 AS derived_efficiency,
-            COUNT(*) as count,
-            cars.id as car_id,
-            cars.efficiency * 100 AS car_efficiency
-        FROM cars
-            LEFT JOIN charging_processes ON
-                cars.id = charging_processes.car_id 
-                AND duration_min > 10
-                AND end_battery_level <= 95
-                AND start_rated_range_km IS NOT NULL
-                AND end_rated_range_km IS NOT NULL
-                AND charge_energy_added > 0
-        WHERE cars.id = \#(carID)
-        GROUP BY 1, 3, 4
-        ORDER BY 2 DESC
-        LIMIT 1
-    ) AS Efficiency
-),
-
-CurrentCapacity AS (
-    SELECT
-        AVG(Capacity) AS Capacity
-    FROM (
-        SELECT 
-            c.rated_battery_range_km * aux.efficiency / c.usable_battery_level AS Capacity
-        FROM charging_processes cp
-            INNER JOIN charges c ON c.charging_process_id = cp.id 
-            INNER JOIN aux ON cp.car_id = aux.car_id
-        WHERE
-            cp.car_id = \#(carID)
-            AND cp.end_date IS NOT NULL
-            AND cp.charge_energy_added >= aux.efficiency
-            AND c.usable_battery_level > 0
-        ORDER BY cp.end_date DESC, c.date desc
-        LIMIT 100
-    ) AS lastCharges
-),
-
-MaxCapacity AS (
-    SELECT 
-        MAX(c.rated_battery_range_km * aux.efficiency / c.usable_battery_level) AS Capacity
-    FROM charging_processes cp
-        INNER JOIN (
-            SELECT
-                charging_process_id,
-                MAX(date) as date FROM charges WHERE usable_battery_level > 0 GROUP BY charging_process_id
-        ) AS gcharges ON
-            cp.id = gcharges.charging_process_id
-        INNER JOIN charges c ON
-            c.charging_process_id = cp.id
-            AND c.date = gcharges.date
-        INNER JOIN aux ON cp.car_id = aux.car_id
-    WHERE
-        cp.car_id = \#(carID)
-        AND cp.end_date IS NOT NULL
-        AND cp.charge_energy_added >= aux.efficiency
-),
-
-CurrentRange AS (
-    SELECT
-        (range * 100.0 / usable_battery_level) AS range
-    FROM (
-        (
-            SELECT
-                date,
-                rated_battery_range_km AS range,
-                usable_battery_level AS usable_battery_level
-            FROM positions
-            WHERE
-                car_id = \#(carID)
-                AND ideal_battery_range_km IS NOT NULL
-                AND usable_battery_level > 0 
-            ORDER BY date DESC
-            LIMIT 1
+        let sql = """
+        with spend as (
+          select coalesce(
+            (select efficiency from cars where id = \(carID) and efficiency > 0),
+            (select percentile_cont(0.5) within group (order by charge_energy_added / (end_rated_range_km - start_rated_range_km))
+               from charging_processes
+              where car_id = \(carID) and end_rated_range_km > start_rated_range_km + 1
+                and charge_energy_added > 2 and duration_min >= 10)
+          ) as kwh_per_km
+        ),
+        readings as (
+          select distinct on (s.charging_process_id)
+                 p.end_date, s.rated_battery_range_km * 100.0 / s.usable_battery_level as full_range_km
+          from charges s
+          join charging_processes p on p.id = s.charging_process_id
+          where p.car_id = \(carID) and p.end_date is not null and p.charge_energy_added > 2
+            and s.usable_battery_level > 0
+          order by s.charging_process_id, s.date desc
         )
-        UNION ALL
-        (
-            SELECT date,
-                rated_battery_range_km AS range,
-                usable_battery_level as usable_battery_level
-            FROM charges c
-                INNER JOIN charging_processes p ON p.id = c.charging_process_id
-            WHERE
-                p.car_id = \#(carID)
-                AND usable_battery_level > 0
-            ORDER BY date DESC
-            LIMIT 1
-        )
-    ) AS data
-    ORDER BY date DESC
-    LIMIT 1
-),
-
-MaxRange AS (
-    SELECT
-        floor(extract(epoch from date)/86400)*86400 AS time,
-        CASE
-            WHEN sum(usable_battery_level) = 0 THEN sum(rated_battery_range_km) * 100
-            ELSE sum(rated_battery_range_km) / sum(usable_battery_level) * 100
-        END AS range
-    FROM (
-        SELECT
-            battery_level,
-            usable_battery_level,
-            date,
-            rated_battery_range_km
-        FROM charges c 
-            INNER JOIN charging_processes p ON p.id = c.charging_process_id 
-        WHERE
-            p.car_id = \#(carID)
-            AND usable_battery_level IS NOT NULL
-    ) AS data
-    GROUP BY 1
-    ORDER BY 2 DESC
-    LIMIT 1
-),
-
-Base AS (
-    SELECT NULL
-)
-
-SELECT
-    json_build_object(
-        'MaxRange', convert_km(MaxRange.range,'km'),
-        'CurrentRange', convert_km(CurrentRange.range,'km'),
-        'MaxCapacity', MaxCapacity.Capacity,
-        'CurrentCapacity', CASE WHEN CurrentCapacity.Capacity IS NULL THEN 1 ELSE CurrentCapacity.Capacity END,
-        'RatedEfficiency', aux.efficiency
-    ) #>> '{}'
-FROM Base
-    LEFT JOIN MaxRange ON true
-    LEFT JOIN CurrentRange ON true
-    LEFT JOIN Aux ON true
-    LEFT JOIN MaxCapacity ON true
-    LEFT JOIN CurrentCapacity ON true
-"""#
-        guard let raw = try await scalarText(sql) , let data = raw.data(using: .utf8) else { return nil }
-        return try JSONDecoder().decode(BatteryHealth.self, from: data)
+        select round((percentile_cont(0.98) within group (order by full_range_km))::numeric, 1)::text as range_new,
+               round((select avg(full_range_km)
+                        from (select full_range_km from readings order by end_date desc limit 20) recent)::numeric, 1)::text as range_now,
+               (select kwh_per_km::text from spend) as kwh_per_km
+        from readings
+        having count(*) >= 5
+        """
+        let columns = try await textColumns(sql)
+        guard columns.count == 3,
+              let maxRange = columns[0].first.flatMap({ $0 }).flatMap(Double.init),
+              let currentRange = columns[1].first.flatMap({ $0 }).flatMap(Double.init),
+              let kwhPerKm = columns[2].first.flatMap({ $0 }).flatMap(Double.init)
+        else { return nil }
+        return BatteryHealth(maxRange: maxRange, currentRange: currentRange, kwhPerKm: kwhPerKm)
     }
 }

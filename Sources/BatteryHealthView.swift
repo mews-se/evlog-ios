@@ -21,7 +21,7 @@ struct BatteryHealthView: View {
                         StatTile(icon: "arrow.down.right", title: String(localized: "Range lost"),
                                  value: Fmt.distance(health.lostRange, decimals: 0), tint: .orange)
                     }
-                    Text("Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy.")
+                    Text("Estimated from the rated range at the end of each charge, scaled to a full battery: when new is the strongest of those readings, now is the average of your last 20 charges. Cell chemistry and temperature make single readings noisy.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)

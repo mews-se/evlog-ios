@@ -721,12 +721,12 @@
         }
       }
     },
-    "Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy." : {
+    "Estimated from the rated range at the end of each charge, scaled to a full battery: when new is the strongest of those readings, now is the average of your last 20 charges. Cell chemistry and temperature make single readings noisy." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estimated from the rated range at the end of your last 100 charges, using the same method as TeslaMate's battery health dashboard. Cell chemistry and temperature make single readings noisy."
+            "value" : "Estimated from the rated range at the end of each charge, scaled to a full battery: when new is the strongest of those readings, now is the average of your last 20 charges. Cell chemistry and temperature make single readings noisy."
           }
         }
       }

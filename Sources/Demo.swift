@@ -72,8 +72,7 @@ enum Demo {
     static let coldChargeStarts: Set<Int> = [2]
 
     static let batteryHealth = BatteryHealth(maxRange: 499, currentRange: 479,
-                                             maxCapacity: 77.8, currentCapacity: 74.7,
-                                             ratedEfficiency: 15.2)
+                                             kwhPerKm: 0.156)
 
     static var countries: [CountryStat] {
         [CountryStat(code: "us", name: "United States", drives: 33, km: 947,
