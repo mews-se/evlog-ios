@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // drives and charges come from the same API but in separate lists. here they sit in
 // one flow per day, where parking is the gap between two entries rather than
@@ -29,6 +30,8 @@ struct TimelineView: View {
     @State private var error: String?
     @State private var loadedKey: String?
     @State private var loading = false
+    // counts the requests to return to the top; TopScroller acts when it grows
+    @State private var topRequests = 0
 
     private var period: TimelinePeriod { TimelinePeriod(rawValue: periodKey) ?? .month }
     private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)|\(periodKey)" }
@@ -67,6 +70,9 @@ struct TimelineView: View {
                     .navigationDestination(for: DetailRoute.self) { route in
                         DetailPager(api: api, carID: carID, route: route, tessieCosts: tessieCosts)
                     }
+                    // ScrollViewReader with ids and anchors always landed a day heading
+                    // short of the very top, so the journey home is made in UIKit
+                    .background(TopScroller(trigger: topRequests))
                 } else if let error {
                     ErrorCard(message: error) { Task { await load() } }
                 } else if loadedKey != nil {
@@ -90,11 +96,16 @@ struct TimelineView: View {
             // the period row already takes its share of the flow
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Picker(String(localized: "Timeline"), selection: $filter) {
-                        ForEach(TimelineFilter.allCases, id: \.self) { Text($0.title) }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
+                    // iOS taught the reflex on the tab bar: tapping where you already
+                    // stand lifts you to the top. the stock picker cannot say that tap
+                    // happened, so the bar carries the UIKit control through a wrapper
+                    // that can - a real segment change scrolls in onChange instead
+                    SegmentedControl(titles: TimelineFilter.allCases.map(\.title),
+                                     selection: Binding(
+                                         get: { TimelineFilter.allCases.firstIndex(of: filter) ?? 0 },
+                                         set: { filter = TimelineFilter.allCases[$0] }
+                                     ),
+                                     onReselect: { topRequests += 1 })
                     // the navigation bar gives the segment exactly its content width, which
                     // presses the longest title against the edges of its third. the ceiling
                     // is the narrowest phone running iOS 17, 375 points less the bar's margins
@@ -103,7 +114,11 @@ struct TimelineView: View {
             }
             .refreshable { await load() }
             .task(id: loadKey) { if loadedKey != loadKey { await load() } }
-            .onChange(of: filter) { _, _ in rebuild() }
+            .onChange(of: filter) { _, _ in
+                rebuild()
+                // a fresh segment starts at the top, not somewhere down the other one's list
+                topRequests += 1
+            }
         }
     }
 
@@ -228,11 +243,115 @@ struct TimelineView: View {
 enum TimelineFilter: CaseIterable {
     case all, drives, charges
 
-    var title: LocalizedStringKey {
+    // strings rather than keys: the titles go into a UIKit control
+    var title: String {
         switch self {
-        case .all: return "All"
-        case .drives: return "Drives"
-        case .charges: return "Charges"
+        case .all: return String(localized: "All")
+        case .drives: return String(localized: "Drives")
+        case .charges: return String(localized: "Charges")
+        }
+    }
+}
+
+// SwiftUI's segmented picker consumes a tap on the segment that is already chosen
+// without a word, gestures layered on top included - so the bar carries the UIKit
+// control instead, subclassed into saying so
+struct SegmentedControl: UIViewRepresentable {
+    let titles: [String]
+    @Binding var selection: Int
+    let onReselect: () -> Void
+
+    func makeUIView(context: Context) -> ReselectingSegmentedControl {
+        let control = ReselectingSegmentedControl(items: titles)
+        control.selectedSegmentIndex = selection
+        control.addTarget(context.coordinator, action: #selector(Coordinator.changed), for: .valueChanged)
+        return control
+    }
+
+    func updateUIView(_ control: ReselectingSegmentedControl, context: Context) {
+        control.selectedSegmentIndex = selection
+        control.onReselect = onReselect
+        context.coordinator.selection = $selection
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(selection: $selection) }
+
+    final class Coordinator: NSObject {
+        var selection: Binding<Int>
+
+        init(selection: Binding<Int>) { self.selection = selection }
+
+        @objc func changed(_ control: UISegmentedControl) {
+            selection.wrappedValue = control.selectedSegmentIndex
+        }
+    }
+}
+
+// the way back up: the list's backing scroll view, moved to offset zero exactly
+// as the status bar tap moves it, day heading and summary card included
+struct TopScroller: UIViewRepresentable {
+    let trigger: Int
+
+    func makeUIView(context: Context) -> UIView {
+        context.coordinator.seen = trigger
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        return view
+    }
+
+    func updateUIView(_ view: UIView, context: Context) {
+        guard context.coordinator.seen != trigger else { return }
+        context.coordinator.seen = trigger
+        // a beat later, so a freshly rebuilt list has settled before it is moved
+        DispatchQueue.main.async {
+            guard let scroll = Self.scrollView(near: view) else { return }
+            scroll.setContentOffset(CGPoint(x: 0, y: -scroll.adjustedContentInset.top), animated: true)
+            // from far down the animation stops short as the rows above get their
+            // real heights, so the landing is checked and quietly corrected
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                let top = -scroll.adjustedContentInset.top
+                if !scroll.isTracking, scroll.contentOffset.y > top + 1 {
+                    scroll.setContentOffset(CGPoint(x: 0, y: top), animated: false)
+                }
+            }
+        }
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    final class Coordinator { var seen = 0 }
+
+    // a background sits beside the scroll view rather than inside it, so the
+    // search climbs the ancestry until a subtree carries one
+    private static func scrollView(near view: UIView) -> UIScrollView? {
+        var root: UIView? = view
+        while let current = root {
+            if let found = descend(current) { return found }
+            root = current.superview
+        }
+        return nil
+    }
+
+    private static func descend(_ view: UIView) -> UIScrollView? {
+        if let scroll = view as? UIScrollView { return scroll }
+        for sub in view.subviews {
+            if let found = descend(sub) { return found }
+        }
+        return nil
+    }
+}
+
+// the selection is settled by the time the touch lifts, so comparing across super's
+// handling is what tells a reselection from a change
+final class ReselectingSegmentedControl: UISegmentedControl {
+    var onReselect: (() -> Void)?
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let before = selectedSegmentIndex
+        super.touchesEnded(touches, with: event)
+        if let touch = touches.first, bounds.contains(touch.location(in: self)),
+           selectedSegmentIndex == before {
+            onReselect?()
         }
     }
 }
