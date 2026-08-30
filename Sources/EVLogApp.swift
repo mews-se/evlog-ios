@@ -20,6 +20,7 @@ enum Pref {
     static let carID = (key: "carID", value: 1)
     static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)
     static let demoMode = (key: "demoMode", value: false)
+    static let visitedMapStyle = (key: "visitedMapStyle", value: VisitedView.MapStylePick.standard.rawValue)
 }
 
 struct RootView: View {

@@ -61,6 +61,16 @@
         }
       }
     },
+    "Cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "Charge complete · %@" : {
       "localizations" : {
         "en" : {
@@ -237,6 +247,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✓ Connected – found %@"
+          }
+        }
+      }
+    },
+    "7 days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 days"
+          }
+        }
+      }
+    },
+    "30 days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 days"
           }
         }
       }
@@ -581,6 +611,26 @@
         }
       }
     },
+    "Custom range" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom range"
+          }
+        }
+      }
+    },
+    "Custom range…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom range…"
+          }
+        }
+      }
+    },
     "Data sources" : {
       "localizations" : {
         "en" : {
@@ -771,6 +821,16 @@
         }
       }
     },
+    "From" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From"
+          }
+        }
+      }
+    },
     "From %@" : {
       "localizations" : {
         "en" : {
@@ -877,6 +937,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Locked"
+          }
+        }
+      }
+    },
+    "Map style" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Map style"
           }
         }
       }
@@ -1281,6 +1351,16 @@
         }
       }
     },
+    "Show" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
+          }
+        }
+      }
+    },
     "Software" : {
       "localizations" : {
         "en" : {
@@ -1457,6 +1537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Timeline"
+          }
+        }
+      }
+    },
+    "To" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To"
           }
         }
       }
