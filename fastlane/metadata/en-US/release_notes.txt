@@ -1,13 +1,1 @@
-EVLog 3.0 is a major update.
-
-The app now has a demo mode. With no server configured it starts in three weeks of built-in example data, so you can try every screen before pointing it at your own TeslaMate — and a switch in Settings takes you back to the demo any time.
-
-The overview now says what the cable is doing — charging, scheduled, complete — and wears TeslaMate's own status glyphs for preconditioning, open doors and windows, tyre pressure and more. The car's name opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own configuration.
-
-Charge details now show what the battery heater and cabin climate drew while the car charged.
-
-Short stops that cost the battery something show as parked rows instead of vanishing between two drives, places in charging statistics open into the charges behind them, average charging power is measured on the charger's side, and the antenna in the corner now means the app cannot reach your server — a sleeping car shows a moon.
-
-The app now speaks English only, in metric or imperial units. Your region sets the default and a picker in Settings changes it.
-
-EVLog now requires iOS 18.
+Battery health is now estimated with EVLog's own method, read directly from your completed charges. Degradation, capacity and range may shift slightly compared with 3.0 — the estimator changed, not your battery.
