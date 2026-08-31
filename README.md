@@ -1,4 +1,8 @@
-# EVLog
+# <img src="assets/icon-180.png" alt="" width="40"> EVLog
+
+![iOS 18+](https://img.shields.io/badge/iOS-18%2B-000000?logo=apple&logoColor=white)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-F05138?logo=swift&logoColor=white)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 A native iPhone client for your own [TeslaMate](https://github.com/teslamate-org/teslamate) server
 — drives, charges, statistics and battery health, in an interface built for the phone rather than a
