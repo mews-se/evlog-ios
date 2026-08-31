@@ -1780,6 +1780,96 @@
           }
         }
       }
+    },
+    "Temperature and consumption" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature and consumption"
+          }
+        }
+      }
+    },
+    "No temperature data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No temperature data"
+          }
+        }
+      }
+    },
+    "Average" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Average"
+          }
+        }
+      }
+    },
+    "Coldest fifth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coldest fifth"
+          }
+        }
+      }
+    },
+    "Warmest fifth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warmest fifth"
+          }
+        }
+      }
+    },
+    "Difference" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difference"
+          }
+        }
+      }
+    },
+    "The fifth of the distance driven in the coldest weather against the fifth driven in the warmest." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The fifth of the distance driven in the coldest weather against the fifth driven in the warmest."
+          }
+        }
+      }
+    },
+    "How much of the driving happened at each temperature." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How much of the driving happened at each temperature."
+          }
+        }
+      }
+    },
+    "Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

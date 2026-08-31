@@ -78,6 +78,7 @@ enum StatsRoute: Hashable {
     case period(Date, StatsView.Granularity)
     case day(Date)
     case charging
+    case temperature
     case place(String)
 }
 

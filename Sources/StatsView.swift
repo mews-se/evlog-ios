@@ -68,10 +68,15 @@ struct StatsView: View {
                                     .foregroundStyle(.orange)
                             }
                         }
-                        if !charges.isEmpty {
-                            Section {
+                        Section {
+                            if !charges.isEmpty {
                                 NavigationLink(value: StatsRoute.charging) {
                                     Label("Charging statistics", systemImage: "bolt.badge.clock")
+                                }
+                            }
+                            if !drives.isEmpty {
+                                NavigationLink(value: StatsRoute.temperature) {
+                                    Label("Temperature and consumption", systemImage: "thermometer.medium")
                                 }
                             }
                         }
@@ -108,6 +113,8 @@ struct StatsView: View {
                     DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
                 case .charging:
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
+                case .temperature:
+                    TempConsumptionView(drives: drives)
                 case let .place(name):
                     PlaceChargesView(name: name, charges: charges, drives: drives,
                                      tessieCosts: tessieCosts, heaterCharges: heaterCharges)
