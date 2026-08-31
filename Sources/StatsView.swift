@@ -75,6 +75,9 @@ struct StatsView: View {
                                 }
                             }
                             if !drives.isEmpty {
+                                NavigationLink(value: StatsRoute.destinations) {
+                                    Label("Destinations", systemImage: "mappin.and.ellipse")
+                                }
                                 NavigationLink(value: StatsRoute.temperature) {
                                     Label("Temperature and consumption", systemImage: "thermometer.medium")
                                 }
@@ -115,6 +118,10 @@ struct StatsView: View {
                     ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
                 case .temperature:
                     TempConsumptionView(drives: drives)
+                case .destinations:
+                    DestinationsView(drives: drives, heaterDrives: heaterDrives)
+                case let .destination(name):
+                    PlaceDrivesView(name: name, drives: drives, heaterDrives: heaterDrives)
                 case let .place(name):
                     PlaceChargesView(name: name, charges: charges, drives: drives,
                                      tessieCosts: tessieCosts, heaterCharges: heaterCharges)

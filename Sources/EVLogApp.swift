@@ -79,6 +79,8 @@ enum StatsRoute: Hashable {
     case day(Date)
     case charging
     case temperature
+    case destinations
+    case destination(String)
     case place(String)
 }
 

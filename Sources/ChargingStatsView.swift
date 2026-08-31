@@ -93,7 +93,7 @@ struct ChargingStatsView: View {
             }
 
             Section {
-                SplitBar(acEnergy: energy(ac), dcEnergy: energy(dc))
+                SplitBar(left: energy(ac), right: energy(dc), leftLabel: "AC", rightLabel: "DC")
                 LabeledContent(String(localized: "Energy")) {
                     Text(verbatim: "\(Fmt.kwh(energy(ac))) / \(Fmt.kwh(energy(dc)))")
                         .monospacedDigit()
@@ -192,29 +192,33 @@ struct PlaceRow: View {
 }
 
 struct SplitBar: View {
-    let acEnergy: Double
-    let dcEnergy: Double
+    let left: Double
+    let right: Double
+    let leftLabel: String
+    let rightLabel: String
+    var leftTint: Color = .green
+    var rightTint: Color = .red
 
-    private var total: Double { acEnergy + dcEnergy }
+    private var total: Double { left + right }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             GeometryReader { geo in
                 HStack(spacing: 2) {
                     if total > 0 {
-                        Capsule().fill(.green)
-                            .frame(width: geo.size.width * acEnergy / total)
-                        Capsule().fill(.red)
+                        Capsule().fill(leftTint)
+                            .frame(width: geo.size.width * left / total)
+                        Capsule().fill(rightTint)
                     }
                 }
             }
             .frame(height: 10)
             HStack {
-                Label(Fmt.pct(total > 0 ? acEnergy / total * 100 : 0, decimals: 0) + " AC", systemImage: "circle.fill")
-                    .foregroundStyle(.green)
+                Label(Fmt.pct(total > 0 ? left / total * 100 : 0, decimals: 0) + " " + leftLabel, systemImage: "circle.fill")
+                    .foregroundStyle(leftTint)
                 Spacer()
-                Label(Fmt.pct(total > 0 ? dcEnergy / total * 100 : 0, decimals: 0) + " DC", systemImage: "circle.fill")
-                    .foregroundStyle(.red)
+                Label(Fmt.pct(total > 0 ? right / total * 100 : 0, decimals: 0) + " " + rightLabel, systemImage: "circle.fill")
+                    .foregroundStyle(rightTint)
             }
             .font(.caption2)
             .labelStyle(.titleAndIcon)
@@ -226,6 +230,7 @@ struct SplitBar: View {
 struct Heatmap: View {
     let grid: [[Double]]
     let days: [Int]
+    var tint: Color = .green
 
     private var peak: Double { grid.flatMap { $0 }.max() ?? 0 }
 
@@ -239,7 +244,7 @@ struct Heatmap: View {
                         .frame(width: 14, alignment: .leading)
                     ForEach(0..<24, id: \.self) { hour in
                         RoundedRectangle(cornerRadius: 2)
-                            .fill(.green.opacity(intensity(day, hour)))
+                            .fill(tint.opacity(intensity(day, hour)))
                             .frame(maxWidth: .infinity)
                             .frame(height: 13)
                     }

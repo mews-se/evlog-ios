@@ -1870,6 +1870,86 @@
           }
         }
       }
+    },
+    "Destinations" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destinations"
+          }
+        }
+      }
+    },
+    "Most visited" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most visited"
+          }
+        }
+      }
+    },
+    "Most distance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most distance"
+          }
+        }
+      }
+    },
+    "Weekdays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays"
+          }
+        }
+      }
+    },
+    "Weekend" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekend"
+          }
+        }
+      }
+    },
+    "Weekdays / Weekend" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays / Weekend"
+          }
+        }
+      }
+    },
+    "When you drive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you drive"
+          }
+        }
+      }
+    },
+    "Distance driven per weekday and hour, across every drive." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance driven per weekday and hour, across every drive."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
