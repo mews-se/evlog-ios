@@ -16,6 +16,15 @@ enum APIError: LocalizedError {
     }
 }
 
+// a mistyped LAN address should fail in seconds, not sit on the system's full sixty
+enum Net {
+    static let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 15
+        return URLSession(configuration: config)
+    }()
+}
+
 struct APIClient {
     let baseURL: String
     var demo: Bool = Demo.isActive
@@ -34,7 +43,7 @@ struct APIClient {
         let root = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
         if root.isEmpty { throw APIError.noServer }
         guard let url = URL(string: root + path) else { throw APIError.badURL }
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await Net.session.data(from: url)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             throw APIError.http(http.statusCode)
         }

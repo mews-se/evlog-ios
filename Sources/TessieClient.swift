@@ -14,7 +14,7 @@ struct TessieClient {
         guard let url = URL(string: "https://api.tessie.com" + path) else { throw APIError.badURL }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await Net.session.data(for: request)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             throw APIError.http(http.statusCode)
         }
