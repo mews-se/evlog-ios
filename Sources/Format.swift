@@ -73,7 +73,8 @@ enum Fmt {
             + (Units.imperial ? " Wh/mi" : " Wh/km")
     }
 
-    static func percent(_ fraction: Double?) -> String {
+    // takes a 0-1 ratio, unlike pct which takes the percentage itself
+    static func ratio(_ fraction: Double?) -> String {
         guard let fraction else { return "–" }
         return (fraction * 100).formatted(.number.precision(.fractionLength(0))) + " %"
     }

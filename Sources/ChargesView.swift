@@ -177,7 +177,7 @@ struct ChargeDetailView: View {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
                         StatTile(icon: "bolt.fill", title: String(localized: "Added"), value: Fmt.kwh(group.energyAdded), tint: typeColor)
                         StatTile(icon: "bolt.badge.clock", title: String(localized: "Used"), value: Fmt.kwh(group.energyUsed), tint: .orange)
-                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency"), value: Fmt.percent(group.efficiency), tint: .mint)
+                        StatTile(icon: "arrow.triangle.2.circlepath", title: String(localized: "Efficiency"), value: Fmt.ratio(group.efficiency), tint: .mint)
                         StatTile(icon: "gauge.with.dots.needle.100percent", title: String(localized: "Max power"), value: Fmt.kw(group.maxPowerKw), tint: typeColor)
                         StatTile(icon: "gauge.with.dots.needle.50percent", title: String(localized: "Avg power"), value: Fmt.kw(group.avgPowerKw), tint: typeColor)
                         StatTile(icon: "battery.75percent", title: String(localized: "Battery"), value: Fmt.battery(group.batteryDetails) ?? "–", tint: .green)
