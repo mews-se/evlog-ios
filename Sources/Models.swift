@@ -110,7 +110,7 @@ struct BatteryStatus: Decodable {
     let batteryLevel: Int?
     let usableBatteryLevel: Int?
 
-    // the same expression as TeslaMate's projected range dashboard: scales up to 100 %
+    // the same arithmetic as TeslaMate's projected range dashboard: scales up to 100 %
     var projectedRatedRange: Double? {
         guard let range = ratedBatteryRange, let level = usableBatteryLevel ?? batteryLevel, level > 0 else { return nil }
         return range / Double(level) * 100
@@ -127,9 +127,11 @@ struct ChargingDetails: Decodable {
     // kept as text: the feed's "none" is year one with an odd offset, not null
     let scheduledChargingStartTime: String?
 
+    private static let iso = ISO8601DateFormatter()
+
     var scheduledStart: Date? {
         guard let raw = scheduledChargingStartTime,
-              let date = ISO8601DateFormatter().date(from: raw),
+              let date = Self.iso.date(from: raw),
               date.timeIntervalSince1970 > 0 else { return nil }
         return date
     }
@@ -460,7 +462,7 @@ struct ChargeGroup: Identifiable {
     // and no time cap is needed
     static func stitch(_ charges: [Charge], drives: [Drive]) -> [ChargeGroup] {
         let sorted = charges.sorted { $0.startDate < $1.startDate }
-        let driveStarts = drives.map(\.startDate)
+        let driveStarts = drives.map(\.startDate).sorted()
         var groups: [ChargeGroup] = []
         var current: [Charge] = []
         for charge in sorted {
@@ -482,7 +484,13 @@ struct ChargeGroup: Identifiable {
               let to = next.batteryDetails?.startBatteryLevel,
               from - to <= 1
         else { return false }
-        return !driveStarts.contains { $0 >= end && $0 <= next.startDate }
+        // driveStarts arrives sorted, so the first start at or past the gap decides
+        var low = 0, high = driveStarts.count
+        while low < high {
+            let mid = (low + high) / 2
+            if driveStarts[mid] < end { low = mid + 1 } else { high = mid }
+        }
+        return !(low < driveStarts.count && driveStarts[low] <= next.startDate)
     }
 }
 
