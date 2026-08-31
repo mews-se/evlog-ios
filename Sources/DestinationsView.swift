@@ -14,7 +14,7 @@ struct DestinationsView: View {
         var id: String { name }
     }
 
-    private var places: [Place] {
+    static func places(for drives: [Drive]) -> [Place] {
         var byName: [String: Place] = [:]
         for drive in drives {
             let name = drive.endAddress ?? String(localized: "Unknown location")
@@ -25,22 +25,6 @@ struct DestinationsView: View {
         }
         return Array(byName.values)
     }
-
-    private var mostVisited: [Place] {
-        Array(places.sorted {
-            $0.count == $1.count ? $0.name < $1.name : $0.count > $1.count
-        }.prefix(10))
-    }
-
-    private var mostDistance: [Place] {
-        Array(places.filter { $0.km > 0 }.sorted { $0.km > $1.km }.prefix(5))
-    }
-
-    // MARK: - Weekdays / weekend
-
-    // the calendar says what a weekend is, so the split follows the region
-    private var weekdayDrives: [Drive] { drives.filter { !Calendar.current.isDateInWeekend($0.startDate) } }
-    private var weekendDrives: [Drive] { drives.filter { Calendar.current.isDateInWeekend($0.startDate) } }
 
     private func km(_ list: [Drive]) -> Double { list.reduce(0) { $0 + $1.distance } }
     private func minutes(_ list: [Drive]) -> Double { list.compactMap(\.durationMin).reduce(0, +) }
@@ -65,6 +49,19 @@ struct DestinationsView: View {
     }
 
     var body: some View {
+        // the pipeline runs once per render - as computed properties every
+        // section re-ran the grouping and the filters
+        let places = Self.places(for: drives)
+        let mostVisited = Array(places.sorted {
+            $0.count == $1.count ? $0.name < $1.name : $0.count > $1.count
+        }.prefix(10))
+        let mostDistance = Array(places.filter { $0.km > 0 }.sorted { $0.km > $1.km }.prefix(5))
+        // the calendar says what a weekend is, so the split follows the region
+        let calendar = Calendar.current
+        let weekdayDrives = drives.filter { !calendar.isDateInWeekend($0.startDate) }
+        let weekendDrives = drives.filter { calendar.isDateInWeekend($0.startDate) }
+        let weekdayKm = km(weekdayDrives)
+        let weekendKm = km(weekendDrives)
         List {
             Section {
                 ForEach(mostVisited) { place in
@@ -91,11 +88,11 @@ struct DestinationsView: View {
             }
 
             Section {
-                SplitBar(left: km(weekdayDrives), right: km(weekendDrives),
+                SplitBar(left: weekdayKm, right: weekendKm,
                          leftLabel: String(localized: "Weekdays"), rightLabel: String(localized: "Weekend"),
                          leftTint: .blue, rightTint: .orange)
                 LabeledContent(String(localized: "Distance")) {
-                    Text(verbatim: "\(Fmt.distance(km(weekdayDrives), decimals: 0)) / \(Fmt.distance(km(weekendDrives), decimals: 0))")
+                    Text(verbatim: "\(Fmt.distance(weekdayKm, decimals: 0)) / \(Fmt.distance(weekendKm, decimals: 0))")
                         .monospacedDigit()
                 }
                 LabeledContent(String(localized: "Time")) {

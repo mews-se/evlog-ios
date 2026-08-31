@@ -72,18 +72,13 @@ struct TempConsumptionView: View {
         return Fifth(whPerKm: energy / km * 1000, coldest: low, warmest: high)
     }
 
-    private var samples: [Sample] { Self.samples(for: drives) }
-    private var buckets: [Bucket] { Self.buckets(for: samples) }
-    private var cold: Fifth? { Self.fifth(of: samples, coldest: true) }
-    private var warm: Fifth? { Self.fifth(of: samples, coldest: false) }
-
-    private var average: Double {
+    private static func average(of buckets: [Bucket]) -> Double {
         let distance = buckets.reduce(0) { $0 + $1.distance }
         let energy = buckets.reduce(0) { $0 + $1.energy }
         return distance > 0 ? energy / distance * 1000 : 0
     }
 
-    private var period: String {
+    private static func period(of samples: [Sample]) -> String {
         let dates = samples.map(\.date)
         guard let first = dates.min(), let last = dates.max() else { return "–" }
         let from = first.formatted(.dateTime.month(.abbreviated).year().locale(.app))
@@ -91,20 +86,10 @@ struct TempConsumptionView: View {
         return from == to ? from : "\(from) – \(to)"
     }
 
-    private var differencePct: Double? {
-        guard let cold, let warm, warm.whPerKm > 0 else { return nil }
-        return (cold.whPerKm / warm.whPerKm - 1) * 100
-    }
-
-    private func plotted(_ whPerKm: Double) -> Double {
-        Units.imperial ? whPerKm * Units.kmPerMile : whPerKm
-    }
-
     // the marks float free of zero, so the axis follows the data instead of
     // dragging an empty 0-150 band along under every chart
-    private var yDomain: ClosedRange<Double> {
-        let values = buckets.map { plotted($0.whPerKm) } + [plotted(average)]
-        guard let low = values.min(), let high = values.max(), high > low else { return 0...1 }
+    private static func yDomain(of values: [Double]) -> ClosedRange<Double> {
+        guard let low = values.min(), let high = values.max() else { return 0...1 }
         var lower = (low / 50).rounded(.down) * 50
         if low - lower < 10 { lower -= 25 }
         var upper = (high / 50).rounded(.up) * 50
@@ -113,11 +98,14 @@ struct TempConsumptionView: View {
     }
 
     // cold to warm across the data's own span: blue through teal and amber to red
-    private func tempColor(_ bucket: Bucket) -> Color {
-        let lowers = buckets.map(\.lower)
-        guard let coldest = lowers.min(), let warmest = lowers.max(), warmest > coldest else { return .purple }
-        let t = (bucket.lower - coldest) / (warmest - coldest)
+    private static func tempColor(_ lower: Double, coldest: Double, warmest: Double) -> Color {
+        guard warmest > coldest else { return .purple }
+        let t = (lower - coldest) / (warmest - coldest)
         return Color(hue: 0.62 - 0.60 * t, saturation: 0.7, brightness: 0.95)
+    }
+
+    private func plotted(_ whPerKm: Double) -> Double {
+        Units.imperial ? whPerKm * Units.kmPerMile : whPerKm
     }
 
     private func span(_ fifth: Fifth) -> String {
@@ -125,12 +113,19 @@ struct TempConsumptionView: View {
     }
 
     var body: some View {
+        // the pipeline runs once per render - as computed properties every access
+        // repeated it, the per-bar colour worst of all
+        let samples = Self.samples(for: drives)
+        let buckets = Self.buckets(for: samples)
+        let average = Self.average(of: buckets)
+        let cold = Self.fifth(of: samples, coldest: true)
+        let warm = Self.fifth(of: samples, coldest: false)
         List {
             if buckets.isEmpty {
                 ContentUnavailableView("No temperature data", systemImage: "thermometer.medium")
             } else {
                 Section {
-                    consumptionChart
+                    consumptionChart(buckets, average: average)
                         .frame(height: 260)
                         .padding(.vertical, 8)
                     LabeledContent(String(localized: "Average")) {
@@ -142,20 +137,21 @@ struct TempConsumptionView: View {
                             .monospacedDigit()
                     }
                     LabeledContent(String(localized: "Period")) {
-                        Text(verbatim: period)
+                        Text(verbatim: Self.period(of: samples))
                     }
                 } footer: {
                     Text("Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average.")
                 }
 
-                if let cold, let warm, let differencePct {
+                if let cold, let warm, warm.whPerKm > 0 {
+                    let difference = (cold.whPerKm / warm.whPerKm - 1) * 100
                     Section {
                         PlaceRow(name: String(localized: "Coldest fifth"), detail: span(cold),
                                  value: Fmt.consumption(cold.whPerKm), tint: .cyan)
                         PlaceRow(name: String(localized: "Warmest fifth"), detail: span(warm),
                                  value: Fmt.consumption(warm.whPerKm), tint: .orange)
                         LabeledContent(String(localized: "Difference")) {
-                            Text(verbatim: (differencePct >= 0 ? "+" : "") + Fmt.pct(differencePct, decimals: 0))
+                            Text(verbatim: (difference >= 0 ? "+" : "") + Fmt.pct(difference, decimals: 0))
                                 .monospacedDigit()
                         }
                     } footer: {
@@ -164,7 +160,7 @@ struct TempConsumptionView: View {
                 }
 
                 Section {
-                    distanceChart
+                    distanceChart(buckets)
                         .frame(height: 140)
                         .padding(.vertical, 8)
                 } footer: {
@@ -177,8 +173,11 @@ struct TempConsumptionView: View {
         .appBackButton()
     }
 
-    private var consumptionChart: some View {
-        Chart {
+    private func consumptionChart(_ buckets: [Bucket], average: Double) -> some View {
+        // buckets arrive sorted, so the colour span reads off the ends
+        let coldest = buckets.first?.lower ?? 0
+        let warmest = buckets.last?.lower ?? 1
+        return Chart {
             ForEach(buckets) { bucket in
                 BarMark(
                     xStart: .value("Temperature" as String, bucket.lower + bucket.width * 0.06),
@@ -186,7 +185,7 @@ struct TempConsumptionView: View {
                     y: .value("Consumption" as String, plotted(bucket.whPerKm)),
                     height: .fixed(16)
                 )
-                .foregroundStyle(tempColor(bucket))
+                .foregroundStyle(Self.tempColor(bucket.lower, coldest: coldest, warmest: warmest))
                 .cornerRadius(8)
             }
             RuleMark(y: .value("Average" as String, plotted(average)))
@@ -199,7 +198,7 @@ struct TempConsumptionView: View {
                 }
         }
         .chartXAxis { temperatureAxis }
-        .chartYScale(domain: yDomain)
+        .chartYScale(domain: Self.yDomain(of: buckets.map { plotted($0.whPerKm) } + [plotted(average)]))
         .chartYAxis {
             AxisMarks(values: .stride(by: 25.0))
         }
@@ -208,7 +207,7 @@ struct TempConsumptionView: View {
         }
     }
 
-    private var distanceChart: some View {
+    private func distanceChart(_ buckets: [Bucket]) -> some View {
         Chart(buckets) { bucket in
             RectangleMark(
                 xStart: .value("Temperature" as String, bucket.lower + bucket.width * 0.06),
