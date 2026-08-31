@@ -29,9 +29,13 @@ struct TimelineView: View {
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var error: String?
     @State private var loadedKey: String?
-    @State private var loading = false
+    // a count rather than a flag: a cancelled load and its successor overlap,
+    // and the spinner should follow whoever is still running
+    @State private var loadsInFlight = 0
     // counts the requests to return to the top; TopScroller acts when it grows
     @State private var topRequests = 0
+
+    private var loading: Bool { loadsInFlight > 0 }
 
     private var period: TimelinePeriod { TimelinePeriod(rawValue: periodKey) ?? .month }
     private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)|\(periodKey)" }
@@ -207,7 +211,7 @@ struct TimelineView: View {
 
     private func load() async {
         let since = period.start()
-        loading = true
+        loadsInFlight += 1
         // the heater queries run in parallel - otherwise the symbols turn up long after the list
         async let heaters = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         async let heatedCharges = GrafanaClient(baseURL: grafanaURL).heaterCharges(carID: carID)
@@ -223,10 +227,10 @@ struct TimelineView: View {
             error = nil
         } catch {
             // a period picked mid-load cancels this one, and that is not a failure to show
-            if Task.isCancelled { return }
+            if Task.isCancelled { loadsInFlight -= 1; return }
             if days.isEmpty { self.error = error.localizedDescription }
         }
-        loading = false
+        loadsInFlight -= 1
         loadedKey = loadKey
         heaterDrives = (try? await heaters) ?? []
         heaterCharges = (try? await heatedCharges) ?? []
