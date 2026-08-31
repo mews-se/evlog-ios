@@ -334,7 +334,6 @@ struct BatteryCard: View {
     }
 }
 
-// placeholder until the two buttons have somewhere to go
 struct StatusGrid: View {
     let status: CarStatus
     var health: BatteryHealth?
@@ -358,7 +357,7 @@ struct StatusGrid: View {
                 StatTile(
                     icon: "mappin.and.ellipse",
                     title: String(localized: "Location"),
-                    value: status.carGeodata?.geofence?.isEmpty == false ? status.carGeodata!.geofence! : String(localized: "Unknown"),
+                    value: (status.carGeodata?.geofence).flatMap { $0.isEmpty ? nil : $0 } ?? String(localized: "Unknown"),
                     tint: .blue,
                     chevron: true
                 )
