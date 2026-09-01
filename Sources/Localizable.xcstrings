@@ -111,6 +111,16 @@
         }
       }
     },
+    "Donate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donate"
+          }
+        }
+      }
+    },
     "Doors open" : {
       "localizations" : {
         "en" : {
@@ -137,6 +147,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Health check failed"
+          }
+        }
+      }
+    },
+    "If you feel like giving back" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you feel like giving back"
           }
         }
       }

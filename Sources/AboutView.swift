@@ -104,6 +104,11 @@ struct AboutView: View {
                 } label: {
                     Label(String(localized: "License"), systemImage: "doc.plaintext")
                 }
+
+                LinkRow(icon: "gift",
+                        title: String(localized: "Donate"),
+                        detail: String(localized: "If you feel like giving back"),
+                        url: "https://mews-se.github.io/evlog-site/donate/")
             } header: {
                 Text("Open source")
             } footer: {
