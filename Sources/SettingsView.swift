@@ -6,6 +6,7 @@ struct SettingsView: View {
     @AppStorage(Pref.teslamate.key) private var teslamateURL = Pref.teslamate.value
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
+    @AppStorage(Pref.tessieTokenVerified.key) private var tessieTokenVerified = Pref.tessieTokenVerified.value
     @AppStorage(Pref.units.key) private var units = Pref.units.value
     @AppStorage(Pref.demoMode.key) private var demoMode = Pref.demoMode.value
 
@@ -14,6 +15,7 @@ struct SettingsView: View {
     @State private var cars: [Car] = []
     @State private var testResult: String?
     @State private var tessieResult: String?
+    @State private var replacingToken = false
 
     // the server field edits a draft: a write-through per keystroke would flip
     // Demo.isActive mid-word and RootView's id would throw the keyboard out
@@ -90,14 +92,30 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    TextField(String(localized: "API key"), text: $tessieToken)
-                        .focused($editing)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                        .font(.footnote.monospaced())
-                    if !tessieToken.isEmpty {
-                        Button("Test connection") {
-                            Task { await testTessie() }
+                    // a key that has passed a test is shown as dots, so the raw
+                    // value stays out of screenshots; editing resets the proof
+                    if tessieTokenVerified && !replacingToken && !tessieToken.isEmpty {
+                        HStack {
+                            Text(verbatim: String(repeating: "•", count: 24))
+                                .font(.footnote.monospaced())
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Button("Replace") { replacingToken = true }
+                        }
+                    } else {
+                        TextField(String(localized: "API key"), text: $tessieToken)
+                            .focused($editing)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .font(.footnote.monospaced())
+                            .onChange(of: tessieToken) {
+                                tessieTokenVerified = false
+                                tessieResult = nil
+                            }
+                        if !tessieToken.isEmpty {
+                            Button("Test connection") {
+                                Task { await testTessie() }
+                            }
                         }
                     }
                     if let tessieResult {
@@ -173,8 +191,11 @@ struct SettingsView: View {
             let vehicles = try await TessieClient(token: tessieToken).vehicles()
             let names = vehicles.compactMap { $0.lastState?.displayName ?? $0.vin }.joined(separator: ", ")
             tessieResult = String(localized: "✓ Connected – found \(names)")
+            tessieTokenVerified = true
+            replacingToken = false
         } catch {
             tessieResult = "✗ \(error.localizedDescription)"
+            tessieTokenVerified = false
         }
     }
 }

@@ -21,8 +21,9 @@ struct TessieClient {
         return try Self.decoder.decode(T.self, from: data)
     }
 
+    // retired cars stay in the account forever; only the active ones matter here
     func vehicles() async throws -> [TessieVehicle] {
-        let payload: TessieVehiclesResponse = try await get("/vehicles")
+        let payload: TessieVehiclesResponse = try await get("/vehicles?only_active=true")
         return payload.results ?? []
     }
 

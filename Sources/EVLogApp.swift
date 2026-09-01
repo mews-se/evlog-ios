@@ -16,6 +16,7 @@ enum Pref {
     static let grafana = (key: "grafanaURL", value: "")
     static let teslamate = (key: "teslamateURL", value: "")
     static let tessieToken = (key: "tessieToken", value: "")
+    static let tessieTokenVerified = (key: "tessieTokenVerified", value: false)
     static let units = (key: "units", value: Locale.current.measurementSystem == .metric ? "metric" : "imperial")
     static let carID = (key: "carID", value: 1)
     static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)

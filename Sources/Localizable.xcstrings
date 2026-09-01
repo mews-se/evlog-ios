@@ -221,6 +221,16 @@
         }
       }
     },
+    "Replace" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace"
+          }
+        }
+      }
+    },
     "Software update available" : {
       "localizations" : {
         "en" : {
