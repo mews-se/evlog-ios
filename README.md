@@ -27,9 +27,9 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 glyphs for preconditioning, open doors and windows, tyre pressure and more, lock state, location,
 temperatures, Sentry, degradation, countries visited, software version and time since last contact.
 The car's name opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own
-configuration. From here you reach a map of every place the car has been over a chosen period, and
-a range map showing how far the current charge takes you, using a detour factor derived from your
-own trips rather than a guess.
+configuration. From here you reach a map of every place the car has been over any period you
+choose, on a plain map or satellite imagery, and a range map showing how far the current charge
+takes you, using a detour factor derived from your own trips rather than a guess.
 
 **Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
@@ -49,7 +49,10 @@ charge. Costs TeslaMate does not have can be filled in from Tessie if you use it
 
 **Statistics** — week, month and year, drilling down from period to day to individual drives.
 Charging statistics with top locations that open into the charges behind them, AC/DC split and a
-weekday-by-hour heat map.
+weekday-by-hour heat map. Destinations: where the car goes most often and where it covers the most
+distance, each opening into the drives behind it, weekdays against weekends, and a heat map of when
+you drive. Temperature and consumption: consumption grouped by outside temperature, with the
+coldest fifth of the driving set against the warmest.
 
 **Demo mode** — with no server configured the app starts in three weeks of built-in example data,
 so every screen above can be tried before anything is set up. A switch in Settings takes you back

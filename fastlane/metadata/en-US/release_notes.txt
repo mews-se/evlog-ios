@@ -1,1 +1,6 @@
-Battery health is now estimated with EVLog's own method, read directly from your completed charges. Degradation, capacity and range may shift slightly compared with 3.0 — the estimator changed, not your battery.
+Pick any period on the visited map, and view it as satellite imagery if you like.
+Two new statistics views: what temperature does to your consumption, and where the car actually goes.
+Tap the timeline segment you are already in to get back to the top.
+A Tessie key turns into dots once it has passed the test, and archived cars are left out.
+A loading spinner that could keep going after a refresh now stops.
+Full story: https://mews-se.github.io/evlog-site/changelog/
