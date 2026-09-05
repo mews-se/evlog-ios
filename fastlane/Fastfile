@@ -88,12 +88,15 @@ platform :ios do
     asc_key
     app = Spaceship::ConnectAPI::App.find(APP_ID)
     UI.user_error!("No app found for #{APP_ID}") if app.nil?
-    # once the only version is live there is nothing editable, and vice versa
-    # before the first release, so both are asked for and whichever exist are shown
-    versions = [app.get_live_app_store_version, app.get_edit_app_store_version].compact.uniq(&:id)
+    # Spaceship's "editable version" filter has no IN_REVIEW, and Apple reports every
+    # superseded version as still READY_FOR_DISTRIBUTION, so list everything newer
+    # than the live version (the newest one on sale) and stop there
+    versions = app.get_app_store_versions.sort_by { |v| Time.parse(v.created_date) }.reverse
+    live = versions.index { |v| v.app_version_state == "READY_FOR_DISTRIBUTION" }
+    versions = versions.first(live + 1) if live
     UI.user_error!("No version on App Store Connect") if versions.empty?
     versions.each do |version|
-      UI.success("Version #{version.version_string} · #{version.app_store_state}")
+      UI.success("Version #{version.version_string} · #{version.app_version_state}")
       begin
         build = version.build
         UI.message("Build attached: #{build ? "build #{build.version}" : "none"}")
