@@ -18,8 +18,8 @@ most recently sent to Apple — normally the one in the store, marked by the lat
 work gathers on `dev`. To build what is in the store, start from the latest tag; for how, see
 [Building](#building).
 
-[Privacy policy](https://mews-se.github.io/evlog-site/privacy/) ·
-[Support](https://mews-se.github.io/evlog-site/support/)
+[Privacy policy](https://evlog.martinstockzell.se/privacy/) ·
+[Support](https://evlog.martinstockzell.se/support/)
 
 ## What it does
 

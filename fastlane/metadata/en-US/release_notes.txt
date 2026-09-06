@@ -3,4 +3,4 @@ Two new statistics views: what temperature does to your consumption, and where t
 Tap the timeline segment you are already in to get back to the top.
 A Tessie key turns into dots once it has passed the test, and archived cars are left out.
 A loading spinner that could keep going after a refresh now stops.
-Full story: https://mews-se.github.io/evlog-site/changelog/
+Full story: https://evlog.martinstockzell.se/changelog/
