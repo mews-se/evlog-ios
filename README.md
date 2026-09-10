@@ -25,22 +25,24 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 
 **Overview** — battery ring with range, what the cable is doing right now, TeslaMate's own status
 glyphs for preconditioning, open doors and windows, tyre pressure and more, lock state, location,
-temperatures, Sentry, degradation, countries visited, software version and time since last contact.
-The car's name opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own
-configuration. From here you reach a map of every place the car has been over any period you
-choose, on a plain map or satellite imagery, and a range map showing how far the current charge
-takes you, using a detour factor derived from your own trips rather than a guess.
+temperatures, Sentry, degradation, countries visited (each opening into the drives and charges
+there), software version and time since last contact. The car's name opens a spec sheet: model,
+VIN, efficiency, and with a Tessie key the car's own configuration. From here you reach a map of
+every place the car has been over any period you choose, on a plain map or satellite imagery, and a
+range map showing how far the current charge takes you, using a detour factor derived from your own
+trips rather than a guess.
 
 **Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
 the car stood and what it cost the battery, and a short stop gets one too if it cost anything. When
-the odometer shows the car moved while nothing was logged, the row says so instead of pretending the
-car stood still. Swipe left and right inside a drive or a charge to step through the day without
-going back to the list.
+the odometer shows the car moved while nothing was logged, the row says so instead of pretending
+the car stood still. Software updates get a row of their own. Swipe left and right inside a drive
+or a charge to step through the day without going back to the list.
 
-**Drives** — a route map, a speed graph you can drag along to follow the car, energy and regen,
-consumption, and efficiency as a percentage of rated consumption. Drives where the battery heater
-ran are marked, since that is often what explains a cold day's consumption.
+**Drives** — a route map, a speed graph you can drag along to follow the car, the elevation profile
+beneath it, energy and regen, consumption, and efficiency as a percentage of rated consumption.
+Drives where the battery heater ran are marked, since that is often what explains a cold day's
+consumption.
 
 **Charges** — AC and DC told apart, the charging curve with a readout under your finger, added
 and used energy, average and peak power, cost, and what the battery heater and cabin climate drew
@@ -48,11 +50,14 @@ while the car charged. A car left plugged in across several charging processes i
 charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
 **Statistics** — week, month and year, drilling down from period to day to individual drives.
-Charging statistics with top locations that open into the charges behind them, AC/DC split and a
-weekday-by-hour heat map. Destinations: where the car goes most often and where it covers the most
-distance, each opening into the drives behind it, weekdays against weekends, and a heat map of when
-you drive. Temperature and consumption: consumption grouped by outside temperature, with the
-coldest fifth of the driving set against the warmest.
+Charging statistics with what charging costs in all, per kWh and per 100 km, top locations that
+open into the charges behind them, AC/DC split and a weekday-by-hour heat map. Destinations: where
+the car goes most often and where it covers the most distance, each opening into the drives behind
+it, weekdays against weekends, and a heat map of when you drive. Temperature and consumption:
+consumption grouped by outside temperature, with the coldest fifth of the driving set against the
+warmest.
+
+Costs are shown in the region's currency, or one you pick in Settings.
 
 **Demo mode** — with no server configured the app starts in three weeks of built-in example data,
 so every screen above can be tried before anything is set up. A switch in Settings takes you back

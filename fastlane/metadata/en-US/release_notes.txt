@@ -1,6 +1,9 @@
-Pick any period on the visited map, and view it as satellite imagery if you like.
-Two new statistics views: what temperature does to your consumption, and where the car actually goes.
-Tap the timeline segment you are already in to get back to the top.
-A Tessie key turns into dots once it has passed the test, and archived cars are left out.
-A loading spinner that could keep going after a refresh now stops.
+What's new
+
+• Costs are shown in your region's currency, with a setting to pick another.
+• Charging statistics open with the totals: cost in all, the AC/DC split, the average per kWh and the cost per 100 km.
+• A drive shows its elevation profile under the speed graph, with the metres climbed and dropped.
+• Software updates appear in the timeline, and the software page says how often the car updates.
+• Tap a country to see the drives and charges there.
+
 Full story: https://evlog.martinstockzell.se/changelog/
