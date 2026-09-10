@@ -13,10 +13,37 @@ struct SoftwareView: View {
         return first
     }
 
+    // the middle gap between one update and the next, as TeslaMate's dashboard has it
+    private var medianGap: String? {
+        let starts = updates.compactMap(\.startDate).sorted()
+        guard starts.count > 1 else { return nil }
+        let gaps = zip(starts, starts.dropFirst()).map { $1.timeIntervalSince($0) }.sorted()
+        let middle = gaps.count / 2
+        let median = gaps.count % 2 == 0 ? (gaps[middle - 1] + gaps[middle]) / 2 : gaps[middle]
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day]
+        formatter.unitsStyle = .full
+        formatter.calendar = Calendar.current
+        formatter.calendar?.locale = .app
+        return formatter.string(from: median)
+    }
+
     var body: some View {
         Group {
             if !updates.isEmpty {
                 List {
+                    Section {
+                        LabeledContent(String(localized: "Updates")) {
+                            Text(verbatim: "\(updates.count)")
+                                .monospacedDigit()
+                        }
+                        if let medianGap {
+                            LabeledContent(String(localized: "Median time between updates")) {
+                                Text(verbatim: medianGap)
+                                    .monospacedDigit()
+                            }
+                        }
+                    }
                     Section {
                         ForEach(updates) { update in
                             UpdateRow(update: update, isCurrent: update.shortVersion == currentShort)

@@ -211,6 +211,16 @@
         }
       }
     },
+    "Median time between updates" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Median time between updates"
+          }
+        }
+      }
+    },
     "No data for %@" : {
       "localizations" : {
         "en" : {
@@ -317,6 +327,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starting to charge"
+          }
+        }
+      }
+    },
+    "Updated to %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updated to %@"
+          }
+        }
+      }
+    },
+    "Updates" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates"
           }
         }
       }

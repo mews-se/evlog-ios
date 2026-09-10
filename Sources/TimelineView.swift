@@ -18,6 +18,7 @@ struct TimelineView: View {
     @State private var drives: [Drive] = []
     @State private var charges: [Charge] = []
     @State private var chargeGroups: [ChargeGroup] = []
+    @State private var updates: [SoftwareUpdate] = []
     @State private var efficiency: Double?
     @State private var days: [TimelineDay] = []
     // the flow as a run of details, and where each row sits in it
@@ -187,13 +188,24 @@ struct TimelineView: View {
             Spine(tint: Color(.tertiaryLabel), symbol: "questionmark.circle.fill") {
                 MissingRow(gap: gap)
             }
+        case .update(let update):
+            // the same purple and arrow the car state wears while it updates
+            Spine(tint: .purple, symbol: "arrow.down.circle.fill") {
+                if let url = update.releaseNotesURL {
+                    // plain, or the link paints the whole row in the accent colour
+                    Link(destination: url) { UpdateTimelineRow(update: update) }
+                        .buttonStyle(.plain)
+                } else {
+                    UpdateTimelineRow(update: update)
+                }
+            }
         }
     }
 
     private func rebuild() {
         chargeGroups = ChargeGroup.stitch(charges, drives: drives)
         switch filter {
-        case .all: days = Timeline.build(drives: drives, chargeGroups: chargeGroups,
+        case .all: days = Timeline.build(drives: drives, chargeGroups: chargeGroups, updates: updates,
                                          efficiency: efficiency, coldCharges: coldCharges)
         case .drives: days = Timeline.group(drives.map(TimelineEntry.drive))
         case .charges: days = Timeline.group(chargeGroups.map(TimelineEntry.charge))
@@ -221,8 +233,14 @@ struct TimelineView: View {
             async let loadedCharges = api.charges(carID: carID, since: since)
             // the park rows turn range loss into kWh through the car's efficiency constant
             async let loadedCars = api.cars()
+            // the software updates are a side line: a failure there costs the rows, not the flow
+            async let loadedUpdates = api.updates(carID: carID)
             (drives, charges) = try await (loadedDrives, loadedCharges)
             efficiency = (try? await loadedCars)?.first { $0.carId == carID }?.carDetails?.efficiency
+            updates = ((try? await loadedUpdates) ?? []).filter { update in
+                guard let start = update.startDate else { return false }
+                return since.map { start >= $0 } ?? true
+            }
             rebuild()
             error = nil
         } catch {
@@ -399,6 +417,7 @@ enum TimelineEntry: Identifiable {
     case charge(ChargeGroup)
     case park(Park)
     case missing(Missing)
+    case update(SoftwareUpdate)
 
     var id: String {
         switch self {
@@ -406,6 +425,7 @@ enum TimelineEntry: Identifiable {
         case .charge(let group): return "charge-\(group.id)"
         case .park(let park): return "park-\(Int(park.start.timeIntervalSince1970))"
         case .missing(let gap): return "missing-\(Int(gap.start.timeIntervalSince1970))"
+        case .update(let update): return "update-\(update.updateId)"
         }
     }
 
@@ -419,7 +439,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return .drive(id: drive.driveId, day: drive.startDate)
         case .charge(let group): return .charge(ids: group.parts.map(\.chargeId), address: group.address)
-        case .park, .missing: return nil
+        case .park, .missing, .update: return nil
         }
     }
 
@@ -434,6 +454,7 @@ enum TimelineEntry: Identifiable {
         case .charge(let group): return group.startDate
         case .park(let park): return park.start
         case .missing(let gap): return gap.start
+        case .update(let update): return update.startDate ?? .distantPast
         }
     }
 
@@ -453,6 +474,7 @@ enum TimelineEntry: Identifiable {
         case .charge(let group): return group.endDate
         case .park(let park): return park.end
         case .missing(let gap): return gap.end
+        case .update(let update): return update.endDate
         }
     }
 
@@ -462,6 +484,7 @@ enum TimelineEntry: Identifiable {
         case .charge(let group): return group.address
         case .park(let park): return park.place
         case .missing(let gap): return gap.to
+        case .update: return nil
         }
     }
 
@@ -471,6 +494,7 @@ enum TimelineEntry: Identifiable {
         case .charge(let group): return group.address
         case .park(let park): return park.place
         case .missing(let gap): return gap.from
+        case .update: return nil
         }
     }
 
@@ -479,7 +503,7 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.batteryDetails?.startBatteryLevel
         case .charge(let group): return group.first.batteryDetails?.startBatteryLevel
         case .park(let park): return park.from
-        case .missing: return nil
+        case .missing, .update: return nil
         }
     }
 
@@ -488,7 +512,7 @@ enum TimelineEntry: Identifiable {
         case .drive(let drive): return drive.batteryDetails?.endBatteryLevel
         case .charge(let group): return group.last.batteryDetails?.endBatteryLevel
         case .park(let park): return park.to
-        case .missing: return nil
+        case .missing, .update: return nil
         }
     }
 
@@ -496,7 +520,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.rangeRated?.startRange
         case .charge(let group): return group.first.rangeRated?.startRange
-        case .park, .missing: return nil
+        case .park, .missing, .update: return nil
         }
     }
 
@@ -504,7 +528,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.rangeRated?.endRange
         case .charge(let group): return group.last.rangeRated?.endRange
-        case .park, .missing: return nil
+        case .park, .missing, .update: return nil
         }
     }
 
@@ -512,7 +536,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerStart
         case .charge(let group): return group.first.odometer
-        case .park, .missing: return nil
+        case .park, .missing, .update: return nil
         }
     }
 
@@ -520,7 +544,7 @@ enum TimelineEntry: Identifiable {
         switch self {
         case .drive(let drive): return drive.odometerDetails?.odometerEnd
         case .charge(let group): return group.last.odometer
-        case .park, .missing: return nil
+        case .park, .missing, .update: return nil
         }
     }
 
@@ -593,7 +617,7 @@ enum Timeline {
 
     // both lists are complete back to the same point, so a gap between two entries is
     // a gap in the car's day and not one list running out before the other
-    static func build(drives: [Drive], chargeGroups: [ChargeGroup],
+    static func build(drives: [Drive], chargeGroups: [ChargeGroup], updates: [SoftwareUpdate] = [],
                       efficiency: Double? = nil, coldCharges: Set<Int>? = nil) -> [TimelineDay] {
         let events = (drives.map(TimelineEntry.drive) + chargeGroups.map(TimelineEntry.charge))
             .sorted { $0.start < $1.start }
@@ -616,6 +640,9 @@ enum Timeline {
             guard stood >= parkThreshold || (stood >= shortStopMinimum && park.costsEnough) else { continue }
             all.append(.park(park))
         }
+        // an update happens while the car stands, so it goes into the flow without
+        // splitting the parked stretch around it - the drain arithmetic stays whole
+        all.append(contentsOf: updates.filter { $0.startDate != nil }.map(TimelineEntry.update))
         return group(all)
     }
 
@@ -638,7 +665,7 @@ enum Timeline {
         case .charge(let group):
             // whether the pack was cold is only knowable through Grafana - no answer, no figures
             guard let coldCharges, !coldCharges.contains(group.first.chargeId) else { return nil }
-        case .park, .missing:
+        case .park, .missing, .update:
             return nil
         }
         return from - to
@@ -714,6 +741,44 @@ struct MissingRow: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+            }
+        }
+        .padding(.top, 2)
+        .padding(.bottom, 8)
+    }
+}
+
+struct UpdateTimelineRow: View {
+    let update: SoftwareUpdate
+
+    private var minutes: Double? {
+        guard let start = update.startDate, let end = update.endDate else { return nil }
+        return end.timeIntervalSince(start) / 60
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Updated to \(update.shortVersion ?? "–")")
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.primary)
+                Spacer()
+                if let minutes {
+                    Text(verbatim: Fmt.duration(minutes))
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+            HStack {
+                Text(verbatim: "\(Fmt.time(update.startDate)) – \(Fmt.time(update.endDate))")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                if update.releaseNotesURL != nil {
+                    Image(systemName: "arrow.up.right.square")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
         .padding(.top, 2)
