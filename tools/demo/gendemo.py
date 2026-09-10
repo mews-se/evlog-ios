@@ -77,8 +77,21 @@ did, cid = 0, 0
 def rng(soc):
     return round(soc / 100 * FULL_RANGE, 2)
 
+# elevation profiles as (progress, metres) corners; the noise has a generator of its
+# own so adding it left every other demo value untouched
+terrain = random.Random(7)
+FLAT = [(0, 10), (0.5, 18), (1, 10)]
+OVER_THE_HILL = [(0, 10), (0.5, 120), (0.7, 550), (0.85, 300), (1, 5)]
+BACK_OVER = [(0, 5), (0.3, 550), (0.5, 120), (1, 10)]
+
+def elevation_at(profile, f):
+    for (f0, e0), (f1, e1) in zip(profile, profile[1:]):
+        if f <= f1:
+            return e0 + (e1 - e0) * (f - f0) / (f1 - f0)
+    return profile[-1][1]
+
 def add_drive(day, h, m, route, road_km, dur_min, name_from, name_to,
-              heater=False, temp=21.0):
+              heater=False, temp=21.0, profile=FLAT):
     global soc, odo, did
     did += 1
     energy = road_km * EFF * random.uniform(0.92, 1.10)
@@ -128,6 +141,9 @@ def add_drive(day, h, m, route, road_km, dur_min, name_from, name_to,
             "latitude": round(lat, 6), "longitude": round(lon, 6),
             "speed": round(sp), "power": round(power, 1),
             "battery_level": round(start_soc - drop * f),
+            # GPS altitude: a few metres of noise, and a couple of percent missing
+            "elevation": None if terrain.random() < 0.02
+                else round(elevation_at(profile, f) + terrain.uniform(-4, 4)),
             "battery_info": {"battery_heater": bool(heater and f < 0.45)},
         })
         if i % 4 == 0:
@@ -229,10 +245,11 @@ for day in range(-20, 1):
                        80, "Home", HOME)
         park_drain(12, 0.06)
     elif weekday == 5 and day == -13:  # Saturday outing to Santa Cruz
-        add_drive(day, 9, 0, ROUTE_TRIP, KM_TRIP, 72, "Home", "Santa Cruz Beach", temp=19)
+        add_drive(day, 9, 0, ROUTE_TRIP, KM_TRIP, 72, "Home", "Santa Cruz Beach", temp=19,
+                  profile=OVER_THE_HILL)
         park_drain(4, 0.25)
         add_drive(day, 13, 45, ROUTE_SC_SUC, KM_SC_SUC, 70, "Santa Cruz Beach",
-                  "Tesla Fremont Supercharger", temp=23)
+                  "Tesla Fremont Supercharger", temp=23, profile=BACK_OVER)
         add_charge(day, 14, 58, 18, 78, "Tesla Fremont Supercharger", SUC,
                    dc=True, heater=True, cold=True, temp=23)
         add_drive(day, 15, 20, ROUTE_SUC_HOME, KM_SUC_HOME, 13,
