@@ -8,6 +8,7 @@ struct SettingsView: View {
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
     @AppStorage(Pref.tessieTokenVerified.key) private var tessieTokenVerified = Pref.tessieTokenVerified.value
     @AppStorage(Pref.units.key) private var units = Pref.units.value
+    @AppStorage(Pref.currency.key) private var currency = Pref.currency.value
     @AppStorage(Pref.demoMode.key) private var demoMode = Pref.demoMode.value
 
     @FocusState private var editing: Bool
@@ -134,8 +135,15 @@ struct SettingsView: View {
                         Text("Metric").tag("metric")
                         Text("Imperial").tag("imperial")
                     }
+                    // a hundred and sixty currencies are a list to push, not a menu to unfold
+                    Picker("Currency", selection: $currency) {
+                        ForEach(Currency.choices, id: \.code) { choice in
+                            Text(verbatim: "\(choice.name) (\(choice.code))").tag(choice.code)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
                 } footer: {
-                    Text("The region sets the default. TeslaMate's data is metric either way; this only changes what is shown.")
+                    Text("The region sets the defaults. TeslaMate's data is metric and its costs carry no currency; this only changes what is shown.")
                 }
 
                 Section {

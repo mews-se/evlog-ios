@@ -38,7 +38,7 @@ struct ChargeSummaryCard: View {
                     .font(.caption)
             }
             HStack {
-                summaryItem(Fmt.kr(cost), String(localized: "Cost"), .blue)
+                summaryItem(Fmt.cost(cost), String(localized: "Cost"), .blue)
                 summaryItem(Fmt.kwh(energy), String(localized: "Energy"), .green)
                 // the parenthesis is the processes the joined stretches were made of,
                 // and the tint is neutral - grey means time everywhere else
@@ -111,7 +111,7 @@ struct ChargeRow: View {
                     MetricChip(text: battery, tint: .green)
                 }
                 if let cost = group.cost(tessieCosts: tessieCosts) {
-                    MetricChip(text: Fmt.kr(cost), tint: .blue)
+                    MetricChip(text: Fmt.cost(cost), tint: .blue)
                 }
                 if heaterUsed {
                     MetricChip(icon: "heat.waves", tint: .red)
@@ -188,7 +188,7 @@ struct ChargeDetailView: View {
                         let costTitle = group.usesTessieCost(tessieCosts)
                             ? String(localized: "Cost") + " (Tessie)"
                             : String(localized: "Cost")
-                        let costValue = Fmt.kr(group.cost(tessieCosts: tessieCosts))
+                        let costValue = Fmt.cost(group.cost(tessieCosts: tessieCosts))
                         if let costEditURL {
                             Link(destination: costEditURL) {
                                 StatTile(icon: "banknote", title: costTitle, value: costValue, tint: .blue, chevron: true)

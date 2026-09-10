@@ -20,6 +20,23 @@ enum Units {
     }
 }
 
+// TeslaMate stores costs as bare numbers the owner typed in, so the currency is only a
+// label. The region picks it, like the units, and the setting can override
+enum Currency {
+    static var code: String {
+        UserDefaults.standard.string(forKey: Pref.currency.key) ?? Pref.currency.value
+    }
+
+    // the common currencies by their english names, the saved one kept even if it is not among them
+    static var choices: [(code: String, name: String)] {
+        var codes = Locale.commonISOCurrencyCodes
+        if !codes.contains(code) { codes.append(code) }
+        return codes
+            .map { (code: $0, name: Locale.app.localizedString(forCurrencyCode: $0) ?? $0) }
+            .sorted { $0.name < $1.name }
+    }
+}
+
 enum Fmt {
     static func distance(_ value: Double?, decimals: Int = 1) -> String {
         guard let value else { return "–" }
@@ -50,9 +67,9 @@ enum Fmt {
         return kwh.formatted(.number.precision(.fractionLength(1))) + " kWh"
     }
 
-    static func kr(_ value: Double?) -> String {
+    static func cost(_ value: Double?) -> String {
         guard let value else { return "–" }
-        return value.formatted(.number.precision(.fractionLength(0))) + " kr"
+        return value.formatted(.currency(code: Currency.code).precision(.fractionLength(0)).locale(.app))
     }
 
     static func temp(_ value: Double?) -> String {

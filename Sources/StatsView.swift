@@ -238,7 +238,7 @@ struct StatBucketRow: View {
             HStack {
                 item(Fmt.distance(bucket.distance, decimals: 0), .blue)
                 item(Fmt.kwh(bucket.energyAdded), .green)
-                item(bucket.cost > 0 ? Fmt.kr(bucket.cost) : "–", .primary)
+                item(bucket.cost > 0 ? Fmt.cost(bucket.cost) : "–", .primary)
             }
             HStack(spacing: 10) {
                 Label { Text(verbatim: "\(bucket.driveCount)") } icon: { Image(systemName: "road.lanes") }

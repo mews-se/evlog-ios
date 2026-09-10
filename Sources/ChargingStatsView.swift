@@ -84,7 +84,7 @@ struct ChargingStatsView: View {
                 Section {
                     ForEach(topByCost) { place in
                         NavigationLink(value: StatsRoute.place(place.name)) {
-                            PlaceRow(name: place.name, detail: Fmt.kwh(place.energy), value: Fmt.kr(place.cost), tint: .blue)
+                            PlaceRow(name: place.name, detail: Fmt.kwh(place.energy), value: Fmt.cost(place.cost), tint: .blue)
                         }
                     }
                 } header: {

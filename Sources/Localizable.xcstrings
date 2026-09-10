@@ -91,6 +91,16 @@
         }
       }
     },
+    "Currency" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currency"
+          }
+        }
+      }
+    },
     "Demo mode" : {
       "localizations" : {
         "en" : {
@@ -1801,12 +1811,12 @@
         }
       }
     },
-    "The region sets the default. TeslaMate's data is metric either way; this only changes what is shown." : {
+    "The region sets the defaults. TeslaMate's data is metric and its costs carry no currency; this only changes what is shown." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The region sets the default. TeslaMate's data is metric either way; this only changes what is shown."
+            "value" : "The region sets the defaults. TeslaMate's data is metric and its costs carry no currency; this only changes what is shown."
           }
         }
       }
