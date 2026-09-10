@@ -248,6 +248,8 @@ struct DrivePoint: Decodable, Identifiable {
     let speed: Double?
     let power: Double?
     let batteryLevel: Int?
+    // metres, null on a couple of percent of the points
+    let elevation: Double?
     let batteryInfo: PointBattery?
 
     var id: Int { detailId }

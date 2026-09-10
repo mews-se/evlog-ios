@@ -18,6 +18,10 @@ enum Units {
     static func temperature(_ celsius: Double) -> Double {
         imperial ? celsius * 9 / 5 + 32 : celsius
     }
+
+    static func altitude(_ metres: Double) -> Double {
+        imperial ? metres * 3.28084 : metres
+    }
 }
 
 // TeslaMate stores costs as bare numbers the owner typed in, so the currency is only a
@@ -70,6 +74,11 @@ enum Fmt {
     static func cost(_ value: Double?, decimals: Int = 0) -> String {
         guard let value else { return "–" }
         return value.formatted(.currency(code: Currency.code).precision(.fractionLength(decimals)).locale(.app))
+    }
+
+    static func altitude(_ metres: Double?) -> String {
+        guard let metres else { return "–" }
+        return "\(Int(Units.altitude(metres).rounded())) " + (Units.imperial ? "ft" : "m")
     }
 
     static func temp(_ value: Double?) -> String {

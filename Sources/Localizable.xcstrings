@@ -171,6 +171,16 @@
         }
       }
     },
+    "Elevation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elevation"
+          }
+        }
+      }
+    },
     "Health check failed" : {
       "localizations" : {
         "en" : {

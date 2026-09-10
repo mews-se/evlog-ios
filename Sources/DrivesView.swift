@@ -53,6 +53,7 @@ struct DriveDetailView: View {
     @State private var track: [CLLocationCoordinate2D] = []
     @State private var scrubPoints: [DrivePoint] = []
     @State private var series: [SpeedPoint] = []
+    @State private var elevation: [ElevationPoint] = []
 
     private var scrubPoint: DrivePoint? {
         guard let heldDate, !scrubPoints.isEmpty else { return nil }
@@ -92,6 +93,9 @@ struct DriveDetailView: View {
 
                     if series.count > 2 {
                         SpeedChart(series: series, selection: $scrubDate, marker: heldDate, label: scrubPoint.map(scrubLabel))
+                    }
+                    if elevation.count > 2 {
+                        ElevationChart(series: elevation, selection: $scrubDate, marker: heldDate)
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
@@ -140,6 +144,7 @@ struct DriveDetailView: View {
             }
             scrubPoints = points.filter { $0.date != nil && $0.latitude != nil && $0.longitude != nil }
             series = Self.buildSeries(points)
+            elevation = Self.buildElevation(points)
         } catch {
             self.error = error.localizedDescription
         }
@@ -167,6 +172,40 @@ struct DriveDetailView: View {
         }
         return series
     }
+
+    // the GPS altitude is noisy enough to dip below the sea along the coast, so every
+    // point becomes the mean of its neighbours within fifteen seconds. a hill lasts
+    // minutes and survives that; the spikes do not. null points are skipped, not zeroed
+    static func buildElevation(_ points: [DrivePoint]) -> [ElevationPoint] {
+        var byDate: [Date: Double] = [:]
+        for p in points {
+            guard let d = p.date, let e = p.elevation, byDate[d] == nil else { continue }
+            byDate[d] = e
+        }
+        let raw = byDate.keys.sorted().map { ElevationPoint(date: $0, metres: byDate[$0]!) }
+        guard raw.count > 2 else { return [] }
+
+        let window: TimeInterval = 15
+        var smoothed: [ElevationPoint] = []
+        smoothed.reserveCapacity(raw.count)
+        var lo = 0, hi = 0, sum = 0.0
+        for p in raw {
+            while hi < raw.count, raw[hi].date.timeIntervalSince(p.date) <= window {
+                sum += raw[hi].metres
+                hi += 1
+            }
+            while p.date.timeIntervalSince(raw[lo].date) > window {
+                sum -= raw[lo].metres
+                lo += 1
+            }
+            smoothed.append(ElevationPoint(date: p.date, metres: sum / Double(hi - lo)))
+        }
+        if smoothed.count > 1600 {
+            let step = smoothed.count / 1600 + 1
+            smoothed = smoothed.enumerated().compactMap { $0.offset % step == 0 ? $0.element : nil }
+        }
+        return smoothed
+    }
 }
 
 struct SpeedPoint: Identifiable {
@@ -174,6 +213,96 @@ struct SpeedPoint: Identifiable {
     let speed: Double
 
     var id: Date { date }
+}
+
+struct ElevationPoint: Identifiable {
+    let date: Date
+    let metres: Double
+
+    var id: Date { date }
+}
+
+struct ElevationChart: View {
+    let series: [ElevationPoint]
+    @Binding var selection: Date?
+    var marker: Date?
+
+    private var floor: Double { series.map(\.metres).min() ?? 0 }
+    private var ceiling: Double { series.map(\.metres).max() ?? 0 }
+
+    // the metres climbed and the metres dropped, summed over the smoothed line
+    private var climb: (up: Double, down: Double) {
+        var up = 0.0, down = 0.0
+        for (a, b) in zip(series, series.dropFirst()) {
+            let delta = b.metres - a.metres
+            if delta > 0 { up += delta } else { down -= delta }
+        }
+        return (up, down)
+    }
+
+    // what the two add up to: how much higher or lower the drive ended than it began
+    private var net: String {
+        let value = climb.up - climb.down
+        let sign = value.rounded() > 0 ? "+" : value.rounded() < 0 ? "\u{2212}" : "\u{00B1}"
+        return sign + Fmt.altitude(abs(value))
+    }
+
+    private var atMarker: Double? {
+        guard let marker else { return nil }
+        return series.min { abs($0.date.timeIntervalSince(marker)) < abs($1.date.timeIntervalSince(marker)) }?.metres
+    }
+
+    var body: some View {
+        // the axis follows the terrain, not the sea: a drive between twenty and sixty
+        // metres would be a flat line on a scale that starts at zero
+        let pad = max(5, (ceiling - floor) * 0.15)
+        let low = floor - pad
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Elevation")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                if let atMarker {
+                    Text(verbatim: Fmt.altitude(atMarker))
+                        .font(.caption.weight(.medium).monospacedDigit())
+                        .foregroundStyle(.brown)
+                } else {
+                    Text(verbatim: "↑ \(Fmt.altitude(climb.up))  ↓ \(Fmt.altitude(climb.down))  Δ \(net)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Chart {
+                ForEach(series) { point in
+                    AreaMark(x: .value("Time", point.date),
+                             yStart: .value("Floor" as String, Units.altitude(low)),
+                             yEnd: .value("Elevation" as String, Units.altitude(point.metres)))
+                        .foregroundStyle(.brown.opacity(0.15).gradient)
+                    LineMark(x: .value("Time", point.date), y: .value("Elevation" as String, Units.altitude(point.metres)))
+                        .foregroundStyle(.brown)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
+                }
+                if let marker {
+                    RuleMark(x: .value("Selected" as String, marker))
+                        .foregroundStyle(.brown.opacity(0.5))
+                        .lineStyle(StrokeStyle(lineWidth: 1))
+                }
+            }
+            .chartYScale(domain: Units.altitude(low)...Units.altitude(ceiling + pad))
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 3))
+            }
+            .chartXSelection(value: $selection)
+            .chartXAxis {
+                AxisMarks(values: .automatic(desiredCount: 4)) {
+                    AxisValueLabel(format: .dateTime.hour().minute())
+                }
+            }
+            .frame(height: 120)
+        }
+        .padding(16)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
 }
 
 struct SpeedChart: View {
