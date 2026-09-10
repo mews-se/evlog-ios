@@ -74,6 +74,10 @@ enum Demo {
     static let batteryHealth = BatteryHealth(maxRange: 499, currentRange: 479,
                                              kwhPerKm: 0.156)
 
+    static func countryIDs(_ code: String) -> (drives: Set<Int>, charges: Set<Int>) {
+        code == "us" ? (Set(1...33), Set(1...6)) : ([], [])
+    }
+
     static var countries: [CountryStat] {
         [CountryStat(code: "us", name: "United States", drives: 33, km: 947,
                      lastVisit: Date())]

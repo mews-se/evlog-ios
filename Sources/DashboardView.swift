@@ -58,6 +58,8 @@ struct DashboardView: View {
                     BatteryHealthView(health: batteryHealth)
                 case .countries:
                     CountriesView(countries: countries)
+                case let .country(country):
+                    CountryTimelineView(api: api, carID: carID, country: country)
                 case let .range(lat, lon, km):
                     if let lat, let lon, let km, km > 0 {
                         RangeMapView(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),

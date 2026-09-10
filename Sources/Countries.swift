@@ -1,6 +1,6 @@
 import Foundation
 
-struct CountryStat: Identifiable {
+struct CountryStat: Identifiable, Hashable {
     let code: String
     let name: String
     let drives: Int
@@ -116,6 +116,33 @@ extension GrafanaClient {
         let columns = try await textColumns(sql)
         guard let ids = columns.first else { return [] }
         return Set(ids.compactMap { $0.flatMap(Int.init) })
+    }
+
+    // the drive and charge lists carry no country, so a country's ids come from the
+    // addresses. a drive belongs to a country it started or ended in, so the drive home
+    // across the border shows up on both sides; the charges by where they were
+    func countryIDs(carID: Int, code: String) async throws -> (drives: Set<Int>, charges: Set<Int>) {
+        if demo { return Demo.countryIDs(code) }
+        let escaped = code.replacingOccurrences(of: "'", with: "''")
+        let sql = """
+        select 'd' as kind, d.id::text as id from drives d
+          left join addresses s on s.id = d.start_address_id
+          left join addresses e on e.id = d.end_address_id
+        where d.car_id = \(carID)
+          and '\(escaped)' in (s.raw->'address'->>'country_code', e.raw->'address'->>'country_code')
+        union all
+        select 'c', c.id::text from charging_processes c
+          join addresses a on a.id = c.address_id
+        where c.car_id = \(carID) and a.raw->'address'->>'country_code' = '\(escaped)'
+        """
+        let columns = try await textColumns(sql)
+        guard columns.count >= 2 else { return ([], []) }
+        var drives: Set<Int> = [], charges: Set<Int> = []
+        for (kind, id) in zip(columns[0], columns[1]) {
+            guard let id = id.flatMap(Int.init) else { continue }
+            if kind == "d" { drives.insert(id) } else { charges.insert(id) }
+        }
+        return (drives, charges)
     }
 
     // the countries live in addresses.raw (Nominatim), not in teslamateapi

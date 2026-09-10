@@ -11,22 +11,9 @@ struct CountriesView: View {
                 List {
                     Section {
                         ForEach(countries) { country in
-                            HStack(spacing: 12) {
-                                Text(verbatim: country.flag)
-                                    .font(.system(size: 30))
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(verbatim: country.displayName)
-                                        .font(.subheadline.weight(.semibold))
-                                    Text("\(country.drives) drives · last \(Fmt.date(country.lastVisit))")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                Text(verbatim: Fmt.distance(country.km, decimals: 0))
-                                    .font(.callout.weight(.semibold).monospacedDigit())
-                                    .foregroundStyle(.blue)
+                            NavigationLink(value: OverviewRoute.country(country)) {
+                                countryRow(country)
                             }
-                            .padding(.vertical, 4)
                         }
                     } footer: {
                         Text("Counted from where each drive ended.")
@@ -37,5 +24,27 @@ struct CountriesView: View {
         .navigationTitle("Countries")
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
+    }
+
+    private func countryRow(_ country: CountryStat) -> some View {
+        HStack(spacing: 12) {
+            Text(verbatim: country.flag)
+                .font(.system(size: 30))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: country.displayName)
+                    .font(.subheadline.weight(.semibold))
+                // the chevron eats width - the caption should shrink, not wrap
+                Text("\(country.drives) drives · last \(Fmt.date(country.lastVisit))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            Spacer()
+            Text(verbatim: Fmt.distance(country.km, decimals: 0))
+                .font(.callout.weight(.semibold).monospacedDigit())
+                .foregroundStyle(.blue)
+        }
+        .padding(.vertical, 4)
     }
 }

@@ -74,6 +74,7 @@ enum OverviewRoute: Hashable {
     case software(version: String?)
     case batteryHealth
     case countries
+    case country(CountryStat)
     case range(lat: Double?, lon: Double?, km: Double?)
 }
 

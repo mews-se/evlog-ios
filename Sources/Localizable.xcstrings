@@ -171,6 +171,16 @@
         }
       }
     },
+    "Drives that started or ended in the country, and the charges there." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drives that started or ended in the country, and the charges there."
+          }
+        }
+      }
+    },
     "Elevation" : {
       "localizations" : {
         "en" : {
@@ -227,6 +237,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No data for %@"
+          }
+        }
+      }
+    },
+    "Nothing here yet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing here yet"
           }
         }
       }
