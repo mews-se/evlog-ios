@@ -67,9 +67,9 @@ enum Fmt {
         return kwh.formatted(.number.precision(.fractionLength(1))) + " kWh"
     }
 
-    static func cost(_ value: Double?) -> String {
+    static func cost(_ value: Double?, decimals: Int = 0) -> String {
         guard let value else { return "–" }
-        return value.formatted(.currency(code: Currency.code).precision(.fractionLength(0)).locale(.app))
+        return value.formatted(.currency(code: Currency.code).precision(.fractionLength(decimals)).locale(.app))
     }
 
     static func temp(_ value: Double?) -> String {

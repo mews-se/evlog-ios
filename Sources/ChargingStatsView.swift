@@ -2,10 +2,32 @@ import SwiftUI
 
 struct ChargingStatsView: View {
     let charges: [Charge]
+    let drives: [Drive]
     var tessieCosts: [Int: Double] = [:]
 
     private func cost(of charge: Charge) -> Double {
         charge.displayCost ?? tessieCosts[charge.chargeId] ?? 0
+    }
+
+    // MARK: - Costs
+
+    private func costSum(_ list: [Charge]) -> Double { list.reduce(0) { $0 + cost(of: $1) } }
+    private var totalCost: Double { costSum(charges) }
+    private var unpricedCount: Int { charges.filter { cost(of: $0) == 0 }.count }
+
+    // only what was paid for is priced, and paid for is what the charger delivered,
+    // so the larger of the two energies, as TeslaMate's dashboard has it
+    private func perKwh(_ list: [Charge]) -> Double? {
+        let paid = list.filter { cost(of: $0) > 0 }
+        let energy = paid.reduce(0) { $0 + max($1.chargeEnergyAdded ?? 0, $1.chargeEnergyUsed ?? 0) }
+        return energy > 0 ? costSum(paid) / energy : nil
+    }
+
+    // every charge over every drive - a charge without a cost counts as free here,
+    // since the distance it paid for cannot be told apart from the rest
+    private var costPer100: Double? {
+        let distance = Units.distance(drives.reduce(0) { $0 + $1.distance })
+        return distance > 0 && totalCost > 0 ? totalCost / distance * 100 : nil
     }
 
     // MARK: - Charging locations
@@ -70,6 +92,34 @@ struct ChargingStatsView: View {
 
     var body: some View {
         List {
+            if totalCost > 0 {
+                Section {
+                    LabeledContent(String(localized: "Total")) {
+                        Text(verbatim: Fmt.cost(totalCost))
+                            .monospacedDigit()
+                    }
+                    SplitBar(left: costSum(ac), right: costSum(dc), leftLabel: "AC", rightLabel: "DC")
+                    LabeledContent(String(localized: "Per kWh")) {
+                        (Text(verbatim: Fmt.cost(perKwh(ac), decimals: 2)).foregroundColor(.green)
+                            + Text(verbatim: " / ").foregroundColor(.secondary)
+                            + Text(verbatim: Fmt.cost(perKwh(dc), decimals: 2)).foregroundColor(.red))
+                            .monospacedDigit()
+                    }
+                    if let costPer100 {
+                        LabeledContent(Units.imperial ? String(localized: "Per 100 mi") : String(localized: "Per 100 km")) {
+                            Text(verbatim: Fmt.cost(costPer100, decimals: 2))
+                                .monospacedDigit()
+                        }
+                    }
+                } header: {
+                    Text("Costs")
+                } footer: {
+                    if unpricedCount > 0 {
+                        Text("\(unpricedCount) of \(charges.count) charges have no recorded cost and count as free.")
+                    }
+                }
+            }
+
             Section {
                 ForEach(topByEnergy) { place in
                     NavigationLink(value: StatsRoute.place(place.name)) {

@@ -115,7 +115,7 @@ struct StatsView: View {
                 case let .day(day):
                     DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
                 case .charging:
-                    ChargingStatsView(charges: charges, tessieCosts: tessieCosts)
+                    ChargingStatsView(charges: charges, drives: drives, tessieCosts: tessieCosts)
                 case .temperature:
                     TempConsumptionView(drives: drives)
                 case .destinations:

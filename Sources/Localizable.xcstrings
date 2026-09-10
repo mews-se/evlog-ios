@@ -41,6 +41,16 @@
         }
       }
     },
+    "%lld of %lld charges have no recorded cost and count as free." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld of %lld charges have no recorded cost and count as free."
+          }
+        }
+      }
+    },
     "%lld of %lld Superchargers are within realistic reach. %@" : {
       "localizations" : {
         "en" : {
@@ -87,6 +97,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging stopped · %@"
+          }
+        }
+      }
+    },
+    "Costs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costs"
           }
         }
       }
@@ -187,6 +207,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No data for %@"
+          }
+        }
+      }
+    },
+    "Per 100 km" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per 100 km"
+          }
+        }
+      }
+    },
+    "Per 100 mi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per 100 mi"
+          }
+        }
+      }
+    },
+    "Per kWh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per kWh"
           }
         }
       }
