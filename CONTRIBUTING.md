@@ -51,6 +51,9 @@ address, a charge without a cost, a drive shorter than a kilometre.
 Keep commits focused. Subject in the imperative, and a body explaining why when the why is not
 obvious from the diff.
 
+If what you found is a security problem, keep it out of the issue tracker: use "Report a
+vulnerability" under the Security tab instead. SECURITY.md has the details.
+
 ## Strings
 
 All user-facing text lives in `Sources/Localizable.xcstrings` and is English only. English doubles

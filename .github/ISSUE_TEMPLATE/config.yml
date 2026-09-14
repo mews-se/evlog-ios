@@ -6,3 +6,6 @@ contact_links:
   - name: TeslaMate itself
     url: https://github.com/teslamate-org/teslamate
     about: Problems with the server, the database or the Grafana dashboards belong there, not here.
+  - name: Security problem
+    url: https://github.com/mews-se/evlog-ios/security/advisories/new
+    about: Anything that could expose your TeslaMate data or your server goes through GitHub's private report, not a public issue.
