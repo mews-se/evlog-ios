@@ -67,6 +67,7 @@ enum Demo {
 
     static let marketingName = "LR AWD"
     static let detourFactor = 1.3
+    static let batteryHeaterNow = true
     static let heaterDrives: Set<Int> = [1, 24]
     static let heaterCharges: Set<Int> = [2]
     static let coldChargeStarts: Set<Int> = [2]

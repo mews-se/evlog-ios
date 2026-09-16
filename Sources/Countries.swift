@@ -118,6 +118,20 @@ extension GrafanaClient {
         return Set(ids.compactMap { $0.flatMap(Int.init) })
     }
 
+    // the status feed says nothing about the battery heater, but TeslaMate stores a
+    // position every five minutes while the car is awake, and each one carries the flag.
+    // a fresh row with the heater on is the heater running now
+    func batteryHeaterNow(carID: Int) async throws -> Bool {
+        if demo { return Demo.batteryHeaterNow }
+        let sql = """
+        select battery_heater::text from positions
+        where car_id = \(carID) and date > now() at time zone 'utc' - interval '10 minutes'
+        order by date desc limit 1
+        """
+        let columns = try await textColumns(sql)
+        return columns.first?.first == "true"
+    }
+
     // the drive and charge lists carry no country, so a country's ids come from the
     // addresses. a drive belongs to a country it started or ended in, so the drive home
     // across the border shows up on both sides; the charges by where they were

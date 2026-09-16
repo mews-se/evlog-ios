@@ -19,6 +19,7 @@ struct DashboardView: View {
     @State private var batteryHealth: BatteryHealth?
     @State private var countries: [CountryStat] = []
     @State private var detour: Double?
+    @State private var batteryHeater = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -30,7 +31,7 @@ struct DashboardView: View {
                             lon: status.carGeodata?.longitude,
                             km: status.batteryDetails?.ratedBatteryRange
                         )) {
-                            BatteryCard(status: status, marketingName: marketingName)
+                            BatteryCard(status: status, marketingName: marketingName, batteryHeater: batteryHeater)
                         }
                         .buttonStyle(.plain)
                         StatusGrid(status: status, health: batteryHealth, countries: countries)
@@ -134,16 +135,20 @@ struct DashboardView: View {
         async let health = grafana.batteryHealth(carID: carID)
         async let lands = grafana.countries(carID: carID)
         async let factor = grafana.detourFactor(carID: carID)
+        // read every time: this one changes by the hour, the rest by the year
+        async let heater = grafana.batteryHeaterNow(carID: carID)
         if marketingName == nil { marketingName = try? await name }
         if batteryHealth == nil { batteryHealth = try? await health }
         if countries.isEmpty { countries = (try? await lands) ?? [] }
         if detour == nil { detour = try? await factor }
+        batteryHeater = (try? await heater) ?? false
     }
 }
 
 struct BatteryCard: View {
     let status: CarStatus
     var marketingName: String?
+    var batteryHeater = false
 
     private var level: Int? { status.batteryDetails?.usableBatteryLevel ?? status.batteryDetails?.batteryLevel }
 
@@ -229,6 +234,11 @@ struct BatteryCard: View {
         let climate = status.climateDetails
         if climate?.isPreconditioning == true {
             row.append(("fan.fill", .secondary, String(localized: "Preconditioning")))
+        }
+        // the flag comes from the last stored position, so a car that has gone to sleep
+        // since is not trusted with it
+        if batteryHeater, !["asleep", "offline"].contains(status.state ?? "") {
+            row.append(("heat.waves", .red, String(localized: "Battery heater")))
         }
         if climate?.climateKeeperMode == "dog" {
             row.append(("dog.fill", .secondary, String(localized: "Dog Mode")))
