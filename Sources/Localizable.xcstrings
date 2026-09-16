@@ -2100,6 +2100,26 @@
           }
         }
       }
+    },
+    "Capacity over mileage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capacity over mileage"
+          }
+        }
+      }
+    },
+    "One reading per finished charge: the rated range at its end, scaled to a full battery and turned into capacity. The line is the median of the nearest readings, so a slope shows through the noise." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One reading per finished charge: the rated range at its end, scaled to a full battery and turned into capacity. The line is the median of the nearest readings, so a slope shows through the noise."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

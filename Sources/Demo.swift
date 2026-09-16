@@ -74,6 +74,15 @@ enum Demo {
 
     static let batteryHealth = BatteryHealth(maxRange: 499, currentRange: 479,
                                              kwhPerKm: 0.156)
+    // a reading per charge across the demo car's mileage, easing from new down to where the
+    // health figures stand, with a wobble standing in for real-world noise
+    static var capacityReadings: [CapacityReading] {
+        (0..<48).map { i in
+            let km = 300 + Double(i) * 510 + 120 * sin(Double(i) * 1.3)
+            let range = 499 - 20 * (1 - exp(-km / 9000)) + 3.5 * sin(Double(i) * 2.4) + 2 * sin(Double(i) * 0.73)
+            return CapacityReading(id: i + 1, odometerKm: km, fullRangeKm: range)
+        }
+    }
 
     static func countryIDs(_ code: String) -> (drives: Set<Int>, charges: Set<Int>) {
         code == "us" ? (Set(1...33), Set(1...6)) : ([], [])
