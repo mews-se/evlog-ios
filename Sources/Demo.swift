@@ -84,6 +84,21 @@ enum Demo {
         }
     }
 
+    // a pack that lives between fifty and its eighty percent limit, with the odd charge
+    // past it and next to no time run down: three weeks of hours across the levels
+    static var levelTimes: [LevelTime] {
+        (5...100).map { level in
+            let hours: Double
+            if level > 80 {
+                hours = exp(-Double(level - 80) / 6)
+            } else {
+                let spread = exp(-pow(Double(level - 64) / 13, 2) / 2)
+                hours = 14 * spread * (1 + 0.15 * sin(Double(level) * 1.7)) + (level == 80 ? 40 : 0)
+            }
+            return LevelTime(level: level, seconds: hours * 3600)
+        }
+    }
+
     static func countryIDs(_ code: String) -> (drives: Set<Int>, charges: Set<Int>) {
         code == "us" ? (Set(1...33), Set(1...6)) : ([], [])
     }

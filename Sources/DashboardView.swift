@@ -18,6 +18,7 @@ struct DashboardView: View {
     @State private var marketingName: String?
     @State private var batteryHealth: BatteryHealth?
     @State private var capacity: [CapacityReading] = []
+    @State private var levelTimes: [LevelTime] = []
     @State private var countries: [CountryStat] = []
     @State private var detour: Double?
     @State private var batteryHeater = false
@@ -57,7 +58,7 @@ struct DashboardView: View {
                 case let .software(version):
                     SoftwareView(api: api, carID: carID, current: version)
                 case .batteryHealth:
-                    BatteryHealthView(health: batteryHealth, readings: capacity)
+                    BatteryHealthView(health: batteryHealth, readings: capacity, times: levelTimes)
                 case .countries:
                     CountriesView(countries: countries)
                 case let .country(country):
@@ -135,6 +136,7 @@ struct DashboardView: View {
         async let name = grafana.marketingName(carID: carID)
         async let health = grafana.batteryHealth(carID: carID)
         async let curve = grafana.capacityReadings(carID: carID)
+        async let stays = grafana.levelTimes(carID: carID)
         async let lands = grafana.countries(carID: carID)
         async let factor = grafana.detourFactor(carID: carID)
         // read every time: this one changes by the hour, the rest by the year
@@ -142,6 +144,7 @@ struct DashboardView: View {
         if marketingName == nil { marketingName = try? await name }
         if batteryHealth == nil { batteryHealth = try? await health }
         if capacity.isEmpty { capacity = (try? await curve) ?? [] }
+        if levelTimes.isEmpty { levelTimes = (try? await stays) ?? [] }
         if countries.isEmpty { countries = (try? await lands) ?? [] }
         if detour == nil { detour = try? await factor }
         batteryHeater = (try? await heater) ?? false

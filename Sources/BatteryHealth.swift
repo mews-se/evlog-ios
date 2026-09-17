@@ -29,6 +29,13 @@ struct CapacityReading: Identifiable {
     let fullRangeKm: Double
 }
 
+// how long the battery has stood at one charge level, over the whole logging history
+struct LevelTime: Identifiable {
+    let level: Int
+    let seconds: Double
+    var id: Int { level }
+}
+
 extension GrafanaClient {
     // every finished charge leaves a reading: the rated range at its last sample, scaled to
     // a full battery
@@ -100,6 +107,39 @@ extension GrafanaClient {
                   let km = columns[1][i].flatMap(Double.init),
                   let range = columns[2][i].flatMap(Double.init) else { return nil }
             return CapacityReading(id: id, odometerKm: km, fullRangeKm: range)
+        }
+    }
+
+    // every stored level is held until the next reading, so a night asleep counts for the
+    // level the car slept at. driving positions come every couple of seconds and are
+    // thinned to one a minute, which makes the query quick without moving the shares
+    func levelTimes(carID: Int) async throws -> [LevelTime] {
+        if demo { return Demo.levelTimes }
+        let sql = """
+        with samples as (
+          select date, battery_level from positions
+          where car_id = \(carID) and battery_level is not null
+            and (drive_id is null or mod(floor(extract(epoch from date))::bigint, 60) = 0)
+          union all
+          select c.date, c.battery_level from charges c
+          join charging_processes p on p.id = c.charging_process_id
+          where p.car_id = \(carID) and c.battery_level is not null
+        ),
+        held as (
+          select battery_level, extract(epoch from lead(date) over (order by date) - date) as seconds
+          from samples
+        )
+        select battery_level::text, round(sum(seconds))::text
+        from held where seconds is not null
+        group by battery_level order by battery_level
+        """
+        let columns = try await textColumns(sql)
+        guard columns.count == 2 else { return [] }
+        let count = columns.map(\.count).min() ?? 0
+        return (0..<count).compactMap { i in
+            guard let level = columns[0][i].flatMap(Int.init),
+                  let seconds = columns[1][i].flatMap(Double.init) else { return nil }
+            return LevelTime(level: level, seconds: seconds)
         }
     }
 }

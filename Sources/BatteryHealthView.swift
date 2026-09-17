@@ -4,6 +4,7 @@ import SwiftUI
 struct BatteryHealthView: View {
     let health: BatteryHealth?
     var readings: [CapacityReading] = []
+    var times: [LevelTime] = []
 
     var body: some View {
         ScrollView {
@@ -30,6 +31,15 @@ struct BatteryHealthView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    if !times.isEmpty {
+                        HStack(spacing: 12) {
+                            StatTile(icon: "battery.100percent", title: String(localized: "Above 80 %"),
+                                     value: Fmt.pct(LevelTimeChart.share(times) { $0 > 80 }), tint: .orange)
+                            StatTile(icon: "battery.25percent", title: String(localized: "Below 20 %"),
+                                     value: Fmt.pct(LevelTimeChart.share(times) { $0 < 20 }), tint: .orange)
+                        }
+                        LevelTimeChart(times: times)
+                    }
                 }
                 .padding(.horizontal)
             } else {
@@ -127,6 +137,91 @@ struct CapacityChart: View {
             }
             .frame(height: 220)
             Text("One reading per finished charge: the rated range at its end, scaled to a full battery and turned into capacity. The line is the median of the nearest readings, so a slope shows through the noise.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// where the battery has stood: the share of all logged time at each charge level, in
+// steps of five, with the time outside the twenty to eighty band picked out
+struct LevelTimeChart: View {
+    let times: [LevelTime]
+
+    struct Bin: Identifiable {
+        let lower: Int
+        let share: Double
+        var id: Int { lower }
+        var upper: Int { lower + 5 }
+        var outside: Bool { upper <= 20 || lower >= 80 }
+    }
+
+    // a bin runs from just above its lower edge up to and including its upper, so eighty,
+    // the limit most owners charge to, lands in the bar below the line rather than above it
+    static func bins(_ times: [LevelTime]) -> [Bin] {
+        let total = times.reduce(0) { $0 + $1.seconds }
+        guard total > 0 else { return [] }
+        var seconds = [Int: Double]()
+        for time in times {
+            seconds[min(95, max(0, (time.level - 1) / 5 * 5)), default: 0] += time.seconds
+        }
+        return stride(from: 0, to: 100, by: 5).map { Bin(lower: $0, share: (seconds[$0] ?? 0) / total) }
+    }
+
+    // the share of all logged time, in percent, at the levels the test keeps
+    static func share(_ times: [LevelTime], where keep: (Int) -> Bool) -> Double? {
+        let total = times.reduce(0) { $0 + $1.seconds }
+        guard total > 0 else { return nil }
+        return times.filter { keep($0.level) }.reduce(0) { $0 + $1.seconds } * 100 / total
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Time at each charge level")
+                .font(.subheadline.weight(.semibold))
+            Chart(Self.bins(times)) { bin in
+                RectangleMark(
+                    xStart: .value("Level" as String, Double(bin.lower) + 0.3),
+                    xEnd: .value("Level" as String, Double(bin.upper) - 0.3),
+                    yStart: .value("Share" as String, 0),
+                    yEnd: .value("Share" as String, bin.share * 100)
+                )
+                .foregroundStyle((bin.outside ? Color.orange : Color.blue).opacity(0.7).gradient)
+                .cornerRadius(2)
+            }
+            .chartXScale(domain: 0...100)
+            .chartXAxis {
+                AxisMarks(values: [0.0, 20, 40, 60, 80, 100]) { value in
+                    AxisGridLine()
+                    if let level = value.as(Double.self) {
+                        // the end labels hang inward, or the last one is dropped for want of room
+                        AxisValueLabel(anchor: level == 100 ? .topTrailing : level == 0 ? .topLeading : .top) {
+                            Text(verbatim: "\(Int(level)) %")
+                        }
+                    }
+                }
+            }
+            .chartXAxisLabel(alignment: .trailing) {
+                Text("Charge level")
+            }
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 4)) { value in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let share = value.as(Double.self) {
+                            Text(verbatim: "\(Int(share)) %")
+                        }
+                    }
+                }
+            }
+            .chartYAxisLabel(alignment: .trailing) {
+                Text("Share of time")
+            }
+            .frame(height: 180)
+            Text("Every stored level counts until the next reading, so a parked car counts for the level it sat at. Orange is the time outside the twenty to eighty band.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }

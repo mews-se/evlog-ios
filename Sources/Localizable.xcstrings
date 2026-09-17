@@ -2120,6 +2120,66 @@
           }
         }
       }
+    },
+    "Above 80 %" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Above 80 %"
+          }
+        }
+      }
+    },
+    "Below 20 %" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Below 20 %"
+          }
+        }
+      }
+    },
+    "Time at each charge level" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time at each charge level"
+          }
+        }
+      }
+    },
+    "Charge level" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge level"
+          }
+        }
+      }
+    },
+    "Share of time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share of time"
+          }
+        }
+      }
+    },
+    "Every stored level counts until the next reading, so a parked car counts for the level it sat at. Orange is the time outside the twenty to eighty band." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every stored level counts until the next reading, so a parked car counts for the level it sat at. Orange is the time outside the twenty to eighty band."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
