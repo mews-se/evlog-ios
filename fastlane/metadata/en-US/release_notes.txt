@@ -1,9 +1,7 @@
 What's new
 
-• Costs are shown in your region's currency, with a setting to pick another.
-• Charging statistics open with the totals: cost in all, the AC/DC split, the average per kWh and the cost per 100 km.
-• A drive shows its elevation profile under the speed graph, with the metres climbed and dropped.
-• Software updates appear in the timeline, and the software page says how often the car updates.
-• Tap a country to see the drives and charges there.
+• The overview shows when the battery heater is running, next to the fan.
+• The battery page plots capacity against mileage, one point per charge.
+• It also shows how the battery spends its time: the share above 80 and below 20 percent, and a histogram of charge levels.
 
 Full story: https://evlog.martinstockzell.se/changelog/

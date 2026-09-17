@@ -24,13 +24,14 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 ## What it does
 
 **Overview** — battery ring with range, what the cable is doing right now, TeslaMate's own status
-glyphs for preconditioning, open doors and windows, tyre pressure and more, lock state, location,
-temperatures, Sentry, degradation, countries visited (each opening into the drives and charges
-there), software version and time since last contact. The car's name opens a spec sheet: model,
-VIN, efficiency, and with a Tessie key the car's own configuration. From here you reach a map of
-every place the car has been over any period you choose, on a plain map or satellite imagery, and a
-range map showing how far the current charge takes you, using a detour factor derived from your own
-trips rather than a guess.
+glyphs for preconditioning, the battery heater, open doors and windows, tyre pressure and more, lock
+state, location, temperatures, Sentry, degradation (opening a battery page with capacity plotted
+against mileage and how long the pack has sat at each charge level), countries visited (each opening
+into the drives and charges there), software version and time since last contact. The car's name
+opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own configuration. From
+here you reach a map of every place the car has been over any period you choose, on a plain map or
+satellite imagery, and a range map showing how far the current charge takes you, using a detour
+factor derived from your own trips rather than a guess.
 
 **Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
