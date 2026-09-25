@@ -11,6 +11,10 @@ dashboard squeezed onto a small screen.
 EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
 create, and nothing leaves your network.
 
+EVLog has a sibling, [WallConnectorLog](https://github.com/mews-se/wallconnectorlog-ios), the same
+developer's companion to the Tesla Wall Connector — one app for the car, one for the charger, built
+the same way: your own server, no accounts, no cloud.
+
 [Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911) — free, iOS 18 or
 later. Every version that reaches the App Store gets a
 [tag and a release](https://github.com/mews-se/evlog-ios/releases) here. `main` holds the build
