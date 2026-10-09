@@ -133,7 +133,7 @@ struct AboutView: View {
             } header: {
                 Text("Data sources")
             } footer: {
-                Text(verbatim: "This app is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.")
+                Text(verbatim: "This project is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.")
             }
         }
         // the list's default first-section margin leaves a hole between the bar
