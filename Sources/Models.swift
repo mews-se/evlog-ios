@@ -256,9 +256,12 @@ struct DrivePoint: Decodable, Identifiable {
 }
 
 struct PointBattery: Decodable {
-    // the climate_state flag, not charge_state's battery_heater_on, which this car
-    // never reports
+    // the climate_state flag. charge_state's battery_heater_on never comes on for
+    // some cars, so either one counts
     let batteryHeater: Bool?
+    let batteryHeaterOn: Bool?
+
+    var heaterRunning: Bool { batteryHeater == true || batteryHeaterOn == true }
 }
 
 // MARK: - /updates
@@ -356,7 +359,7 @@ struct Charge: Decodable, Identifiable {
     // request. gaps between flagged samples count as heating; a long one does not
     var batteryHeaterMinutes: Double? {
         let heated = (chargeDetails ?? [])
-            .compactMap { $0.batteryInfo?.batteryHeater == true ? $0.date : nil }
+            .compactMap { $0.batteryInfo?.heaterRunning == true ? $0.date : nil }
             .sorted()
         var seconds = 0.0
         for (previous, date) in zip(heated, heated.dropFirst()) {
@@ -374,6 +377,9 @@ struct ChargePoint: Decodable, Identifiable {
     // the car's own running total for the session, not TeslaMate's per-process figure:
     // it only goes back to zero when the cable comes out
     let chargeEnergyAdded: Double?
+    // below the level while the pack is too cold to give all of it
+    let usableBatteryLevel: Int?
+    let notEnoughPowerToHeat: Bool?
     let chargerDetails: ChargerDetails?
     let fastChargerInfo: FastChargerInfo?
     let batteryInfo: PointBattery?
@@ -500,6 +506,10 @@ struct FastChargerInfo: Decodable {
     let fastChargerPresent: Bool?
 }
 
+// teslamateapi writes 0 for a current or voltage the row lacks
 struct ChargerDetails: Decodable {
     let chargerPower: Double?
+    let chargerActualCurrent: Int?
+    let chargerPilotCurrent: Int?
+    let chargerVoltage: Int?
 }

@@ -2190,6 +2190,156 @@
           }
         }
       }
+    },
+    "What set the pace" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What set the pace"
+          }
+        }
+      }
+    },
+    "The charger offered %lld A on %@ and the car drew %lld A" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The charger offered %lld A on %@ and the car drew %lld A"
+          }
+        }
+      }
+    },
+    "one phase" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "one phase"
+          }
+        }
+      }
+    },
+    "two phases" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "two phases"
+          }
+        }
+      }
+    },
+    "three phases" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "three phases"
+          }
+        }
+      }
+    },
+    "The battery started cold" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The battery started cold"
+          }
+        }
+      }
+    },
+    "%@ usable of %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ usable of %@"
+          }
+        }
+      }
+    },
+    "The battery heater ran for %@ of %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The battery heater ran for %@ of %@"
+          }
+        }
+      }
+    },
+    "The power took %@ to climb to %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The power took %@ to climb to %@"
+          }
+        }
+      }
+    },
+    "The charger gave too little power to heat the battery" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The charger gave too little power to heat the battery"
+          }
+        }
+      }
+    },
+    "Started at %@, where the car itself holds the power back" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Started at %@, where the car itself holds the power back"
+          }
+        }
+      }
+    },
+    "Charging stopped once and started again" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charging stopped once and started again"
+          }
+        }
+      }
+    },
+    "Charging stopped %lld times and started again" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charging stopped %lld times and started again"
+          }
+        }
+      }
+    },
+    "%@ without charging" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ without charging"
+          }
+        }
+      }
+    },
+    "Nothing stands out in the log" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing stands out in the log"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
