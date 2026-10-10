@@ -208,6 +208,21 @@ struct StatBucket: Identifiable {
         }
         return byPeriod.values.sorted { $0.period > $1.period }
     }
+
+    static func sum(_ buckets: [StatBucket], period: Date) -> StatBucket {
+        var t = StatBucket(period: period)
+        for b in buckets {
+            t.distance += b.distance
+            t.driveMinutes += b.driveMinutes
+            t.driveCount += b.driveCount
+            t.energyConsumed += b.energyConsumed
+            t.rangeDiff += b.rangeDiff
+            t.energyAdded += b.energyAdded
+            t.cost += b.cost
+            t.chargeCount += b.chargeCount
+        }
+        return t
+    }
 }
 
 enum PeriodTitle {
@@ -229,11 +244,20 @@ enum PeriodTitle {
 
 struct StatBucketRow: View {
     let bucket: StatBucket
-    let component: Calendar.Component
+    let title: String
+
+    init(bucket: StatBucket, title: String) {
+        self.bucket = bucket
+        self.title = title
+    }
+
+    init(bucket: StatBucket, component: Calendar.Component) {
+        self.init(bucket: bucket, title: PeriodTitle.text(bucket.period, component))
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(verbatim: PeriodTitle.text(bucket.period, component))
+            Text(verbatim: title)
                 .font(.subheadline.weight(.semibold))
             HStack {
                 item(Fmt.distance(bucket.distance, decimals: 0), .blue)
@@ -267,60 +291,56 @@ struct StatBucketRow: View {
 }
 
 struct PeriodDetailView: View {
-    let period: Date
-    let granularity: StatsView.Granularity
+    let interval: DateInterval?
+    let title: String
+    // what the period breaks down into
+    let finer: Calendar.Component
     let drives: [Drive]
     let charges: [Charge]
     let tessieCosts: [Int: Double]
 
-    private var interval: DateInterval? {
-        Calendar.current.dateInterval(of: granularity.component, for: period)
-    }
-
     private var buckets: [StatBucket] {
         StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts,
-                         component: granularity.finer, within: interval)
+                         component: finer, within: interval)
     }
 
     private var total: StatBucket {
-        var t = StatBucket(period: period)
-        for b in buckets {
-            t.distance += b.distance
-            t.driveMinutes += b.driveMinutes
-            t.driveCount += b.driveCount
-            t.energyConsumed += b.energyConsumed
-            t.rangeDiff += b.rangeDiff
-            t.energyAdded += b.energyAdded
-            t.cost += b.cost
-            t.chargeCount += b.chargeCount
-        }
-        return t
+        StatBucket.sum(buckets, period: interval?.start ?? .now)
     }
 
     var body: some View {
         List {
             Section {
-                StatBucketRow(bucket: total, component: granularity.component)
+                StatBucketRow(bucket: total, title: title)
             } header: {
                 Text("Total")
             }
             Section {
                 ForEach(buckets) { bucket in
-                    if granularity.finer == .day {
+                    if finer == .day {
                         NavigationLink(value: StatsRoute.day(bucket.period)) {
-                            StatBucketRow(bucket: bucket, component: granularity.finer)
+                            StatBucketRow(bucket: bucket, component: finer)
                         }
                     } else {
-                        StatBucketRow(bucket: bucket, component: granularity.finer)
+                        StatBucketRow(bucket: bucket, component: finer)
                     }
                 }
             } header: {
-                granularity.finer == .month ? Text("By month") : Text("By day")
+                finer == .month ? Text("By month") : Text("By day")
             }
         }
-        .navigationTitle(PeriodTitle.text(period, granularity.component))
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
+    }
+}
+
+extension PeriodDetailView {
+    init(period: Date, granularity: StatsView.Granularity,
+         drives: [Drive], charges: [Charge], tessieCosts: [Int: Double]) {
+        self.init(interval: Calendar.current.dateInterval(of: granularity.component, for: period),
+                  title: PeriodTitle.text(period, granularity.component), finer: granularity.finer,
+                  drives: drives, charges: charges, tessieCosts: tessieCosts)
     }
 }
 
