@@ -9,7 +9,7 @@ struct StatsView: View {
     @AppStorage(Pref.grafana.key) private var grafanaURL = Pref.grafana.value
 
     enum Granularity: String, CaseIterable, Identifiable {
-        case week, month, year
+        case week, month, year, custom
 
         var id: String { rawValue }
 
@@ -18,14 +18,17 @@ struct StatsView: View {
             case .week: return "Week"
             case .month: return "Month"
             case .year: return "Year"
+            case .custom: return "Custom"
             }
         }
 
+        // a picked span is summed as a whole and has no calendar unit to step by
         var component: Calendar.Component {
             switch self {
             case .week: return .weekOfYear
             case .month: return .month
             case .year: return .year
+            case .custom: return .day
             }
         }
 
@@ -33,12 +36,15 @@ struct StatsView: View {
         var finer: Calendar.Component {
             switch self {
             case .year: return .month
-            case .month, .week: return .day
+            case .month, .week, .custom: return .day
             }
         }
     }
 
     @State private var granularity: Granularity = .month
+    @State private var customFrom = Calendar.current.date(byAdding: .day, value: -6,
+                                                          to: Calendar.current.startOfDay(for: .now)) ?? .now
+    @State private var customTo = Date.now
     @State private var drives: [Drive] = []
     @State private var charges: [Charge] = []
     @State private var tessieCosts: [Int: Double] = [:]
@@ -54,6 +60,20 @@ struct StatsView: View {
 
     private var buckets: [StatBucket] {
         StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts, component: granularity.component)
+    }
+
+    // whole days: from the start of the first to midnight after the last
+    private var customSpan: DateInterval {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: customFrom)
+        let last = calendar.startOfDay(for: customTo)
+        return DateInterval(start: start, end: calendar.date(byAdding: .day, value: 1, to: last) ?? last)
+    }
+
+    private var customTotal: StatBucket {
+        let days = StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts,
+                                    component: .day, within: customSpan)
+        return StatBucket.sum(days, period: customSpan.start)
     }
 
     var body: some View {
@@ -91,10 +111,22 @@ struct StatsView: View {
                             .listRowInsets(EdgeInsets())
                             .listRowBackground(Color.clear)
                         }
-                        Section {
-                            ForEach(buckets) { bucket in
-                                NavigationLink(value: StatsRoute.period(bucket.period, granularity)) {
-                                    StatBucketRow(bucket: bucket, component: granularity.component)
+                        if granularity == .custom {
+                            Section {
+                                DatePicker("From", selection: $customFrom, in: ...customTo, displayedComponents: .date)
+                                DatePicker("To", selection: $customTo, in: customFrom...Date.now, displayedComponents: .date)
+                            }
+                            Section {
+                                NavigationLink(value: StatsRoute.span(customSpan.start, customSpan.end)) {
+                                    StatBucketRow(bucket: customTotal, title: PeriodTitle.span(customSpan))
+                                }
+                            }
+                        } else {
+                            Section {
+                                ForEach(buckets) { bucket in
+                                    NavigationLink(value: StatsRoute.period(bucket.period, granularity)) {
+                                        StatBucketRow(bucket: bucket, component: granularity.component)
+                                    }
                                 }
                             }
                         }
@@ -111,6 +143,9 @@ struct StatsView: View {
                 switch route {
                 case let .period(period, granularity):
                     PeriodDetailView(period: period, granularity: granularity,
+                                     drives: drives, charges: charges, tessieCosts: tessieCosts)
+                case let .span(start, end):
+                    PeriodDetailView(span: DateInterval(start: start, end: end),
                                      drives: drives, charges: charges, tessieCosts: tessieCosts)
                 case let .day(day):
                     DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
@@ -240,6 +275,12 @@ enum PeriodTitle {
             return Fmt.day(date)
         }
     }
+
+    // a span ends at midnight after its last day, which is the day the title names
+    static func span(_ interval: DateInterval) -> String {
+        let last = Calendar.current.date(byAdding: .day, value: -1, to: interval.end) ?? interval.end
+        return (interval.start..<max(interval.start, last)).formatted(.interval.day().month().year().locale(.app))
+    }
 }
 
 struct StatBucketRow: View {
@@ -340,6 +381,13 @@ extension PeriodDetailView {
          drives: [Drive], charges: [Charge], tessieCosts: [Int: Double]) {
         self.init(interval: Calendar.current.dateInterval(of: granularity.component, for: period),
                   title: PeriodTitle.text(period, granularity.component), finer: granularity.finer,
+                  drives: drives, charges: charges, tessieCosts: tessieCosts)
+    }
+
+    // a picked span longer than two months reads better by month than as a wall of days
+    init(span: DateInterval, drives: [Drive], charges: [Charge], tessieCosts: [Int: Double]) {
+        let twoMonths = Calendar.current.date(byAdding: .month, value: 2, to: span.start) ?? span.end
+        self.init(interval: span, title: PeriodTitle.span(span), finer: span.end > twoMonths ? .month : .day,
                   drives: drives, charges: charges, tessieCosts: tessieCosts)
     }
 }

@@ -2180,6 +2180,16 @@
           }
         }
       }
+    },
+    "Custom" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

@@ -80,6 +80,7 @@ enum OverviewRoute: Hashable {
 
 enum StatsRoute: Hashable {
     case period(Date, StatsView.Granularity)
+    case span(Date, Date)
     case day(Date)
     case charging
     case temperature
