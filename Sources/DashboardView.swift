@@ -112,7 +112,10 @@ struct DashboardView: View {
                     }
                 }
             }
-            .refreshable { await load() }
+            .refreshable {
+                ServerCheck.shared.forget()
+                await load()
+            }
             .task { await load() }
             .sheet(isPresented: $showSpec) {
                 CarSpecView(api: api, carID: carID, status: status,

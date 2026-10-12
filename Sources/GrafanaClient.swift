@@ -23,8 +23,9 @@ struct GrafanaClient {
 
     // the one request shape every query shares - answers arrive as columns
     private func query(_ sql: String) async throws -> Data {
-        let uid = try await datasourceUID()
         let url = try endpoint("/api/ds/query")
+        guard await ServerCheck.shared.reachable(root) else { throw APIError.unreachable }
+        let uid = try await datasourceUID()
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

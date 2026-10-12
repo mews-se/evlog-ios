@@ -2,9 +2,15 @@ import SwiftUI
 
 @main
 struct EVLogApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             RootView()
+        }
+        // back in the foreground the phone may be on another network
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { ServerCheck.shared.forget() }
         }
     }
 }
@@ -101,8 +107,12 @@ struct ErrorCard: View {
             Text(verbatim: message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("Try again", action: retry)
-                .buttonStyle(.borderedProminent)
+            // trying again includes looking for the server again
+            Button("Try again") {
+                ServerCheck.shared.forget()
+                retry()
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding(32)
     }

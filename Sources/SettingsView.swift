@@ -45,6 +45,7 @@ struct SettingsView: View {
                         .textInputAutocapitalization(.never)
                         .onSubmit { commitServer() }
                     Button("Test connection") {
+                        ServerCheck.shared.forget()
                         Task { await testConnection() }
                     }
                     if let testResult {

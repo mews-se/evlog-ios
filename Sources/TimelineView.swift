@@ -117,7 +117,10 @@ struct TimelineView: View {
                     .frame(minWidth: 330)
                 }
             }
-            .refreshable { await load() }
+            .refreshable {
+                ServerCheck.shared.forget()
+                await load()
+            }
             .task(id: loadKey) { if loadedKey != loadKey { await load() } }
             .onChange(of: filter) { _, _ in
                 rebuild()

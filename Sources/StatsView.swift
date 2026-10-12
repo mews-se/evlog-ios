@@ -166,7 +166,10 @@ struct StatsView: View {
                 DetailPager(api: api, carID: carID, route: route, tessieCosts: tessieCosts)
             }
             .navigationTitle("Statistics")
-            .refreshable { await load() }
+            .refreshable {
+                ServerCheck.shared.forget()
+                await load()
+            }
             .task(id: loadKey) { if loadedKey != loadKey { await load() } }
         }
     }

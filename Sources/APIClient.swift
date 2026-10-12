@@ -4,6 +4,7 @@ enum APIError: LocalizedError {
     case noServer
     case noGrafana
     case badURL
+    case unreachable
     case http(Int)
 
     var errorDescription: String? {
@@ -11,6 +12,7 @@ enum APIError: LocalizedError {
         case .noServer: return String(localized: "No server yet. Add your TeslaMate API address under Settings.")
         case .noGrafana: return String(localized: "No Grafana address yet. Add it under Settings to see this.")
         case .badURL: return String(localized: "Invalid server URL. Check the settings.")
+        case .unreachable: return String(localized: "The server can't be reached from here. Connect to its network or your VPN, then try again.")
         case .http(let code): return String(localized: "The server returned an error (HTTP \(code)).")
         }
     }
@@ -23,6 +25,39 @@ enum Net {
         config.timeoutIntervalForRequest = 15
         return URLSession(configuration: config)
     }()
+}
+
+// away from the network the server lives on, every request waits out its timeout
+// on its own. one quick look per server answers for all of them, until the app
+// leaves the foreground or someone asks again
+@MainActor
+final class ServerCheck {
+    static let shared = ServerCheck()
+    private var answers: [String: Task<Bool, Never>] = [:]
+
+    func reachable(_ root: String) async -> Bool {
+        if let answer = answers[root] { return await answer.value }
+        let answer = Task { await Self.ping(root) }
+        answers[root] = answer
+        return await answer.value
+    }
+
+    func forget() {
+        answers = [:]
+    }
+
+    // any answer at all means the server is there - Grafana has no /api/ping and says 404
+    private nonisolated static func ping(_ root: String) async -> Bool {
+        guard let url = URL(string: root + "/api/ping") else { return true }
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 3
+        do {
+            _ = try await Net.session.data(for: request)
+            return true
+        } catch {
+            return false
+        }
+    }
 }
 
 struct APIClient {
@@ -43,6 +78,7 @@ struct APIClient {
         let root = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
         if root.isEmpty { throw APIError.noServer }
         guard let url = URL(string: root + path) else { throw APIError.badURL }
+        guard await ServerCheck.shared.reachable(root) else { throw APIError.unreachable }
         let (data, response) = try await Net.session.data(from: url)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             throw APIError.http(http.statusCode)
