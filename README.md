@@ -49,18 +49,20 @@ beneath it, energy and regen, consumption, and efficiency as a percentage of rat
 Drives where the battery heater ran are marked, since that is often what explains a cold day's
 consumption.
 
-**Charges** — AC and DC told apart, the charging curve with a readout under your finger, added
-and used energy, average and peak power, cost, and what the battery heater and cabin climate drew
-while the car charged. A car left plugged in across several charging processes is shown as one
+**Charges** — AC and DC told apart, the charging curve with a readout under your finger, added and
+used energy, average and peak power, cost, and what the battery heater and cabin climate drew while
+the car charged. A card names what set the pace of the charge: the current the charger offered
+against what the car drew, a cold battery, the heater, or on DC a start above half full and the
+stops along the way. A car left plugged in across several charging processes is shown as one
 charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
-**Statistics** — week, month and year, drilling down from period to day to individual drives.
-Charging statistics with what charging costs in all, per kWh and per 100 km, top locations that
-open into the charges behind them, AC/DC split and a weekday-by-hour heat map. Destinations: where
-the car goes most often and where it covers the most distance, each opening into the drives behind
-it, weekdays against weekends, and a heat map of when you drive. Temperature and consumption:
-consumption grouped by outside temperature, with the coldest fifth of the driving set against the
-warmest.
+**Statistics** — week, month, year or any span of days you pick, drilling down from period to day
+to individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km,
+top locations that open into the charges behind them, AC/DC split and a weekday-by-hour heat map.
+Destinations: where the car goes most often and where it covers the most distance, each opening
+into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature
+and consumption: consumption grouped by outside temperature, with the coldest fifth of the driving
+set against the warmest.
 
 Costs are shown in the region's currency, or one you pick in Settings.
 
