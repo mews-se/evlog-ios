@@ -78,7 +78,8 @@ struct APIClient {
     // teslamateapi serves newest first. from v1.24 it also bounds the list with
     // startDate; older servers ignore the parameter and send the same pages as ever,
     // so the bound is applied here too and paging stops where a page reaches past it.
-    // drives can fail on old rows holding nulls (scan error) — broken pages are skipped
+    // drives can fail on old rows holding nulls (scan error) — broken pages are skipped,
+    // but a server that stops answering is not a run of broken pages
     private func pages<T>(since: Date?, start: KeyPath<T, Date>,
                           fetch: (Int) async throws -> [T]) async throws -> [T] {
         var all: [T] = []
@@ -95,7 +96,7 @@ struct APIClient {
             } catch {
                 lastError = error
                 failures += 1
-                if failures >= 3 { break }
+                if failures >= 3 || error is URLError { break }
             }
             page += 1
         }
