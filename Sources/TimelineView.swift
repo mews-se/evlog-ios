@@ -91,6 +91,9 @@ struct TimelineView: View {
                     ProgressView()
                 }
             }
+            // the error card and the spinner are only as tall as themselves, and without
+            // the full height the period row was centred together with them, mid-screen
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             // the period sits above the list rather than in the bar, which the segment
             // already fills on the narrowest phones. it stays put when the list is empty,
             // since that is exactly when it needs changing
