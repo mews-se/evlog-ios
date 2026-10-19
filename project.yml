@@ -5,6 +5,15 @@ options:
     iOS: "18.0"
   createIntermediateGroups: true
   developmentLanguage: en
+# keeps Xcode's "update to recommended settings" triangle away - changes made in
+# its dialog land in the generated project and are lost on the next xcodegen run
+attributes:
+  LastUpgradeCheck: "2710"
+settings:
+  base:
+    DEVELOPMENT_TEAM: 4S9Z57Q8KR
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
 targets:
   EVLog:
     type: application
@@ -23,7 +32,6 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: EVLog
         INFOPLIST_KEY_UIUserInterfaceStyle: Automatic
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: 4S9Z57Q8KR
     info:
       path: Resources/Info.plist
       properties:
