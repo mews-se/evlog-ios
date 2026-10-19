@@ -292,6 +292,8 @@ struct SegmentedControl: UIViewRepresentable {
     func makeUIView(context: Context) -> ReselectingSegmentedControl {
         let control = ReselectingSegmentedControl(items: titles)
         control.selectedSegmentIndex = selection
+        // the segments switch views the way tabs do, so voiceover should call them tabs
+        control.accessibilityTraits.insert(.tabBar)
         control.addTarget(context.coordinator, action: #selector(Coordinator.changed), for: .valueChanged)
         return control
     }
