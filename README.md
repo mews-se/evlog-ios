@@ -125,9 +125,21 @@ services:
 Then `docker compose up -d`, and point the app at `http://your-server:8080`. `ENABLE_COMMANDS=false`
 keeps the API read-only, which is all EVLog needs — it never writes to your instance.
 
-Grafana needs nothing extra. TeslaMate's own compose file already runs it with
-`GF_AUTH_ANONYMOUS_ENABLED=true`, and that is the access EVLog uses for the visited-places map and
-battery health.
+## Opening Grafana to the app
+
+EVLog reads Grafana as an anonymous viewer, and TeslaMate ships its Grafana with anonymous access
+turned off. Until it is on, the visited-places map, battery health and countries stay greyed out.
+Add a `grafana` entry under the same `services:` key in the override file:
+
+```yaml
+  grafana:
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+```
+
+Compose adds the variable to the ones in your original file, so nothing else there changes. Run
+`docker compose up -d` again. Anyone who can reach Grafana's port can then open the dashboards
+without logging in, so keep it on your LAN or VPN.
 
 ## Building
 
