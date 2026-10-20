@@ -4,6 +4,23 @@ struct Envelope<T: Decodable>: Decodable {
     let data: T
 }
 
+// teslamateapi answers in the units picked in TeslaMate's settings and names them
+// beside the data. the app works in km and °C throughout, so the client turns them back
+struct ServerUnits: Decodable {
+    let unitOfLength: String?
+    let unitOfTemperature: String?
+
+    func km(_ value: Double?) -> Double? {
+        guard let value, unitOfLength == "mi" else { return value }
+        return value * Units.kmPerMile
+    }
+
+    func celsius(_ value: Double?) -> Double? {
+        guard let value, unitOfTemperature == "F" else { return value }
+        return (value - 32) * 5 / 9
+    }
+}
+
 // MARK: - /cars
 
 struct CarsPayload: Decodable {
@@ -48,22 +65,36 @@ struct CarDetails: Decodable {
 
 struct StatusPayload: Decodable {
     let status: CarStatus
+    let units: ServerUnits?
 }
 
 struct CarStatus: Decodable {
     let displayName: String?
     let state: String?
     let stateSince: Date?
-    let odometer: Double?
+    var odometer: Double?
     let carStatus: CarFlags?
     let carDetails: CarDetails?
     let carGeodata: Geodata?
     let carVersions: Versions?
-    let drivingDetails: DrivingDetails?
-    let climateDetails: ClimateDetails?
-    let batteryDetails: BatteryStatus?
+    var drivingDetails: DrivingDetails?
+    var climateDetails: ClimateDetails?
+    var batteryDetails: BatteryStatus?
     let chargingDetails: ChargingDetails?
     let tpmsDetails: TpmsDetails?
+
+    func metric(_ units: ServerUnits?) -> CarStatus {
+        guard let units else { return self }
+        var status = self
+        status.odometer = units.km(odometer)
+        status.drivingDetails?.speed = units.km(drivingDetails?.speed)
+        status.batteryDetails?.estBatteryRange = units.km(batteryDetails?.estBatteryRange)
+        status.batteryDetails?.ratedBatteryRange = units.km(batteryDetails?.ratedBatteryRange)
+        status.batteryDetails?.idealBatteryRange = units.km(batteryDetails?.idealBatteryRange)
+        status.climateDetails?.insideTemp = units.celsius(climateDetails?.insideTemp)
+        status.climateDetails?.outsideTemp = units.celsius(climateDetails?.outsideTemp)
+        return status
+    }
 }
 
 struct CarFlags: Decodable {
@@ -92,21 +123,21 @@ struct Versions: Decodable {
 struct DrivingDetails: Decodable {
     let shiftState: String?
     let power: Double?
-    let speed: Double?
+    var speed: Double?
 }
 
 struct ClimateDetails: Decodable {
     let isClimateOn: Bool?
-    let insideTemp: Double?
-    let outsideTemp: Double?
+    var insideTemp: Double?
+    var outsideTemp: Double?
     let isPreconditioning: Bool?
     let climateKeeperMode: String?
 }
 
 struct BatteryStatus: Decodable {
-    let estBatteryRange: Double?
-    let ratedBatteryRange: Double?
-    let idealBatteryRange: Double?
+    var estBatteryRange: Double?
+    var ratedBatteryRange: Double?
+    var idealBatteryRange: Double?
     let batteryLevel: Int?
     let usableBatteryLevel: Int?
 
@@ -154,13 +185,15 @@ struct TpmsDetails: Decodable {
 // teslamateapi writes null rather than an empty list when nothing matched
 struct DrivesPayload: Decodable {
     private let list: [Drive]?
+    let units: ServerUnits?
     var drives: [Drive] { list ?? [] }
 
-    enum CodingKeys: String, CodingKey { case list = "drives" }
+    enum CodingKeys: String, CodingKey { case list = "drives", units }
 }
 
 struct DrivePayload: Decodable {
     let drive: Drive
+    let units: ServerUnits?
 }
 
 struct Drive: Decodable, Identifiable {
@@ -169,18 +202,37 @@ struct Drive: Decodable, Identifiable {
     let endDate: Date?
     let startAddress: String?
     let endAddress: String?
-    let odometerDetails: OdometerDetails?
+    var odometerDetails: OdometerDetails?
     let durationMin: Double?
-    let speedMax: Double?
-    let speedAvg: Double?
+    var speedMax: Double?
+    var speedAvg: Double?
     let batteryDetails: DriveBattery?
-    let outsideTempAvg: Double?
+    var outsideTempAvg: Double?
     let energyConsumedNet: Double?
-    let consumptionNet: Double?
-    let rangeRated: RangeDetails?
-    let driveDetails: [DrivePoint]?
+    var consumptionNet: Double?
+    var rangeRated: RangeDetails?
+    var driveDetails: [DrivePoint]?
 
     var id: Int { driveId }
+
+    func metric(_ units: ServerUnits?) -> Drive {
+        guard let units else { return self }
+        var drive = self
+        drive.odometerDetails = odometerDetails?.metric(units)
+        drive.speedMax = units.km(speedMax)
+        drive.speedAvg = units.km(speedAvg)
+        drive.rangeRated = rangeRated?.metric(units)
+        // teslamateapi turns wh/km into miles with the distance factor, so the same factor undoes it
+        drive.consumptionNet = units.km(consumptionNet)
+        drive.outsideTempAvg = units.celsius(outsideTempAvg)
+        drive.driveDetails = driveDetails?.map { point in
+            var point = point
+            point.speed = units.km(point.speed)
+            return point
+        }
+        return drive
+    }
+
     var distance: Double { odometerDetails?.odometerDistance ?? 0 }
 
     // streamed position rows carry no climate data, so only a subset holds the flag
@@ -225,12 +277,21 @@ struct RangeDetails: Decodable {
     let startRange: Double?
     let endRange: Double?
     let rangeDiff: Double?
+
+    func metric(_ units: ServerUnits) -> RangeDetails {
+        RangeDetails(startRange: units.km(startRange), endRange: units.km(endRange), rangeDiff: units.km(rangeDiff))
+    }
 }
 
 struct OdometerDetails: Decodable {
     let odometerStart: Double?
     let odometerEnd: Double?
     let odometerDistance: Double?
+
+    func metric(_ units: ServerUnits) -> OdometerDetails {
+        OdometerDetails(odometerStart: units.km(odometerStart), odometerEnd: units.km(odometerEnd),
+                        odometerDistance: units.km(odometerDistance))
+    }
 }
 
 // charges carry no usable levels, so those decode nil there
@@ -245,7 +306,7 @@ struct DrivePoint: Decodable, Identifiable {
     let date: Date?
     let latitude: Double?
     let longitude: Double?
-    let speed: Double?
+    var speed: Double?
     let power: Double?
     let batteryLevel: Int?
     // metres, null on a couple of percent of the points
@@ -294,13 +355,15 @@ struct SoftwareUpdate: Decodable, Identifiable {
 
 struct ChargesPayload: Decodable {
     private let list: [Charge]?
+    let units: ServerUnits?
     var charges: [Charge] { list ?? [] }
 
-    enum CodingKeys: String, CodingKey { case list = "charges" }
+    enum CodingKeys: String, CodingKey { case list = "charges", units }
 }
 
 struct ChargePayload: Decodable {
     let charge: Charge
+    let units: ServerUnits?
 }
 
 struct Charge: Decodable, Identifiable {
@@ -313,14 +376,23 @@ struct Charge: Decodable, Identifiable {
     let cost: Double?
     let durationMin: Double?
     let batteryDetails: DriveBattery?
-    let rangeRated: RangeDetails?
-    let outsideTempAvg: Double?
-    let odometer: Double?
+    var rangeRated: RangeDetails?
+    var outsideTempAvg: Double?
+    var odometer: Double?
     let latitude: Double?
     let longitude: Double?
     let chargeDetails: [ChargePoint]?
 
     var id: Int { chargeId }
+
+    func metric(_ units: ServerUnits?) -> Charge {
+        guard let units else { return self }
+        var charge = self
+        charge.rangeRated = rangeRated?.metric(units)
+        charge.outsideTempAvg = units.celsius(outsideTempAvg)
+        charge.odometer = units.km(odometer)
+        return charge
+    }
 
     // what the charger delivered over the time it ran, the same side of the on-board
     // charger as the max, so a steady 11 kW AC charge reads 11 and not the 10 that

@@ -93,7 +93,7 @@ struct APIClient {
 
     func status(carID: Int) async throws -> CarStatus {
         let payload: StatusPayload = try await get("/api/v1/cars/\(carID)/status")
-        return payload.status
+        return payload.status.metric(payload.units)
     }
 
     func updates(carID: Int) async throws -> [SoftwareUpdate] {
@@ -105,7 +105,7 @@ struct APIClient {
     func drives(carID: Int, since: Date? = nil) async throws -> [Drive] {
         try await pages(since: since, start: \.startDate) { page in
             let payload: DrivesPayload = try await get("/api/v1/cars/\(carID)/drives?show=\(Self.pageSize)&page=\(page)" + Self.bound(since))
-            return payload.drives
+            return payload.drives.map { $0.metric(payload.units) }
         }
     }
 
@@ -148,7 +148,7 @@ struct APIClient {
 
     func drive(carID: Int, driveID: Int) async throws -> Drive {
         let payload: DrivePayload = try await get("/api/v1/cars/\(carID)/drives/\(driveID)")
-        return payload.drive
+        return payload.drive.metric(payload.units)
     }
 
     // plug-ins that never delivered anything have nothing to show and inflate the
@@ -156,13 +156,13 @@ struct APIClient {
     func charges(carID: Int, since: Date? = nil) async throws -> [Charge] {
         let all: [Charge] = try await pages(since: since, start: \.startDate) { page in
             let payload: ChargesPayload = try await get("/api/v1/cars/\(carID)/charges?show=\(Self.pageSize)&page=\(page)" + Self.bound(since))
-            return payload.charges
+            return payload.charges.map { $0.metric(payload.units) }
         }
         return all.filter { ($0.chargeEnergyAdded ?? 0) > 0 }
     }
 
     func charge(carID: Int, chargeID: Int) async throws -> Charge {
         let payload: ChargePayload = try await get("/api/v1/cars/\(carID)/charges/\(chargeID)")
-        return payload.charge
+        return payload.charge.metric(payload.units)
     }
 }
