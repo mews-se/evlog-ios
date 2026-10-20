@@ -1,11 +1,6 @@
-What's new
-
-• Statistics can sum up any span of days you pick, not just a week, month or year.
-• A charge now says what set its pace: the charger, a cold battery, the heater or a DC stop.
-
 Bug fixes
 
-• Away from your server's network the app says so within seconds instead of spinning for most of a minute.
-• The period row on the Timeline stays at the top when something goes wrong.
+• Temperatures, distances, range and the odometer read right when TeslaMate is set to miles or Fahrenheit.
+• VoiceOver now announces the Timeline's All, Drives and Charges as tabs.
 
 Full story: https://evlog.martinstockzell.se/changelog/
