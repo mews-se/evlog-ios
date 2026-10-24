@@ -8,8 +8,9 @@ A native iPhone client for your own [TeslaMate](https://github.com/teslamate-org
 drives, charges, statistics and battery health, in an interface built for the phone rather than a
 dashboard squeezed onto a small screen.
 
-EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
-create, and nothing leaves your network.
+EVLog reads your data from servers you run yourself. Apart from those it fetches the public
+Supercharger list from supercharge.info for the range map, and talks to Tessie only if you add a
+key. It never connects to Tesla, and there is no account to create.
 
 EVLog has a sibling, [WallConnectorLog](https://github.com/mews-se/wallconnectorlog-ios), the same
 developer's companion to the Tesla Wall Connector. One app for the car, one for the charger, built
@@ -31,11 +32,13 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 glyphs for preconditioning, the battery heater, open doors and windows, tyre pressure and more, lock
 state, location, temperatures, Sentry, degradation (opening a battery page with capacity plotted
 against mileage and how long the pack has sat at each charge level), countries visited (each opening
-into the drives and charges there), software version and time since last contact. The car's name
-opens a spec sheet: model, VIN, efficiency, and with a Tessie key the car's own configuration. From
-here you reach a map of every place the car has been over any period you choose, on a plain map or
-satellite imagery, and a range map showing how far the current charge takes you, using a detour
-factor derived from your own trips rather than a guess.
+into the drives and charges there), software version (opening every version installed so far, the
+median time between updates and each version's release notes on notateslaapp.com) and time since
+last contact. The car's name opens a spec sheet: model, VIN, efficiency, and with a Tessie key the
+car's own configuration. From here you reach a map of every place the car has been over any period
+you choose, on a plain map or satellite imagery, and a range map showing how far the current charge
+takes you and which Superchargers lie within reach, using a detour factor derived from your own
+trips rather than a guess.
 
 **Timeline**: drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
@@ -50,21 +53,23 @@ Drives where the battery heater ran are marked, since that is often what explain
 consumption.
 
 **Charges**: AC and DC told apart, the charging curve with a readout under your finger, added and
-used energy, average and peak power, cost, and what the battery heater and cabin climate drew while
-the car charged. A card names what set the pace of the charge: the current the charger offered
+used energy, average and peak power, cost, and how long the battery heater and cabin climate ran
+while the car charged. A card names what set the pace of the charge: the current the charger offered
 against what the car drew, a cold battery, the heater, or on DC a start above half full and the
 stops along the way. A car left plugged in across several charging processes is shown as one
 charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
 **Statistics**: week, month, year or any span of days you pick, drilling down from period to day
-to individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km,
-top locations that open into the charges behind them, AC/DC split and a weekday-by-hour heat map.
-Destinations: where the car goes most often and where it covers the most distance, each opening
-into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature
-and consumption: consumption grouped by outside temperature, with the coldest fifth of the driving
-set against the warmest.
+to individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km
+or 100 mi, top locations that open into the charges behind them, AC/DC split and a weekday-by-hour
+heat map. Destinations: where the car goes most often and where it covers the most distance, each
+opening into the drives behind it, weekdays against weekends, and a heat map of when you drive.
+Temperature and consumption: consumption grouped by outside temperature, with the coldest fifth of
+the driving set against the warmest.
 
-Costs are shown in the region's currency, or one you pick in Settings.
+Costs are shown in the region's currency, or one you pick in Settings. Units work the same way,
+metric or imperial, and with more than one car in TeslaMate a picker there chooses which one the
+app shows.
 
 **Demo mode**: with no server configured the app starts in three weeks of built-in example data,
 so every screen above can be tried before anything is set up. A switch in Settings takes you back
@@ -72,11 +77,11 @@ there any time, and the title says DEMO MODE whenever the data is canned.
 
 ## What's next
 
-The [open milestone](https://github.com/mews-se/evlog-ios/milestones) lists what the next release
-is meant to carry, and the [planned](https://github.com/mews-se/evlog-ios/labels/planned) label
-marks the ideas that are agreed rather than merely filed. Releases gather a body of work instead of
-trickling out one change at a time, so most of what is happening is in the branches rather than in
-the release list.
+A [milestone](https://github.com/mews-se/evlog-ios/milestones), when one is open, lists what the
+next release is meant to carry, and the
+[planned](https://github.com/mews-se/evlog-ios/labels/planned) label marks the ideas that are
+agreed rather than merely filed. Releases gather a body of work instead of trickling out one change
+at a time, so most of what is happening is in the branches rather than in the release list.
 
 ## What you need
 
@@ -85,15 +90,18 @@ the release list.
   the app's main data source
 - Optionally Grafana, used for the visited-places map, battery health and a few queries the API
   does not expose
-- Optionally a [Tessie](https://tessie.com) API key, only to fill in charging costs that TeslaMate
-  never records
+- Optionally TeslaMate's own web address, so a charge's cost links to the page in TeslaMate where
+  you edit it
+- Optionally a [Tessie](https://tessie.com) API key, to fill in charging costs that TeslaMate never
+  records and the car's own configuration on the spec sheet
 
 All addresses are configured under Settings in the app. Until a server address is in place the app
 runs in demo mode, so there is something to look at before there is anything to connect to.
 
 The app allows plain HTTP to your own network: private addresses such as 192.168.x.x and 10.x.x.x,
-`.local` names, and hostnames without a dot. That covers a LAN and a VPN alike. A server you reach
-by a public domain name needs HTTPS, which needs no other change in the app.
+`.local` names, and hostnames without a dot. That covers a LAN and a VPN alike. Any other name with
+a dot in it, a private one such as `teslamate.lan` or a public domain, needs HTTPS, which needs no
+other change in the app.
 
 ## Adding teslamateapi
 
@@ -149,14 +157,17 @@ you run:
 ```
 brew install xcodegen
 xcodegen generate
+open EVLog.xcodeproj
 ```
 
-iOS 18 or later, iPhone only.
+It builds with Xcode 27.1 and runs on iOS 18 or later, iPhone only.
 
 That is enough to build and run it in the simulator. To put it on your own iPhone, change
 `DEVELOPMENT_TEAM` in `project.yml` first. The identifier in the file is mine, and Xcode will not
-sign for a team you are not a member of. A free Apple ID works: pick Personal Team when Xcode asks.
-Apps signed that way stop launching after seven days and have to be run from Xcode again to renew.
+sign for a team you are not a member of. The bundle identifier `se.mews.EVLog` belongs to the App
+Store app, so change `bundleIdPrefix` there as well. A free Apple ID works: pick Personal Team when
+Xcode asks. Apps signed that way stop launching after seven days and have to be run from Xcode
+again to renew.
 
 ## Licence
 
