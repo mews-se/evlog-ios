@@ -151,8 +151,11 @@ struct ChargeDetailView: View {
 
     // cost editing is per process in TeslaMate, so the link only fits a single charge
     private var costEditURL: URL? {
-        guard chargeIDs.count == 1, let id = chargeIDs.first else { return nil }
-        return URL(string: teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines)) + "/charge-cost/\(id)")
+        let root = teslamateURL.trimmingCharacters(in: CharacterSet(charactersIn: "/").union(.whitespacesAndNewlines))
+        guard !root.isEmpty, chargeIDs.count == 1, let id = chargeIDs.first,
+              let url = URL(string: root + "/charge-cost/\(id)"),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return nil }
+        return url
     }
 
     var body: some View {
