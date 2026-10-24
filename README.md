@@ -4,21 +4,21 @@
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-F05138?logo=swift&logoColor=white)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-A native iPhone client for your own [TeslaMate](https://github.com/teslamate-org/teslamate) server
-— drives, charges, statistics and battery health, in an interface built for the phone rather than a
+A native iPhone client for your own [TeslaMate](https://github.com/teslamate-org/teslamate) server:
+drives, charges, statistics and battery health, in an interface built for the phone rather than a
 dashboard squeezed onto a small screen.
 
 EVLog talks only to servers you run yourself. It never connects to Tesla, there is no account to
 create, and nothing leaves your network.
 
 EVLog has a sibling, [WallConnectorLog](https://github.com/mews-se/wallconnectorlog-ios), the same
-developer's companion to the Tesla Wall Connector — one app for the car, one for the charger, built
+developer's companion to the Tesla Wall Connector. One app for the car, one for the charger, built
 the same way: your own server, no accounts, no cloud.
 
-[Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911) — free, iOS 18 or
+[Download it on the App Store](https://apps.apple.com/app/evlog/id6802532911): free, iOS 18 or
 later. Every version that reaches the App Store gets a
 [tag and a release](https://github.com/mews-se/evlog-ios/releases) here. `main` holds the build
-most recently sent to Apple — normally the one in the store, marked by the latest tag — while new
+most recently sent to Apple, normally the one in the store, marked by the latest tag, while new
 work gathers on `dev`. To build what is in the store, start from the latest tag; for how, see
 [Building](#building).
 
@@ -27,7 +27,7 @@ work gathers on `dev`. To build what is in the store, start from the latest tag;
 
 ## What it does
 
-**Overview** — battery ring with range, what the cable is doing right now, TeslaMate's own status
+**Overview**: battery ring with range, what the cable is doing right now, TeslaMate's own status
 glyphs for preconditioning, the battery heater, open doors and windows, tyre pressure and more, lock
 state, location, temperatures, Sentry, degradation (opening a battery page with capacity plotted
 against mileage and how long the pack has sat at each charge level), countries visited (each opening
@@ -37,26 +37,26 @@ here you reach a map of every place the car has been over any period you choose,
 satellite imagery, and a range map showing how far the current charge takes you, using a detour
 factor derived from your own trips rather than a guess.
 
-**Timeline** — drives, charges and the parking in between, as one flow per day, going back as far
+**Timeline**: drives, charges and the parking in between, as one flow per day, going back as far
 as you choose: the last week, the last month, this year or everything. A parked row says how long
 the car stood and what it cost the battery, and a short stop gets one too if it cost anything. When
 the odometer shows the car moved while nothing was logged, the row says so instead of pretending
 the car stood still. Software updates get a row of their own. Swipe left and right inside a drive
 or a charge to step through the day without going back to the list.
 
-**Drives** — a route map, a speed graph you can drag along to follow the car, the elevation profile
+**Drives**: a route map, a speed graph you can drag along to follow the car, the elevation profile
 beneath it, energy and regen, consumption, and efficiency as a percentage of rated consumption.
 Drives where the battery heater ran are marked, since that is often what explains a cold day's
 consumption.
 
-**Charges** — AC and DC told apart, the charging curve with a readout under your finger, added and
+**Charges**: AC and DC told apart, the charging curve with a readout under your finger, added and
 used energy, average and peak power, cost, and what the battery heater and cabin climate drew while
 the car charged. A card names what set the pace of the charge: the current the charger offered
 against what the car drew, a cold battery, the heater, or on DC a start above half full and the
 stops along the way. A car left plugged in across several charging processes is shown as one
 charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
-**Statistics** — week, month, year or any span of days you pick, drilling down from period to day
+**Statistics**: week, month, year or any span of days you pick, drilling down from period to day
 to individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km,
 top locations that open into the charges behind them, AC/DC split and a weekday-by-hour heat map.
 Destinations: where the car goes most often and where it covers the most distance, each opening
@@ -66,7 +66,7 @@ set against the warmest.
 
 Costs are shown in the region's currency, or one you pick in Settings.
 
-**Demo mode** — with no server configured the app starts in three weeks of built-in example data,
+**Demo mode**: with no server configured the app starts in three weeks of built-in example data,
 so every screen above can be tried before anything is set up. A switch in Settings takes you back
 there any time, and the title says DEMO MODE whenever the data is canned.
 
@@ -81,7 +81,7 @@ the release list.
 ## What you need
 
 - A running TeslaMate instance
-- [teslamateapi](https://github.com/tobiasehlert/teslamateapi) reachable from your phone — this is
+- [teslamateapi](https://github.com/tobiasehlert/teslamateapi) reachable from your phone; this is
   the app's main data source
 - Optionally Grafana, used for the visited-places map, battery health and a few queries the API
   does not expose
@@ -123,7 +123,7 @@ services:
 ```
 
 Then `docker compose up -d`, and point the app at `http://your-server:8080`. `ENABLE_COMMANDS=false`
-keeps the API read-only, which is all EVLog needs — it never writes to your instance.
+keeps the API read-only, which is all EVLog needs: it never writes to your instance.
 
 ## Opening Grafana to the app
 
@@ -154,13 +154,13 @@ xcodegen generate
 iOS 18 or later, iPhone only.
 
 That is enough to build and run it in the simulator. To put it on your own iPhone, change
-`DEVELOPMENT_TEAM` in `project.yml` first — the identifier in the file is mine, and Xcode will not
+`DEVELOPMENT_TEAM` in `project.yml` first. The identifier in the file is mine, and Xcode will not
 sign for a team you are not a member of. A free Apple ID works: pick Personal Team when Xcode asks.
 Apps signed that way stop launching after seven days and have to be run from Xcode again to renew.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
 
 ## Disclaimer
 
