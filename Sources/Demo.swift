@@ -71,6 +71,8 @@ enum Demo {
     static let heaterDrives: Set<Int> = [1, 24]
     static let heaterCharges: Set<Int> = [2]
     static let coldChargeStarts: Set<Int> = [2]
+    // charge 6 is a top-up later the same evening, with the cable still in from 5
+    static let stillPluggedCharges: Set<Int> = [6]
 
     static let batteryHealth = BatteryHealth(maxRange: 499, currentRange: 479,
                                              kwhPerKm: 0.156)

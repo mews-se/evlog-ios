@@ -50,6 +50,7 @@ struct StatsView: View {
     @State private var tessieCosts: [Int: Double] = [:]
     @State private var heaterDrives: Set<Int> = []
     @State private var heaterCharges: Set<Int> = []
+    @State private var stillPlugged: Set<Int> = []
     @State private var error: String?
     @State private var partialFailure = false
     @State private var loadedKey: String?
@@ -59,7 +60,8 @@ struct StatsView: View {
     private var loadKey: String { "\(api.baseURL)|\(carID)|\(tessieToken)" }
 
     private var buckets: [StatBucket] {
-        StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts, component: granularity.component)
+        StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged,
+                         component: granularity.component)
     }
 
     // whole days: from the start of the first to midnight after the last
@@ -72,7 +74,7 @@ struct StatsView: View {
 
     private var customTotal: StatBucket {
         let days = StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts,
-                                    component: .day, within: customSpan)
+                                    stillPlugged: stillPlugged, component: .day, within: customSpan)
         return StatBucket.sum(days, period: customSpan.start)
     }
 
@@ -143,10 +145,12 @@ struct StatsView: View {
                 switch route {
                 case let .period(period, granularity):
                     PeriodDetailView(period: period, granularity: granularity,
-                                     drives: drives, charges: charges, tessieCosts: tessieCosts)
+                                     drives: drives, charges: charges, tessieCosts: tessieCosts,
+                                     stillPlugged: stillPlugged)
                 case let .span(start, end):
                     PeriodDetailView(span: DateInterval(start: start, end: end),
-                                     drives: drives, charges: charges, tessieCosts: tessieCosts)
+                                     drives: drives, charges: charges, tessieCosts: tessieCosts,
+                                     stillPlugged: stillPlugged)
                 case let .day(day):
                     DayDrivesView(day: day, drives: drives, heaterDrives: heaterDrives)
                 case .charging:
@@ -159,7 +163,8 @@ struct StatsView: View {
                     PlaceDrivesView(name: name, drives: drives, heaterDrives: heaterDrives)
                 case let .place(name):
                     PlaceChargesView(name: name, charges: charges, drives: drives,
-                                     tessieCosts: tessieCosts, heaterCharges: heaterCharges)
+                                     tessieCosts: tessieCosts, heaterCharges: heaterCharges,
+                                     stillPlugged: stillPlugged)
                 }
             }
             .navigationDestination(for: DetailRoute.self) { route in
@@ -180,9 +185,11 @@ struct StatsView: View {
         async let c = api.charges(carID: carID)
         async let h = GrafanaClient(baseURL: grafanaURL).heaterDrives(carID: carID)
         async let hc = GrafanaClient(baseURL: grafanaURL).heaterCharges(carID: carID)
+        async let p = GrafanaClient(baseURL: grafanaURL).stillPluggedCharges(carID: carID)
         var failure: String?
         heaterDrives = (try? await h) ?? []
         heaterCharges = (try? await hc) ?? []
+        stillPlugged = (try? await p) ?? []
         do { drives = try await d } catch { failure = error.localizedDescription }
         do { charges = try await c } catch { failure = failure ?? error.localizedDescription }
         if drives.isEmpty && charges.isEmpty {
@@ -218,7 +225,7 @@ struct StatBucket: Identifiable {
     }
 
     // shared by the tab and the period detail view - interval narrows it to one period
-    static func build(drives: [Drive], charges: [Charge], tessieCosts: [Int: Double],
+    static func build(drives: [Drive], charges: [Charge], tessieCosts: [Int: Double], stillPlugged: Set<Int> = [],
                       component: Calendar.Component, within interval: DateInterval? = nil) -> [StatBucket] {
         let calendar = Calendar.current
         var byPeriod: [Date: StatBucket] = [:]
@@ -240,7 +247,7 @@ struct StatBucket: Identifiable {
         }
         // joined the way the timeline joins them, so an evening on the cable counts once
         // and lands on the day it started
-        for group in ChargeGroup.stitch(charges, drives: drives) {
+        for group in ChargeGroup.stitch(charges, drives: drives, stillPlugged: stillPlugged) {
             guard let k = key(group.startDate) else { continue }
             var b = byPeriod[k] ?? StatBucket(period: k)
             b.energyAdded += group.energyAdded ?? 0
@@ -355,9 +362,10 @@ struct PeriodDetailView: View {
     let drives: [Drive]
     let charges: [Charge]
     let tessieCosts: [Int: Double]
+    var stillPlugged: Set<Int> = []
 
     private var buckets: [StatBucket] {
-        StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts,
+        StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged,
                          component: finer, within: interval)
     }
 
@@ -394,17 +402,18 @@ struct PeriodDetailView: View {
 
 extension PeriodDetailView {
     init(period: Date, granularity: StatsView.Granularity,
-         drives: [Drive], charges: [Charge], tessieCosts: [Int: Double]) {
+         drives: [Drive], charges: [Charge], tessieCosts: [Int: Double], stillPlugged: Set<Int>) {
         self.init(interval: Calendar.current.dateInterval(of: granularity.component, for: period),
                   title: PeriodTitle.text(period, granularity.component), finer: granularity.finer,
-                  drives: drives, charges: charges, tessieCosts: tessieCosts)
+                  drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged)
     }
 
     // a picked span longer than two months reads better by month than as a wall of days
-    init(span: DateInterval, drives: [Drive], charges: [Charge], tessieCosts: [Int: Double]) {
+    init(span: DateInterval, drives: [Drive], charges: [Charge], tessieCosts: [Int: Double],
+         stillPlugged: Set<Int>) {
         let twoMonths = Calendar.current.date(byAdding: .month, value: 2, to: span.start) ?? span.end
         self.init(interval: span, title: PeriodTitle.span(span), finer: span.end > twoMonths ? .month : .day,
-                  drives: drives, charges: charges, tessieCosts: tessieCosts)
+                  drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged)
     }
 }
 

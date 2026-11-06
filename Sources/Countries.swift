@@ -105,6 +105,24 @@ extension GrafanaClient {
         return formatter.string(from: date)
     }
 
+    // the car's own energy counter only goes back to zero when the cable comes out, so a
+    // process whose first sample already counts energy began with the cable still in from
+    // the one before. a fresh plug-in reads 0 to 0.4 by its first sample
+    func stillPluggedCharges(carID: Int) async throws -> Set<Int> {
+        if demo { return Demo.stillPluggedCharges }
+        let sql = """
+        select c.id::text from charging_processes c
+        join lateral (
+          select s.charge_energy_added from charges s
+          where s.charging_process_id = c.id order by s.date limit 1
+        ) first on true
+        where c.car_id = \(carID) and first.charge_energy_added > 0.5
+        """
+        let columns = try await textColumns(sql)
+        guard let ids = columns.first else { return [] }
+        return Set(ids.compactMap { $0.flatMap(Int.init) })
+    }
+
     // the charge list carries no usable level, so the cold starts are fetched the same way
     func coldChargeStarts(carID: Int) async throws -> Set<Int> {
         if demo { return Demo.coldChargeStarts }

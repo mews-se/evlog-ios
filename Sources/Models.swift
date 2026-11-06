@@ -539,14 +539,17 @@ struct ChargeGroup: Identifiable {
 
     // the join rule: same place, no drive in between, and a level that held still.
     // an unplugged car drifts, a plugged one does not, so the level is the plug signal
-    // and no time cap is needed
-    static func stitch(_ charges: [Charge], drives: [Drive]) -> [ChargeGroup] {
+    // and no time cap is needed. a car on the cable can still drift a couple of percent
+    // before it tops up again, so a charge that began with the cable already in
+    // (stillPlugged, from Grafana) joins the one before whatever the level did
+    static func stitch(_ charges: [Charge], drives: [Drive], stillPlugged: Set<Int> = []) -> [ChargeGroup] {
         let sorted = charges.sorted { $0.startDate < $1.startDate }
         let driveStarts = drives.map(\.startDate).sorted()
         var groups: [ChargeGroup] = []
         var current: [Charge] = []
         for charge in sorted {
-            if let previous = current.last, joins(previous, charge, driveStarts: driveStarts) {
+            if let previous = current.last,
+               joins(previous, charge, driveStarts: driveStarts, stillPlugged: stillPlugged) {
                 current.append(charge)
             } else {
                 if !current.isEmpty { groups.append(ChargeGroup(parts: current)) }
@@ -557,13 +560,17 @@ struct ChargeGroup: Identifiable {
         return groups
     }
 
-    private static func joins(_ previous: Charge, _ next: Charge, driveStarts: [Date]) -> Bool {
+    private static func joins(_ previous: Charge, _ next: Charge, driveStarts: [Date],
+                              stillPlugged: Set<Int>) -> Bool {
         guard let end = previous.endDate,
-              let place = previous.address, place == next.address,
-              let from = previous.batteryDetails?.endBatteryLevel,
-              let to = next.batteryDetails?.startBatteryLevel,
-              from - to <= 1
+              let place = previous.address, place == next.address
         else { return false }
+        if !stillPlugged.contains(next.chargeId) {
+            guard let from = previous.batteryDetails?.endBatteryLevel,
+                  let to = next.batteryDetails?.startBatteryLevel,
+                  from - to <= 1
+            else { return false }
+        }
         // driveStarts arrives sorted, so the first start at or past the gap decides
         var low = 0, high = driveStarts.count
         while low < high {

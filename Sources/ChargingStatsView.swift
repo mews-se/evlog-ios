@@ -184,12 +184,14 @@ struct PlaceChargesView: View {
     let drives: [Drive]
     var tessieCosts: [Int: Double] = [:]
     var heaterCharges: Set<Int> = []
+    var stillPlugged: Set<Int> = []
 
     // the same filter the ranking was built from, joined the way the timeline joins
     private var groups: [ChargeGroup] {
         let unknown = String(localized: "Unknown location")
         let here = charges.filter { ($0.address ?? unknown) == name }
-        return ChargeGroup.stitch(here, drives: drives).sorted { $0.startDate > $1.startDate }
+        return ChargeGroup.stitch(here, drives: drives, stillPlugged: stillPlugged)
+            .sorted { $0.startDate > $1.startDate }
     }
 
     var body: some View {

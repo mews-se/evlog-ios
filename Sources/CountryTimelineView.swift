@@ -83,6 +83,8 @@ struct CountryTimelineView: View {
         let grafana = GrafanaClient(baseURL: grafanaURL)
         async let heaters = grafana.heaterDrives(carID: carID)
         async let heatedCharges = grafana.heaterCharges(carID: carID)
+        // the country ids come from Grafana too, so waiting for this one costs nothing extra
+        async let plugged = grafana.stillPluggedCharges(carID: carID)
         do {
             async let ids = grafana.countryIDs(carID: carID, code: country.code)
             async let drives = api.drives(carID: carID)
@@ -90,7 +92,7 @@ struct CountryTimelineView: View {
             let (here, allDrives, allCharges) = try await (ids, drives, charges)
             let drivesHere = allDrives.filter { here.drives.contains($0.driveId) }
             // joined the way the timeline joins, then kept when the stretch is in the country
-            let groups = ChargeGroup.stitch(allCharges, drives: allDrives)
+            let groups = ChargeGroup.stitch(allCharges, drives: allDrives, stillPlugged: (try? await plugged) ?? [])
                 .filter { group in group.parts.contains { here.charges.contains($0.chargeId) } }
             days = Timeline.group(drivesHere.map(TimelineEntry.drive) + groups.map(TimelineEntry.charge))
             var run: [DetailTarget] = []
