@@ -307,16 +307,20 @@ struct StatBucketRow: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(verbatim: title)
                 .font(.subheadline.weight(.semibold))
-            // driving on the first line, charging on the second. charged kWh beside
-            // the distance read as what the drives had used
+            // the driving first, the charging last. charged kWh beside the distance
+            // read as what the drives had used
             HStack {
                 item(Fmt.distance(bucket.distance, decimals: 0), .blue)
                 item(Fmt.kwh(bucket.energyConsumed), .purple)
                 item(Fmt.pct(bucket.efficiencyPct, decimals: 0), CarState.efficiencyColor(bucket.efficiencyPct))
             }
-            HStack(spacing: 10) {
-                Label { Text(verbatim: "\(bucket.driveCount)") } icon: { Image(systemName: "road.lanes") }
-                Label(Fmt.duration(bucket.driveMinutes), systemImage: "clock")
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 10) {
+                    Label { Text(verbatim: "\(bucket.driveCount)") } icon: { Image(systemName: "road.lanes") }
+                    Label(Fmt.duration(bucket.driveMinutes), systemImage: "clock")
+                }
+                // a line of its own: a year of charges with energy and cost does not
+                // fit beside the driving time
                 Label { Text(verbatim: charging) } icon: { Image(systemName: "bolt") }
             }
             .font(.caption)
