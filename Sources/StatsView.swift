@@ -238,11 +238,13 @@ struct StatBucket: Identifiable {
             b.rangeDiff += drive.rangeRated?.rangeDiff ?? 0
             byPeriod[k] = b
         }
-        for charge in charges {
-            guard let k = key(charge.startDate) else { continue }
+        // joined the way the timeline joins them, so an evening on the cable counts once
+        // and lands on the day it started
+        for group in ChargeGroup.stitch(charges, drives: drives) {
+            guard let k = key(group.startDate) else { continue }
             var b = byPeriod[k] ?? StatBucket(period: k)
-            b.energyAdded += charge.chargeEnergyAdded ?? 0
-            b.cost += charge.displayCost ?? tessieCosts[charge.chargeId] ?? 0
+            b.energyAdded += group.energyAdded ?? 0
+            b.cost += group.cost(tessieCosts: tessieCosts) ?? 0
             b.chargeCount += 1
             byPeriod[k] = b
         }
