@@ -202,7 +202,9 @@ struct StatBucket: Identifiable {
     var distance = 0.0
     var driveMinutes = 0.0
     var driveCount = 0
-    var energyConsumed = 0.0
+    // range lost times the car's efficiency, per drive. teslamateapi leaves it null
+    // where no range was lost, so nil here means no drive had anything to add
+    var energyConsumed: Double?
     var rangeDiff = 0.0
     var energyAdded = 0.0
     var cost = 0.0
@@ -232,7 +234,7 @@ struct StatBucket: Identifiable {
             b.distance += drive.distance
             b.driveMinutes += drive.durationMin ?? 0
             b.driveCount += 1
-            b.energyConsumed += drive.energyConsumedNet ?? 0
+            if let energy = drive.energyConsumedNet { b.energyConsumed = (b.energyConsumed ?? 0) + energy }
             b.rangeDiff += drive.rangeRated?.rangeDiff ?? 0
             byPeriod[k] = b
         }
@@ -253,7 +255,7 @@ struct StatBucket: Identifiable {
             t.distance += b.distance
             t.driveMinutes += b.driveMinutes
             t.driveCount += b.driveCount
-            t.energyConsumed += b.energyConsumed
+            if let energy = b.energyConsumed { t.energyConsumed = (t.energyConsumed ?? 0) + energy }
             t.rangeDiff += b.rangeDiff
             t.energyAdded += b.energyAdded
             t.cost += b.cost
@@ -303,19 +305,17 @@ struct StatBucketRow: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(verbatim: title)
                 .font(.subheadline.weight(.semibold))
+            // driving on the first line, charging on the second. charged kWh beside
+            // the distance read as what the drives had used
             HStack {
                 item(Fmt.distance(bucket.distance, decimals: 0), .blue)
-                item(Fmt.kwh(bucket.energyAdded), .green)
-                item(bucket.cost > 0 ? Fmt.cost(bucket.cost) : "–", .primary)
+                item(Fmt.kwh(bucket.energyConsumed), .purple)
+                item(Fmt.pct(bucket.efficiencyPct, decimals: 0), CarState.efficiencyColor(bucket.efficiencyPct))
             }
             HStack(spacing: 10) {
                 Label { Text(verbatim: "\(bucket.driveCount)") } icon: { Image(systemName: "road.lanes") }
-                Label { Text(verbatim: "\(bucket.chargeCount)") } icon: { Image(systemName: "bolt") }
                 Label(Fmt.duration(bucket.driveMinutes), systemImage: "clock")
-                if let efficiency = bucket.efficiencyPct {
-                    Label(Fmt.pct(efficiency, decimals: 0), systemImage: "leaf")
-                        .foregroundStyle(CarState.efficiencyColor(efficiency))
-                }
+                Label { Text(verbatim: charging) } icon: { Image(systemName: "bolt") }
             }
             .font(.caption)
             .foregroundStyle(.tertiary)
@@ -324,6 +324,13 @@ struct StatBucketRow: View {
             .minimumScaleFactor(0.75)
         }
         .padding(.vertical, 4)
+    }
+
+    private var charging: String {
+        guard bucket.chargeCount > 0 else { return "0" }
+        var parts = ["\(bucket.chargeCount)", Fmt.kwh(bucket.energyAdded)]
+        if bucket.cost > 0 { parts.append(Fmt.cost(bucket.cost)) }
+        return parts.joined(separator: " · ")
     }
 
     private func item(_ value: String, _ tint: Color) -> some View {
