@@ -40,12 +40,13 @@ you choose, on a plain map or satellite imagery, and a range map showing how far
 takes you and which Superchargers lie within reach, using a detour factor derived from your own
 trips rather than a guess.
 
-**Timeline**: drives, charges and the parking in between, as one flow per day, going back as far
-as you choose: the last week, the last month, this year or everything. A parked row says how long
-the car stood and what it cost the battery, and a short stop gets one too if it cost anything. When
-the odometer shows the car moved while nothing was logged, the row says so instead of pretending
-the car stood still. Software updates get a row of their own. Swipe left and right inside a drive
-or a charge to step through the day without going back to the list.
+**Timeline**: drives, charges and the parking in between, as one flow per day, going back as far as
+you choose: the last week, the last month, this year or everything. Each day's heading says how far
+the car went and how much it charged. A parked row says how long the car stood and what it cost the
+battery, and a short stop gets one too if it cost anything. When the odometer shows the car moved
+while nothing was logged, the row says so instead of pretending the car stood still. Software
+updates get a row of their own. Swipe left and right inside a drive or a charge to step through the
+day without going back to the list.
 
 **Drives**: a route map, a speed graph you can drag along to follow the car, the elevation profile
 beneath it, energy and regen, consumption, and efficiency as a percentage of rated consumption.
@@ -56,16 +57,18 @@ consumption.
 used energy, average and peak power, cost, and how long the battery heater and cabin climate ran
 while the car charged. A card names what set the pace of the charge: the current the charger offered
 against what the car drew, a cold battery, the heater, or on DC a start above half full and the
-stops along the way. A car left plugged in across several charging processes is shown as one
-charge. Costs TeslaMate does not have can be filled in from Tessie if you use it.
+stops along the way. A car left plugged in across several charging processes is shown as one charge,
+also when it tops up a few times along the way; with Grafana reachable the app goes by the car's own
+energy counter to tell. Costs TeslaMate does not have can be filled in from Tessie if you use it.
 
-**Statistics**: week, month, year or any span of days you pick, drilling down from period to day
-to individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km
-or 100 mi, top locations that open into the charges behind them, AC/DC split and a weekday-by-hour
-heat map. Destinations: where the car goes most often and where it covers the most distance, each
-opening into the drives behind it, weekdays against weekends, and a heat map of when you drive.
-Temperature and consumption: consumption grouped by outside temperature, with the coldest fifth of
-the driving set against the warmest.
+**Statistics**: week, month, year or any span of days you pick, each period with its distance, the
+energy the drives used, efficiency and what was charged, drilling down from period to day to
+individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km or
+100 mi, top locations that open into the charges behind them, AC/DC split and a weekday-by-hour heat
+map. Destinations: where the car goes most often and where it covers the most distance, each opening
+into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature
+and consumption: consumption grouped by outside temperature, with the coldest fifth of the driving
+set against the warmest.
 
 Costs are shown in the region's currency, or one you pick in Settings. Units work the same way,
 metric or imperial, and with more than one car in TeslaMate a picker there chooses which one the

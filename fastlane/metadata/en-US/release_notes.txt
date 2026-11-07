@@ -1,6 +1,11 @@
+What's new
+
+• Each day in the Timeline says how far the car went and how much it charged.
+
 Bug fixes
 
-• Temperatures, distances, range and the odometer read right when TeslaMate is set to miles or Fahrenheit.
-• VoiceOver now announces the Timeline's All, Drives and Charges as tabs.
+• Statistics show the energy your drives used, so a day without a charge no longer reads 0.0 kWh.
+• A day on the cable no longer splits into several charges when the car tops up along the way.
+• Charging statistics count charges the same way as the rest of the app.
 
 Full story: https://evlog.martinstockzell.se/changelog/
