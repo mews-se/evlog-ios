@@ -422,6 +422,20 @@ struct TimelineDay: Identifiable {
 
     var driveCount: Int { entries.filter(\.isDrive).count }
     var chargeCount: Int { entries.filter(\.isCharge).count }
+
+    var distance: Double {
+        entries.reduce(0) { sum, entry in
+            if case .drive(let drive) = entry { return sum + drive.distance }
+            return sum
+        }
+    }
+
+    var energyAdded: Double {
+        entries.reduce(0) { sum, entry in
+            if case .charge(let group) = entry { return sum + (group.energyAdded ?? 0) }
+            return sum
+        }
+    }
 }
 
 enum TimelineEntry: Identifiable {
@@ -798,27 +812,43 @@ struct UpdateTimelineRow: View {
     }
 }
 
-// the day heading carries the count of each kind, a summary without anything having
-// to be added up
+// the day heading sums the day up: how far the car went and what it took on. the
+// rows under it already say how many of each, and counts beside the sums did not fit
+// next to a long date
 struct DayHeader: View {
     let day: TimelineDay
 
     var body: some View {
         HStack(spacing: 10) {
+            // the date is what the eye looks for, so the sums give way first
             Text(verbatim: Fmt.day(day.date))
+                .layoutPriority(1)
             Spacer()
+            // both sums step down a size together rather than one shrinking on its own
+            ViewThatFits(in: .horizontal) {
+                sums
+                sums.font(.subheadline)
+            }
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.8)
+    }
+
+    private var sums: some View {
+        HStack(spacing: 10) {
             if day.driveCount > 0 {
-                count(day.driveCount, icon: "road.lanes")
+                // a day of short moves would read 0 km without the decimal
+                sum(Fmt.distance(day.distance, decimals: day.distance < 10 ? 1 : 0), icon: "road.lanes")
             }
             if day.chargeCount > 0 {
-                count(day.chargeCount, icon: "bolt.fill")
+                sum(Fmt.kwh(day.energyAdded), icon: "bolt.fill")
             }
         }
     }
 
-    private func count(_ value: Int, icon: String) -> some View {
+    private func sum(_ value: String, icon: String) -> some View {
         Label {
-            Text(verbatim: "\(value)")
+            Text(verbatim: value)
         } icon: {
             Image(systemName: icon)
         }
