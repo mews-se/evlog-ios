@@ -4,16 +4,23 @@ struct ChargingStatsView: View {
     let charges: [Charge]
     let drives: [Drive]
     var tessieCosts: [Int: Double] = [:]
+    var stillPlugged: Set<Int> = []
 
     private func cost(of charge: Charge) -> Double {
         charge.displayCost ?? tessieCosts[charge.chargeId] ?? 0
+    }
+
+    // the counts go by charges joined the way the timeline joins them, so a day on the
+    // cable is one charge here too. sums come out the same from either list
+    private var groups: [ChargeGroup] {
+        ChargeGroup.stitch(charges, drives: drives, stillPlugged: stillPlugged)
     }
 
     // MARK: - Costs
 
     private func costSum(_ list: [Charge]) -> Double { list.reduce(0) { $0 + cost(of: $1) } }
     private var totalCost: Double { costSum(charges) }
-    private var unpricedCount: Int { charges.filter { cost(of: $0) == 0 }.count }
+    private var unpricedCount: Int { groups.filter { ($0.cost(tessieCosts: tessieCosts) ?? 0) == 0 }.count }
 
     // only what was paid for is priced, and paid for is what the charger delivered,
     // so the larger of the two energies, as TeslaMate's dashboard has it
@@ -43,11 +50,11 @@ struct ChargingStatsView: View {
 
     private var places: [Place] {
         var byName: [String: Place] = [:]
-        for charge in charges {
-            let name = charge.address ?? String(localized: "Unknown location")
+        for group in groups {
+            let name = group.address ?? String(localized: "Unknown location")
             var place = byName[name] ?? Place(name: name)
-            place.energy += charge.chargeEnergyAdded ?? 0
-            place.cost += cost(of: charge)
+            place.energy += group.energyAdded ?? 0
+            place.cost += group.cost(tessieCosts: tessieCosts) ?? 0
             place.count += 1
             byName[name] = place
         }
@@ -115,7 +122,7 @@ struct ChargingStatsView: View {
                     Text("Costs")
                 } footer: {
                     if unpricedCount > 0 {
-                        Text("\(unpricedCount) of \(charges.count) charges have no recorded cost and count as free.")
+                        Text("\(unpricedCount) of \(groups.count) charges have no recorded cost and count as free.")
                     }
                 }
             }
@@ -153,7 +160,7 @@ struct ChargingStatsView: View {
                         .monospacedDigit()
                 }
                 LabeledContent(String(localized: "Charges")) {
-                    Text(verbatim: "\(ac.count) / \(dc.count)")
+                    Text(verbatim: "\(groups.filter { !$0.isDC }.count) / \(groups.filter(\.isDC).count)")
                         .monospacedDigit()
                 }
             } header: {
