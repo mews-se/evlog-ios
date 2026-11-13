@@ -8,6 +8,12 @@
             "state" : "translated",
             "value" : "%@ added · %lld kW"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 已充入 · %lld kW"
+          }
         }
       }
     },
@@ -17,6 +23,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ added · %lld kW · %@ left"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 已充入 · %lld kW · 剩余 %@"
           }
         }
       }
@@ -28,6 +40,12 @@
             "state" : "translated",
             "value" : "%@ since"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 已持续"
+          }
         }
       }
     },
@@ -37,6 +55,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld drives · last %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 次行程 · 最近 %@"
           }
         }
       }
@@ -48,6 +72,12 @@
             "state" : "translated",
             "value" : "%lld of %lld charges have no recorded cost and count as free."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld 次充电没有记录费用，按免费计算。"
+          }
         }
       }
     },
@@ -57,6 +87,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld of %lld Superchargers are within realistic reach. %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld 个超充站在实际可达范围内。%@"
           }
         }
       }
@@ -68,6 +104,12 @@
             "state" : "translated",
             "value" : "Built-in example data instead of a server. The app starts here until a TeslaMate API address is in place."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置示例数据，不需要服务器。在填好 TeslaMate API 地址之前，App 会一直停在这里。"
+          }
         }
       }
     },
@@ -77,6 +119,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
           }
         }
       }
@@ -88,6 +136,12 @@
             "state" : "translated",
             "value" : "Charge complete · %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电完成 · %@"
+          }
         }
       }
     },
@@ -97,6 +151,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging stopped · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电中断 · %@"
           }
         }
       }
@@ -108,6 +168,12 @@
             "state" : "translated",
             "value" : "Costs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "费用"
+          }
         }
       }
     },
@@ -117,6 +183,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Currency"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "货币"
           }
         }
       }
@@ -128,6 +200,12 @@
             "state" : "translated",
             "value" : "Demo mode"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "演示模式"
+          }
         }
       }
     },
@@ -137,6 +215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dog Mode"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "宠物模式"
           }
         }
       }
@@ -148,6 +232,12 @@
             "state" : "translated",
             "value" : "Donate"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打赏作者"
+          }
         }
       }
     },
@@ -157,6 +247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Doors open"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "车门未关"
           }
         }
       }
@@ -168,6 +264,12 @@
             "state" : "translated",
             "value" : "Driver present"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "驾驶员在座"
+          }
         }
       }
     },
@@ -177,6 +279,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drives that started or ended in the country, and the charges there."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在该国家/地区开始或结束的行程，以及当地的充电记录。"
           }
         }
       }
@@ -188,6 +296,12 @@
             "state" : "translated",
             "value" : "Elevation"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "海拔"
+          }
         }
       }
     },
@@ -197,6 +311,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Health check failed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "健康检查失败"
           }
         }
       }
@@ -208,6 +328,12 @@
             "state" : "translated",
             "value" : "If you feel like giving back"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果想支持一下作者"
+          }
         }
       }
     },
@@ -217,6 +343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Low tyre pressure"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "胎压过低"
           }
         }
       }
@@ -228,6 +360,12 @@
             "state" : "translated",
             "value" : "Median time between updates"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新间隔中位数"
+          }
         }
       }
     },
@@ -237,6 +375,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No data for %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 没有数据"
           }
         }
       }
@@ -248,6 +392,12 @@
             "state" : "translated",
             "value" : "Nothing here yet"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里还是空的"
+          }
         }
       }
     },
@@ -257,6 +407,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Per 100 km"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 100 km"
           }
         }
       }
@@ -268,6 +424,12 @@
             "state" : "translated",
             "value" : "Per 100 mi"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 100 mi"
+          }
         }
       }
     },
@@ -277,6 +439,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Per kWh"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 kWh"
           }
         }
       }
@@ -288,6 +456,12 @@
             "state" : "translated",
             "value" : "Plugged in · no power"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已插枪 · 未供电"
+          }
         }
       }
     },
@@ -297,6 +471,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plugged in · starts at %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已插枪 · %@ 开始"
           }
         }
       }
@@ -308,6 +488,12 @@
             "state" : "translated",
             "value" : "Preconditioning"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池预热"
+          }
         }
       }
     },
@@ -317,6 +503,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reduced battery range"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池续航受限"
           }
         }
       }
@@ -328,6 +520,12 @@
             "state" : "translated",
             "value" : "Replace"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "替换"
+          }
         }
       }
     },
@@ -337,6 +535,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Software update available"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有软件更新"
           }
         }
       }
@@ -348,6 +552,12 @@
             "state" : "translated",
             "value" : "Starting to charge"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始充电"
+          }
         }
       }
     },
@@ -357,6 +567,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Updated to %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已更新到 %@"
           }
         }
       }
@@ -368,6 +584,12 @@
             "state" : "translated",
             "value" : "Updates"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新"
+          }
         }
       }
     },
@@ -377,6 +599,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Windows open"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "车窗未关"
           }
         }
       }
@@ -388,6 +616,12 @@
             "state" : "translated",
             "value" : "≈ %@ at %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "约 %@（%@ 时）"
+          }
         }
       }
     },
@@ -397,6 +631,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✓ Connected – found %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 已连接 – 找到 %@"
           }
         }
       }
@@ -408,6 +648,12 @@
             "state" : "translated",
             "value" : "7 days"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 天"
+          }
         }
       }
     },
@@ -417,6 +663,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "30 days"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 天"
           }
         }
       }
@@ -428,6 +680,12 @@
             "state" : "translated",
             "value" : "90 days"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 天"
+          }
         }
       }
     },
@@ -437,6 +695,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A project by %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 %@ 开发"
           }
         }
       }
@@ -448,6 +712,12 @@
             "state" : "translated",
             "value" : "About EVLog"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于 EVLog"
+          }
         }
       }
     },
@@ -457,6 +727,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AC / DC"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "交流 / 直流"
           }
         }
       }
@@ -468,6 +744,12 @@
             "state" : "translated",
             "value" : "Added"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充入"
+          }
         }
       }
     },
@@ -477,6 +759,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部"
           }
         }
       }
@@ -488,6 +776,12 @@
             "state" : "translated",
             "value" : "All time"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部时间"
+          }
         }
       }
     },
@@ -497,6 +791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "API key"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API 密钥"
           }
         }
       }
@@ -508,6 +808,12 @@
             "state" : "translated",
             "value" : "Asleep"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休眠"
+          }
         }
       }
     },
@@ -517,6 +823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avg power"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均功率"
           }
         }
       }
@@ -528,6 +840,12 @@
             "state" : "translated",
             "value" : "Back"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "返回"
+          }
         }
       }
     },
@@ -537,6 +855,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池"
           }
         }
       }
@@ -548,6 +872,12 @@
             "state" : "translated",
             "value" : "Battery (%)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电量（%）"
+          }
         }
       }
     },
@@ -557,6 +887,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery health"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池健康"
           }
         }
       }
@@ -568,6 +904,12 @@
             "state" : "translated",
             "value" : "Battery heater"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池加热"
+          }
         }
       }
     },
@@ -577,6 +919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "By day"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按天"
           }
         }
       }
@@ -588,6 +936,12 @@
             "state" : "translated",
             "value" : "By month"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按月"
+          }
         }
       }
     },
@@ -597,6 +951,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Capacity now"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前容量"
           }
         }
       }
@@ -608,6 +968,12 @@
             "state" : "translated",
             "value" : "Capacity when new"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新车容量"
+          }
         }
       }
     },
@@ -617,6 +983,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Car"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "车辆"
           }
         }
       }
@@ -628,6 +1000,12 @@
             "state" : "translated",
             "value" : "Charge"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电"
+          }
         }
       }
     },
@@ -637,6 +1015,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charge curve"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电曲线"
           }
         }
       }
@@ -648,6 +1032,12 @@
             "state" : "translated",
             "value" : "Charge time"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电时长"
+          }
         }
       }
     },
@@ -657,6 +1047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charges"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电"
           }
         }
       }
@@ -668,6 +1064,12 @@
             "state" : "translated",
             "value" : "Charging"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电中"
+          }
         }
       }
     },
@@ -677,6 +1079,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging costs TeslaMate lacks"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TeslaMate 缺失的充电费用"
           }
         }
       }
@@ -688,6 +1096,12 @@
             "state" : "translated",
             "value" : "Charging statistics"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电统计"
+          }
         }
       }
     },
@@ -697,6 +1111,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose a longer period above."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在上方选择更长的时间范围。"
           }
         }
       }
@@ -708,6 +1128,12 @@
             "state" : "translated",
             "value" : "Climate"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空调"
+          }
         }
       }
     },
@@ -717,6 +1143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Consumption"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "能耗"
           }
         }
       }
@@ -728,6 +1160,12 @@
             "state" : "translated",
             "value" : "Cost"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "费用"
+          }
         }
       }
     },
@@ -737,6 +1175,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't load tracks from Grafana (%@)."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法从 Grafana 加载轨迹（%@）。"
           }
         }
       }
@@ -748,6 +1192,12 @@
             "state" : "translated",
             "value" : "Counted from where each drive ended."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按每次行程的终点统计。"
+          }
         }
       }
     },
@@ -757,6 +1207,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Countries"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "国家/地区"
           }
         }
       }
@@ -768,6 +1224,12 @@
             "state" : "translated",
             "value" : "Custom range"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义范围"
+          }
         }
       }
     },
@@ -777,6 +1239,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom range…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义范围…"
           }
         }
       }
@@ -788,6 +1256,12 @@
             "state" : "translated",
             "value" : "Data sources"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据来源"
+          }
         }
       }
     },
@@ -797,6 +1271,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Degradation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池衰减"
           }
         }
       }
@@ -808,6 +1288,12 @@
             "state" : "translated",
             "value" : "Distance"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距离"
+          }
         }
       }
     },
@@ -817,6 +1303,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Done"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
           }
         }
       }
@@ -828,6 +1320,12 @@
             "state" : "translated",
             "value" : "Drag the chart to follow the drive"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖动图表回看行程"
+          }
         }
       }
     },
@@ -837,6 +1335,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drag the chart to read the charge"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖动图表查看充电过程"
           }
         }
       }
@@ -848,6 +1352,12 @@
             "state" : "translated",
             "value" : "Drives"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行程"
+          }
         }
       }
     },
@@ -857,6 +1367,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drives, charges and vehicle data"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行程、充电和车辆数据"
           }
         }
       }
@@ -868,6 +1384,12 @@
             "state" : "translated",
             "value" : "Driving"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行驶中"
+          }
         }
       }
     },
@@ -877,6 +1399,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duration"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时长"
           }
         }
       }
@@ -888,6 +1416,12 @@
             "state" : "translated",
             "value" : "Efficiency"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "效率"
+          }
         }
       }
     },
@@ -897,6 +1431,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Energy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "能量"
           }
         }
       }
@@ -908,6 +1448,12 @@
             "state" : "translated",
             "value" : "Energy (net)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "能量（净）"
+          }
         }
       }
     },
@@ -917,6 +1463,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Energy added per weekday and hour, across every charge."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有充电按星期几和小时统计的充入电量。"
           }
         }
       }
@@ -928,6 +1480,12 @@
             "state" : "translated",
             "value" : "Estimated from the rated range at the end of each charge, scaled to a full battery: when new is the strongest of those readings, now is the average of your last 20 charges. Cell chemistry and temperature make single readings noisy."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "根据每次充电结束时的额定续航，折算到满电来估算：新车容量取这些读数中最高的一个，当前容量取最近 20 次充电的平均值。电芯特性和温度会让单次读数波动较大。"
+          }
         }
       }
     },
@@ -937,6 +1495,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estimated range"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "估算续航"
           }
         }
       }
@@ -948,6 +1512,12 @@
             "state" : "translated",
             "value" : "Falling asleep"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进入休眠"
+          }
         }
       }
     },
@@ -957,6 +1527,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finish"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束"
           }
         }
       }
@@ -968,6 +1544,12 @@
             "state" : "translated",
             "value" : "Free and open source"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费且开源"
+          }
         }
       }
     },
@@ -977,6 +1559,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "From"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从"
           }
         }
       }
@@ -988,6 +1576,12 @@
             "state" : "translated",
             "value" : "From %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 %@"
+          }
         }
       }
     },
@@ -997,6 +1591,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装"
           }
         }
       }
@@ -1008,6 +1608,12 @@
             "state" : "translated",
             "value" : "Installed versions"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装版本"
+          }
         }
       }
     },
@@ -1017,6 +1623,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid server URL. Check the settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器地址无效，请检查设置。"
           }
         }
       }
@@ -1028,6 +1640,12 @@
             "state" : "translated",
             "value" : "Last month"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上个月"
+          }
         }
       }
     },
@@ -1037,6 +1655,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last week"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上周"
           }
         }
       }
@@ -1048,6 +1672,12 @@
             "state" : "translated",
             "value" : "License"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开源协议"
+          }
         }
       }
     },
@@ -1057,6 +1687,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Loading tracks…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载轨迹…"
           }
         }
       }
@@ -1068,6 +1704,12 @@
             "state" : "translated",
             "value" : "Location"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置"
+          }
         }
       }
     },
@@ -1077,6 +1719,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lock"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "锁车"
           }
         }
       }
@@ -1088,6 +1736,12 @@
             "state" : "translated",
             "value" : "Locked"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已锁车"
+          }
         }
       }
     },
@@ -1097,6 +1751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Map style"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地图样式"
           }
         }
       }
@@ -1108,6 +1768,12 @@
             "state" : "translated",
             "value" : "Max / avg"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最大 / 平均"
+          }
         }
       }
     },
@@ -1117,6 +1783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Max power"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最大功率"
           }
         }
       }
@@ -1128,6 +1800,12 @@
             "state" : "translated",
             "value" : "Month"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月"
+          }
         }
       }
     },
@@ -1137,6 +1815,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Most energy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充入最多"
           }
         }
       }
@@ -1148,6 +1832,12 @@
             "state" : "translated",
             "value" : "Most expensive"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "花费最高"
+          }
         }
       }
     },
@@ -1157,6 +1847,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No activity yet"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无动态"
           }
         }
       }
@@ -1168,6 +1864,12 @@
             "state" : "translated",
             "value" : "No ads, no tracking, nothing to buy"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无广告、无追踪、没有内购"
+          }
         }
       }
     },
@@ -1177,6 +1879,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No connection to the server"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法连接到服务器"
           }
         }
       }
@@ -1188,6 +1896,12 @@
             "state" : "translated",
             "value" : "No countries yet"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有国家/地区记录"
+          }
         }
       }
     },
@@ -1197,6 +1911,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No drives this day"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这一天没有行程"
           }
         }
       }
@@ -1208,6 +1928,12 @@
             "state" : "translated",
             "value" : "No drives yet"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有行程"
+          }
         }
       }
     },
@@ -1217,6 +1943,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Grafana address yet. Add it under Settings to see this."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有填 Grafana 地址。在「设置」里添加后即可查看。"
           }
         }
       }
@@ -1228,6 +1960,12 @@
             "state" : "translated",
             "value" : "No position yet"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无位置"
+          }
         }
       }
     },
@@ -1237,6 +1975,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No server yet. Add your TeslaMate API address under Settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有配置服务器。请在「设置」里填写 TeslaMate API 地址。"
           }
         }
       }
@@ -1248,6 +1992,12 @@
             "state" : "translated",
             "value" : "No tracks in this period."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该时间段内没有轨迹。"
+          }
         }
       }
     },
@@ -1257,6 +2007,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not enough charging data yet"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电数据还不够"
           }
         }
       }
@@ -1268,6 +2024,12 @@
             "state" : "translated",
             "value" : "Nothing in this period"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该时间段内没有数据"
+          }
         }
       }
     },
@@ -1277,6 +2039,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Off"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关"
           }
         }
       }
@@ -1288,6 +2056,12 @@
             "state" : "translated",
             "value" : "Offline"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线"
+          }
         }
       }
     },
@@ -1297,6 +2071,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Older entries are outside the period."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更早的记录不在该时间段内。"
           }
         }
       }
@@ -1308,6 +2088,12 @@
             "state" : "translated",
             "value" : "On"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开"
+          }
         }
       }
     },
@@ -1317,6 +2103,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On during the drive"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行程中开启"
           }
         }
       }
@@ -1328,6 +2120,12 @@
             "state" : "translated",
             "value" : "Online"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在线"
+          }
         }
       }
     },
@@ -1337,6 +2135,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open source"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开源"
           }
         }
       }
@@ -1348,6 +2152,12 @@
             "state" : "translated",
             "value" : "Optional. Fills in charging costs that TeslaMate lacks, for example Superchargers. The key is stored on this device only."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可选。用于补全 TeslaMate 没有记录的充电费用，例如超充。密钥只保存在本机。"
+          }
         }
       }
     },
@@ -1357,6 +2167,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Outside / inside"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "车外 / 车内"
           }
         }
       }
@@ -1368,6 +2184,12 @@
             "state" : "translated",
             "value" : "Outside temp"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "车外温度"
+          }
         }
       }
     },
@@ -1377,6 +2199,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Overview"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "总览"
           }
         }
       }
@@ -1388,6 +2216,12 @@
             "state" : "translated",
             "value" : "Parked %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已停放 %@"
+          }
         }
       }
     },
@@ -1397,6 +2231,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Period"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间范围"
           }
         }
       }
@@ -1408,6 +2248,12 @@
             "state" : "translated",
             "value" : "Plugged in"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已插枪"
+          }
         }
       }
     },
@@ -1417,6 +2263,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Power (kW)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "功率（kW）"
           }
         }
       }
@@ -1428,6 +2280,12 @@
             "state" : "translated",
             "value" : "Range"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "续航"
+          }
         }
       }
     },
@@ -1437,6 +2295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Range at 100 %"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "满电续航"
           }
         }
       }
@@ -1448,6 +2312,12 @@
             "state" : "translated",
             "value" : "Range lost"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "续航损失"
+          }
         }
       }
     },
@@ -1457,6 +2327,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Realistic reach"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实际可达"
           }
         }
       }
@@ -1468,6 +2344,12 @@
             "state" : "translated",
             "value" : "Regen"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "动能回收"
+          }
         }
       }
     },
@@ -1477,6 +2359,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Release notes come from notateslaapp.com, which is not affiliated with Tesla or TeslaMate."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新说明来自 notateslaapp.com，该网站与 Tesla 及 TeslaMate 均无关联。"
           }
         }
       }
@@ -1488,6 +2376,12 @@
             "state" : "translated",
             "value" : "Roads are not straight. Your own drives cover %@ km of road per kilometre in a straight line, so the filled circle is the honest one."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "道路不是直线。按你自己的行程，每直线 1 公里实际要开 %@ 公里，所以实心圆才是真实可达范围。"
+          }
         }
       }
     },
@@ -1497,6 +2391,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
           }
         }
       }
@@ -1508,6 +2408,12 @@
             "state" : "translated",
             "value" : "Show"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示"
+          }
         }
       }
     },
@@ -1517,6 +2423,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Software"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "软件"
           }
         }
       }
@@ -1528,6 +2440,12 @@
             "state" : "translated",
             "value" : "Software release notes"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "软件更新说明"
+          }
         }
       }
     },
@@ -1537,6 +2455,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Software Update available (%@)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有软件更新（%@）"
           }
         }
       }
@@ -1548,6 +2472,12 @@
             "state" : "translated",
             "value" : "Some of the data could not be loaded."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分数据加载失败。"
+          }
         }
       }
     },
@@ -1557,6 +2487,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Source code"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "源代码"
           }
         }
       }
@@ -1568,6 +2504,12 @@
             "state" : "translated",
             "value" : "Speed"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "速度"
+          }
         }
       }
     },
@@ -1577,6 +2519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始"
           }
         }
       }
@@ -1588,6 +2536,12 @@
             "state" : "translated",
             "value" : "Statistics"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "统计"
+          }
         }
       }
     },
@@ -1597,6 +2551,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Straight line"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直线距离"
           }
         }
       }
@@ -1608,6 +2568,12 @@
             "state" : "translated",
             "value" : "Supercharger locations"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "超充站位置"
+          }
         }
       }
     },
@@ -1617,6 +2583,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Test connection"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试连接"
           }
         }
       }
@@ -1628,6 +2600,12 @@
             "state" : "translated",
             "value" : "That is everything TeslaMate has recorded."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这就是 TeslaMate 记录的全部内容。"
+          }
         }
       }
     },
@@ -1637,6 +2615,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The code is there to read, build and change."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "代码公开，可阅读、可编译、可修改。"
           }
         }
       }
@@ -1648,6 +2632,12 @@
             "state" : "translated",
             "value" : "The server returned an error (HTTP %lld)."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器返回错误（HTTP %lld）。"
+          }
         }
       }
     },
@@ -1657,6 +2647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The teslamateapi container. Drives, charges and vehicle status all come from here."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "teslamateapi 容器。行程、充电和车辆状态都来自这里。"
           }
         }
       }
@@ -1668,6 +2664,12 @@
             "state" : "translated",
             "value" : "This year"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今年"
+          }
         }
       }
     },
@@ -1677,6 +2679,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Time"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间"
           }
         }
       }
@@ -1688,6 +2696,12 @@
             "state" : "translated",
             "value" : "Timeline"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间线"
+          }
         }
       }
     },
@@ -1697,6 +2711,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "至"
           }
         }
       }
@@ -1708,6 +2728,12 @@
             "state" : "translated",
             "value" : "Today"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天"
+          }
         }
       }
     },
@@ -1717,6 +2743,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合计"
           }
         }
       }
@@ -1728,6 +2760,12 @@
             "state" : "translated",
             "value" : "Try again"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
         }
       }
     },
@@ -1737,6 +2775,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
           }
         }
       }
@@ -1748,6 +2792,12 @@
             "state" : "translated",
             "value" : "Unknown location"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知地点"
+          }
         }
       }
     },
@@ -1757,6 +2807,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unlocked"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未锁车"
           }
         }
       }
@@ -1768,6 +2824,12 @@
             "state" : "translated",
             "value" : "Update available"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有更新"
+          }
         }
       }
     },
@@ -1777,6 +2839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Updating"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在升级"
           }
         }
       }
@@ -1788,6 +2856,12 @@
             "state" : "translated",
             "value" : "Used"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已用"
+          }
         }
       }
     },
@@ -1797,6 +2871,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Used for editing charge costs."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于编辑充电费用。"
           }
         }
       }
@@ -1808,6 +2888,12 @@
             "state" : "translated",
             "value" : "Used for the visited places map."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于「到访地点」地图。"
+          }
         }
       }
     },
@@ -1817,6 +2903,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visited"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到访"
           }
         }
       }
@@ -1828,6 +2920,12 @@
             "state" : "translated",
             "value" : "Week"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "周"
+          }
         }
       }
     },
@@ -1837,6 +2935,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When you charge"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的充电时间"
           }
         }
       }
@@ -1848,6 +2952,12 @@
             "state" : "translated",
             "value" : "Year"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年"
+          }
         }
       }
     },
@@ -1857,6 +2967,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yesterday"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "昨天"
           }
         }
       }
@@ -1868,6 +2984,12 @@
             "state" : "translated",
             "value" : "Add a Tessie API key in Settings and the car itself fills in the rest."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「设置」里填入 Tessie API 密钥，其余由车辆自己补齐。"
+          }
         }
       }
     },
@@ -1877,6 +2999,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tessie didn't answer, so this is what TeslaMate knows."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tessie 没有响应，这里显示的是 TeslaMate 已有的数据。"
           }
         }
       }
@@ -1888,6 +3016,12 @@
             "state" : "translated",
             "value" : "From the car, via Tessie."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "来自车辆，经由 Tessie。"
+          }
         }
       }
     },
@@ -1897,6 +3031,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Units"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单位"
           }
         }
       }
@@ -1908,6 +3048,12 @@
             "state" : "translated",
             "value" : "Metric"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "公制"
+          }
         }
       }
     },
@@ -1917,6 +3063,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Imperial"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "英制"
           }
         }
       }
@@ -1928,6 +3080,12 @@
             "state" : "translated",
             "value" : "The region sets the defaults. TeslaMate's data is metric and its costs carry no currency; this only changes what is shown."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认值由所在地区决定。TeslaMate 的数据是公制，费用本身不带货币；这里只影响显示方式。"
+          }
         }
       }
     },
@@ -1937,6 +3095,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Temperature and consumption"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "温度与能耗"
           }
         }
       }
@@ -1948,6 +3112,12 @@
             "state" : "translated",
             "value" : "No temperature data"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有温度数据"
+          }
         }
       }
     },
@@ -1957,6 +3127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Average"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均"
           }
         }
       }
@@ -1968,6 +3144,12 @@
             "state" : "translated",
             "value" : "Coldest fifth"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最冷的五分之一"
+          }
         }
       }
     },
@@ -1977,6 +3159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Warmest fifth"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最暖的五分之一"
           }
         }
       }
@@ -1988,6 +3176,12 @@
             "state" : "translated",
             "value" : "Difference"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "差值"
+          }
         }
       }
     },
@@ -1997,6 +3191,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The fifth of the distance driven in the coldest weather against the fifth driven in the warmest."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最冷天气下行驶的五分之一里程，对比最暖天气下的五分之一。"
           }
         }
       }
@@ -2008,6 +3208,12 @@
             "state" : "translated",
             "value" : "How much of the driving happened at each temperature."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各温度区间下的行驶里程占比。"
+          }
         }
       }
     },
@@ -2017,6 +3223,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按车外温度分组的净能耗，只统计 1 公里以上的行程；少于三次行程的分组不显示。虚线表示平均值。"
           }
         }
       }
@@ -2028,6 +3240,12 @@
             "state" : "translated",
             "value" : "Destinations"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常去地点"
+          }
         }
       }
     },
@@ -2037,6 +3255,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Most visited"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到访最多"
           }
         }
       }
@@ -2048,6 +3272,12 @@
             "state" : "translated",
             "value" : "Most distance"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "里程最多"
+          }
         }
       }
     },
@@ -2057,6 +3287,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weekdays"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作日"
           }
         }
       }
@@ -2068,6 +3304,12 @@
             "state" : "translated",
             "value" : "Weekend"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "周末"
+          }
         }
       }
     },
@@ -2077,6 +3319,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weekdays / Weekend"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作日 / 周末"
           }
         }
       }
@@ -2088,6 +3336,12 @@
             "state" : "translated",
             "value" : "When you drive"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的出行时间"
+          }
         }
       }
     },
@@ -2097,6 +3351,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Distance driven per weekday and hour, across every drive."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有行程按星期几和小时统计的行驶距离。"
           }
         }
       }
@@ -2108,6 +3368,12 @@
             "state" : "translated",
             "value" : "Capacity over mileage"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "容量随里程变化"
+          }
         }
       }
     },
@@ -2117,6 +3383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "One reading per finished charge: the rated range at its end, scaled to a full battery and turned into capacity. The line is the median of the nearest readings, so a slope shows through the noise."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每次充电结束后取一个读数：结束时的额定续航，折算到满电并换算成容量。曲线是邻近读数的中位数，这样即使数据有波动也能看出趋势。"
           }
         }
       }
@@ -2128,6 +3400,12 @@
             "state" : "translated",
             "value" : "Above 80 %"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "80 % 以上"
+          }
         }
       }
     },
@@ -2137,6 +3415,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Below 20 %"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 % 以下"
           }
         }
       }
@@ -2148,6 +3432,12 @@
             "state" : "translated",
             "value" : "Time at each charge level"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各电量区间停留时间"
+          }
         }
       }
     },
@@ -2157,6 +3447,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charge level"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电量"
           }
         }
       }
@@ -2168,6 +3464,12 @@
             "state" : "translated",
             "value" : "Share of time"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间占比"
+          }
         }
       }
     },
@@ -2177,6 +3479,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Every stored level counts until the next reading, so a parked car counts for the level it sat at. Orange is the time outside the twenty to eighty band."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每段停留时间都按当时记录的电量计算，所以停放中的车也计入它停放时的电量。橙色表示电量在 20 %–80 % 区间之外的时间。"
           }
         }
       }
@@ -2188,6 +3496,12 @@
             "state" : "translated",
             "value" : "Custom"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义"
+          }
         }
       }
     },
@@ -2197,6 +3511,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "What set the pace"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是什么限制了充电速度"
           }
         }
       }
@@ -2208,6 +3528,12 @@
             "state" : "translated",
             "value" : "The charger offered %lld A on %@ and the car drew %lld A"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电桩提供了 %lld A（%@），车辆实际取用 %lld A"
+          }
         }
       }
     },
@@ -2217,6 +3543,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "one phase"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单相"
           }
         }
       }
@@ -2228,6 +3560,12 @@
             "state" : "translated",
             "value" : "two phases"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "两相"
+          }
         }
       }
     },
@@ -2237,6 +3575,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "three phases"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "三相"
           }
         }
       }
@@ -2248,6 +3592,12 @@
             "state" : "translated",
             "value" : "The battery started cold"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池起始温度偏低"
+          }
         }
       }
     },
@@ -2257,6 +3607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ usable of %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用 %@（共 %@）"
           }
         }
       }
@@ -2268,6 +3624,12 @@
             "state" : "translated",
             "value" : "The battery heater ran for %@ of %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电池加热运行了 %@，共 %@"
+          }
         }
       }
     },
@@ -2277,6 +3639,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The power took %@ to climb to %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "功率用了 %@ 才升到 %@"
           }
         }
       }
@@ -2288,6 +3656,12 @@
             "state" : "translated",
             "value" : "The charger gave too little power to heat the battery"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电桩提供的功率不足以加热电池"
+          }
         }
       }
     },
@@ -2297,6 +3671,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Started at %@, where the car itself holds the power back"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从 %@ 开始，此时车辆自身会限制功率"
           }
         }
       }
@@ -2308,6 +3688,12 @@
             "state" : "translated",
             "value" : "Charging stopped once and started again"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电中断一次后重新开始"
+          }
         }
       }
     },
@@ -2317,6 +3703,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging stopped %lld times and started again"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "充电中断 %lld 次后重新开始"
           }
         }
       }
@@ -2328,6 +3720,12 @@
             "state" : "translated",
             "value" : "%@ without charging"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停充 %@"
+          }
         }
       }
     },
@@ -2338,6 +3736,12 @@
             "state" : "translated",
             "value" : "Nothing stands out in the log"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "记录里没有特别之处"
+          }
         }
       }
     },
@@ -2347,6 +3751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The server can't be reached from here. Connect to its network or your VPN, then try again."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从这里连不上服务器。请连接到它所在的网络或 VPN 后重试。"
           }
         }
       }
