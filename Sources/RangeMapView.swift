@@ -68,7 +68,10 @@ struct RangeMapView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                Text("Roads are not straight. Your own drives cover \(Fmt.number(detour)) km of road per kilometre in a straight line, so the filled circle is the honest one.")
+                // a ratio, so the figure is the same in miles
+                Text(verbatim: Units.miles
+                    ? String(localized: "Roads are not straight. Your own drives cover \(Fmt.number(detour)) mi of road per mile in a straight line, so the filled circle is the honest one.")
+                    : String(localized: "Roads are not straight. Your own drives cover \(Fmt.number(detour)) km of road per kilometre in a straight line, so the filled circle is the honest one."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

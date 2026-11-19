@@ -2370,6 +2370,26 @@
           }
         }
       }
+    },
+    "Net consumption for every drive of at least 0.6 miles, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Net consumption for every drive of at least 0.6 miles, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average."
+          }
+        }
+      }
+    },
+    "Roads are not straight. Your own drives cover %@ mi of road per mile in a straight line, so the filled circle is the honest one." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roads are not straight. Your own drives cover %@ mi of road per mile in a straight line, so the filled circle is the honest one."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

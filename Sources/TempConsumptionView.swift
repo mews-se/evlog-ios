@@ -140,7 +140,9 @@ struct TempConsumptionView: View {
                         Text(verbatim: Self.period(of: samples))
                     }
                 } footer: {
-                    Text("Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average.")
+                    Text(verbatim: Units.miles
+                        ? String(localized: "Net consumption for every drive of at least 0.6 miles, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average.")
+                        : String(localized: "Net consumption for every drive of at least a kilometre, grouped by outside temperature. Groups with fewer than three drives are hidden. The dashed line marks the average."))
                 }
 
                 if let cold, let warm, warm.whPerKm > 0 {
