@@ -4,6 +4,8 @@ import SwiftUI
 struct EVLogApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
+    init() { Pref.splitUnits() }
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -23,12 +25,25 @@ enum Pref {
     static let teslamate = (key: "teslamateURL", value: "")
     static let tessieToken = (key: "tessieToken", value: "")
     static let tessieTokenVerified = (key: "tessieTokenVerified", value: false)
-    static let units = (key: "units", value: Locale.current.measurementSystem == .metric ? "metric" : "imperial")
+    // the uk measures in miles but not in fahrenheit, so the degrees follow the
+    // phone's own temperature setting rather than the measurement system
+    static let distanceUnit = (key: "distanceUnit", value: Locale.current.measurementSystem == .metric ? "km" : "mi")
+    static let temperatureUnit = (key: "temperatureUnit", value: UnitTemperature(forLocale: .current) == .fahrenheit ? "F" : "C")
     static let currency = (key: "currency", value: Locale.current.currency?.identifier ?? "USD")
     static let carID = (key: "carID", value: 1)
     static let timelinePeriod = (key: "timelinePeriod", value: TimelinePeriod.month.rawValue)
     static let demoMode = (key: "demoMode", value: false)
     static let visitedMapStyle = (key: "visitedMapStyle", value: VisitedView.MapStylePick.standard.rawValue)
+
+    // up to 3.5 one setting covered both. a choice made there carries over; with none
+    // stored the defaults above apply, as on a new install
+    static func splitUnits() {
+        let defaults = UserDefaults.standard
+        guard let old = defaults.string(forKey: "units") else { return }
+        defaults.set(old == "imperial" ? "mi" : "km", forKey: distanceUnit.key)
+        defaults.set(old == "imperial" ? "F" : "C", forKey: temperatureUnit.key)
+        defaults.removeObject(forKey: "units")
+    }
 }
 
 struct RootView: View {
@@ -37,7 +52,8 @@ struct RootView: View {
 
     // formatted strings read the choice outside SwiftUI's view state, so a change
     // rebuilds the tree the way the language picker used to
-    @AppStorage(Pref.units.key) private var units = Pref.units.value
+    @AppStorage(Pref.distanceUnit.key) private var distanceUnit = Pref.distanceUnit.value
+    @AppStorage(Pref.temperatureUnit.key) private var temperatureUnit = Pref.temperatureUnit.value
     @AppStorage(Pref.currency.key) private var currency = Pref.currency.value
     @AppStorage(Pref.demoMode.key) private var demoMode = Pref.demoMode.value
 
@@ -70,7 +86,7 @@ struct RootView: View {
             statsPath = NavigationPath()
         }
         // flipping units, currency or demo rebuilds the tree so every view reloads its data
-        .id("\(units)|\(currency)|\(demoMode)|\(serverURL.isEmpty)")
+        .id("\(distanceUnit)|\(temperatureUnit)|\(currency)|\(demoMode)|\(serverURL.isEmpty)")
         .environment(\.locale, .app)
     }
 }

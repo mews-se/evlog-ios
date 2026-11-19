@@ -133,7 +133,7 @@ struct CapacityChart: View {
                 }
             }
             .chartXAxisLabel(alignment: .trailing) {
-                Text(verbatim: Units.imperial ? "mi" : "km")
+                Text(verbatim: Units.miles ? "mi" : "km")
             }
             .frame(height: 220)
             Text("One reading per finished charge: the rated range at its end, scaled to a full battery and turned into capacity. The line is the median of the nearest readings, so a slope shows through the noise.")

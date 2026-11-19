@@ -71,8 +71,8 @@ and consumption: consumption grouped by outside temperature, with the coldest fi
 set against the warmest.
 
 Costs are shown in the region's currency, or one you pick in Settings. Units work the same way,
-metric or imperial, and with more than one car in TeslaMate a picker there chooses which one the
-app shows.
+with distance and temperature chosen apart, so miles can go with °C. With more than one car in
+TeslaMate a picker there chooses which one the app shows.
 
 **Demo mode**: with no server configured the app starts in three weeks of built-in example data,
 so every screen above can be tried before anything is set up. A switch in Settings takes you back

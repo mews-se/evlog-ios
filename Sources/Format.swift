@@ -5,22 +5,27 @@ import SwiftUI
 enum Units {
     static let kmPerMile = 1.609344
 
-    static var imperial: Bool {
-        (UserDefaults.standard.string(forKey: Pref.units.key) ?? Pref.units.value) == "imperial"
+    // speed, altitude and consumption go with the distance
+    static var miles: Bool {
+        (UserDefaults.standard.string(forKey: Pref.distanceUnit.key) ?? Pref.distanceUnit.value) == "mi"
     }
 
-    static var speedSuffix: String { imperial ? "mph" : "km/h" }
+    static var fahrenheit: Bool {
+        (UserDefaults.standard.string(forKey: Pref.temperatureUnit.key) ?? Pref.temperatureUnit.value) == "F"
+    }
+
+    static var speedSuffix: String { miles ? "mph" : "km/h" }
 
     static func distance(_ km: Double) -> Double {
-        imperial ? km / kmPerMile : km
+        miles ? km / kmPerMile : km
     }
 
     static func temperature(_ celsius: Double) -> Double {
-        imperial ? celsius * 9 / 5 + 32 : celsius
+        fahrenheit ? celsius * 9 / 5 + 32 : celsius
     }
 
     static func altitude(_ metres: Double) -> Double {
-        imperial ? metres * 3.28084 : metres
+        miles ? metres * 3.28084 : metres
     }
 }
 
@@ -45,7 +50,7 @@ enum Fmt {
     static func distance(_ value: Double?, decimals: Int = 1) -> String {
         guard let value else { return "–" }
         return Units.distance(value).formatted(.number.precision(.fractionLength(decimals)))
-            + (Units.imperial ? " mi" : " km")
+            + (Units.miles ? " mi" : " km")
     }
 
     static func speed(_ kmh: Double?) -> String {
@@ -78,7 +83,7 @@ enum Fmt {
 
     static func altitude(_ metres: Double?) -> String {
         guard let metres else { return "–" }
-        return "\(Int(Units.altitude(metres).rounded())) " + (Units.imperial ? "ft" : "m")
+        return "\(Int(Units.altitude(metres).rounded())) " + (Units.miles ? "ft" : "m")
     }
 
     static func temp(_ value: Double?) -> String {
@@ -94,9 +99,9 @@ enum Fmt {
 
     static func consumption(_ whPerKm: Double?) -> String {
         guard let whPerKm else { return "–" }
-        let value = Units.imperial ? whPerKm * Units.kmPerMile : whPerKm
+        let value = Units.miles ? whPerKm * Units.kmPerMile : whPerKm
         return value.formatted(.number.precision(.fractionLength(0)))
-            + (Units.imperial ? " Wh/mi" : " Wh/km")
+            + (Units.miles ? " Wh/mi" : " Wh/km")
     }
 
     // takes a 0-1 ratio, unlike pct which takes the percentage itself

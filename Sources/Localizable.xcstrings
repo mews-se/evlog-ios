@@ -1891,36 +1891,6 @@
         }
       }
     },
-    "Units" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Units"
-          }
-        }
-      }
-    },
-    "Metric" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metric"
-          }
-        }
-      }
-    },
-    "Imperial" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Imperial"
-          }
-        }
-      }
-    },
     "The region sets the defaults. TeslaMate's data is metric and its costs carry no currency; this only changes what is shown." : {
       "localizations" : {
         "en" : {
@@ -2347,6 +2317,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The server can't be reached from here. Connect to its network or your VPN, then try again."
+          }
+        }
+      }
+    },
+    "Temperature" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature"
+          }
+        }
+      }
+    },
+    "Kilometres" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilometres"
+          }
+        }
+      }
+    },
+    "Miles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miles"
+          }
+        }
+      }
+    },
+    "Celsius" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celsius"
+          }
+        }
+      }
+    },
+    "Fahrenheit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fahrenheit"
           }
         }
       }

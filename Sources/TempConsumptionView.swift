@@ -42,7 +42,7 @@ struct TempConsumptionView: View {
 
     // buckets live in display units so the bands land on even numbers either way
     static func buckets(for samples: [Sample]) -> [Bucket] {
-        let width: Double = Units.imperial ? 5 : 2
+        let width: Double = Units.fahrenheit ? 5 : 2
         var byLower: [Double: Bucket] = [:]
         for sample in samples {
             let lower = (Units.temperature(sample.celsius) / width).rounded(.down) * width
@@ -105,7 +105,7 @@ struct TempConsumptionView: View {
     }
 
     private func plotted(_ whPerKm: Double) -> Double {
-        Units.imperial ? whPerKm * Units.kmPerMile : whPerKm
+        Units.miles ? whPerKm * Units.kmPerMile : whPerKm
     }
 
     private func span(_ fifth: Fifth) -> String {
@@ -203,7 +203,7 @@ struct TempConsumptionView: View {
             AxisMarks(values: .stride(by: 25.0))
         }
         .chartYAxisLabel(alignment: .trailing) {
-            Text(verbatim: Units.imperial ? "Wh/mi" : "Wh/km")
+            Text(verbatim: Units.miles ? "Wh/mi" : "Wh/km")
         }
     }
 
@@ -220,7 +220,7 @@ struct TempConsumptionView: View {
         }
         .chartXAxis { temperatureAxis }
         .chartYAxisLabel(alignment: .trailing) {
-            Text(verbatim: Units.imperial ? "mi" : "km")
+            Text(verbatim: Units.miles ? "mi" : "km")
         }
     }
 

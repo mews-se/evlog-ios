@@ -113,7 +113,7 @@ struct ChargingStatsView: View {
                             .monospacedDigit()
                     }
                     if let costPer100 {
-                        LabeledContent(Units.imperial ? String(localized: "Per 100 mi") : String(localized: "Per 100 km")) {
+                        LabeledContent(Units.miles ? String(localized: "Per 100 mi") : String(localized: "Per 100 km")) {
                             Text(verbatim: Fmt.cost(costPer100, decimals: 2))
                                 .monospacedDigit()
                         }

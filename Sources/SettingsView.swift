@@ -7,7 +7,8 @@ struct SettingsView: View {
     @AppStorage(Pref.carID.key) private var carID = Pref.carID.value
     @AppStorage(Pref.tessieToken.key) private var tessieToken = Pref.tessieToken.value
     @AppStorage(Pref.tessieTokenVerified.key) private var tessieTokenVerified = Pref.tessieTokenVerified.value
-    @AppStorage(Pref.units.key) private var units = Pref.units.value
+    @AppStorage(Pref.distanceUnit.key) private var distanceUnit = Pref.distanceUnit.value
+    @AppStorage(Pref.temperatureUnit.key) private var temperatureUnit = Pref.temperatureUnit.value
     @AppStorage(Pref.currency.key) private var currency = Pref.currency.value
     @AppStorage(Pref.demoMode.key) private var demoMode = Pref.demoMode.value
 
@@ -132,9 +133,13 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Picker("Units", selection: $units) {
-                        Text("Metric").tag("metric")
-                        Text("Imperial").tag("imperial")
+                    Picker("Distance", selection: $distanceUnit) {
+                        Text("Kilometres").tag("km")
+                        Text("Miles").tag("mi")
+                    }
+                    Picker("Temperature", selection: $temperatureUnit) {
+                        Text("Celsius").tag("C")
+                        Text("Fahrenheit").tag("F")
                     }
                     // a hundred and sixty currencies are a list to push, not a menu to unfold
                     Picker("Currency", selection: $currency) {
