@@ -364,6 +364,8 @@ struct PeriodDetailView: View {
     let charges: [Charge]
     let tessieCosts: [Int: Double]
     var stillPlugged: Set<Int> = []
+    // the calendar unit the period is one of, nil for a picked span
+    var unit: Calendar.Component?
 
     private var buckets: [StatBucket] {
         StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged,
@@ -374,12 +376,45 @@ struct PeriodDetailView: View {
         StatBucket.sum(buckets, period: interval?.start ?? .now)
     }
 
+    private var comparison: PeriodComparison? {
+        guard let interval else { return nil }
+        return PeriodComparison(interval: interval, unit: unit, drives: drives, charges: charges,
+                                tessieCosts: tessieCosts, stillPlugged: stillPlugged)
+    }
+
     var body: some View {
         List {
             Section {
                 StatBucketRow(bucket: total, title: title)
             } header: {
                 Text("Total")
+            }
+            if let comparison {
+                Section {
+                    Grid(alignment: .trailing, horizontalSpacing: 16, verticalSpacing: 8) {
+                        GridRow {
+                            Color.clear
+                                .gridCellUnsizedAxes([.horizontal, .vertical])
+                            ForEach(comparison.columns) { column in
+                                Text(verbatim: column.title)
+                            }
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                        change(String(localized: "Distance"), comparison) { $0.distance }
+                        change(String(localized: "Energy"), comparison) { $0.energyConsumed }
+                    }
+                } header: {
+                    Text("Compared with")
+                } footer: {
+                    if let days = comparison.daysSoFar {
+                        days == 1
+                            ? Text("The period is still running, so each is compared over its first day.")
+                            : Text("The period is still running, so each is compared over its first \(days) days.")
+                    }
+                }
             }
             Section {
                 ForEach(buckets) { bucket in
@@ -399,6 +434,18 @@ struct PeriodDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .appBackButton()
     }
+
+    private func change(_ label: String, _ comparison: PeriodComparison,
+                        _ value: @escaping (StatBucket) -> Double?) -> some View {
+        GridRow {
+            Text(verbatim: label)
+                .gridColumnAlignment(.leading)
+            ForEach(comparison.columns) { column in
+                Text(verbatim: PeriodComparison.change(value(total), value(column.bucket)))
+                    .monospacedDigit()
+            }
+        }
+    }
 }
 
 extension PeriodDetailView {
@@ -406,7 +453,8 @@ extension PeriodDetailView {
          drives: [Drive], charges: [Charge], tessieCosts: [Int: Double], stillPlugged: Set<Int>) {
         self.init(interval: Calendar.current.dateInterval(of: granularity.component, for: period),
                   title: PeriodTitle.text(period, granularity.component), finer: granularity.finer,
-                  drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged)
+                  drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged,
+                  unit: granularity.component)
     }
 
     // a picked span longer than two months reads better by month than as a wall of days
@@ -415,6 +463,79 @@ extension PeriodDetailView {
         let twoMonths = Calendar.current.date(byAdding: .month, value: 2, to: span.start) ?? span.end
         self.init(interval: span, title: PeriodTitle.span(span), finer: span.end > twoMonths ? .month : .day,
                   drives: drives, charges: charges, tessieCosts: tessieCosts, stillPlugged: stillPlugged)
+    }
+}
+
+// a period against the one before it and the same one a year earlier. one still
+// running is held against the same stretch of the others, or half a month would
+// always read as a quiet one
+struct PeriodComparison {
+    struct Column: Identifiable {
+        let title: String
+        let bucket: StatBucket
+        var id: String { title }
+    }
+
+    let columns: [Column]
+    // days gone of a period still running, nil once it is over
+    let daysSoFar: Int?
+
+    init?(interval: DateInterval, unit: Calendar.Component?, drives: [Drive], charges: [Charge],
+          tessieCosts: [Int: Double], stillPlugged: Set<Int>, now: Date = .now) {
+        let calendar = Calendar.current
+        guard let first = (drives.map(\.startDate) + charges.map(\.startDate)).min() else { return nil }
+        // a period the log only partly covers would show a rise that is just the log starting
+        let logStart = calendar.startOfDay(for: first)
+        let elapsed = interval.end > now
+            ? calendar.dateComponents([.day, .hour, .minute, .second], from: interval.start, to: now)
+            : nil
+
+        func column(_ span: DateInterval, _ title: String) -> Column? {
+            guard span.start >= logStart else { return nil }
+            var end = span.end
+            if let elapsed, let cut = calendar.date(byAdding: elapsed, to: span.start) { end = min(end, cut) }
+            let days = StatBucket.build(drives: drives, charges: charges, tessieCosts: tessieCosts,
+                                        stillPlugged: stillPlugged, component: .day,
+                                        within: DateInterval(start: span.start, end: end))
+            return Column(title: title, bucket: StatBucket.sum(days, period: span.start))
+        }
+
+        var columns: [Column?] = []
+        if let unit {
+            if let start = calendar.date(byAdding: unit, value: -1, to: interval.start) {
+                columns.append(column(DateInterval(start: start, end: interval.start), PeriodTitle.text(start, unit)))
+            }
+            // the year before is the one before. elsewhere the middle of the period finds
+            // the same week a year back, where its first day would land a week early
+            let middle = interval.start.addingTimeInterval(interval.duration / 2)
+            if unit != .year, let then = calendar.date(byAdding: .year, value: -1, to: middle),
+               let back = calendar.dateInterval(of: unit, for: then) {
+                columns.append(column(back, PeriodTitle.text(back.start, unit)))
+            }
+        } else {
+            let days = calendar.dateComponents([.day], from: interval.start, to: interval.end).day ?? 0
+            if let start = calendar.date(byAdding: .day, value: -days, to: interval.start) {
+                let before = DateInterval(start: start, end: interval.start)
+                columns.append(column(before, PeriodTitle.span(before)))
+            }
+            if let start = calendar.date(byAdding: .year, value: -1, to: interval.start),
+               let end = calendar.date(byAdding: .year, value: -1, to: interval.end), start < end {
+                let back = DateInterval(start: start, end: end)
+                columns.append(column(back, PeriodTitle.span(back)))
+            }
+        }
+        self.columns = columns.compactMap { $0 }
+        guard !self.columns.isEmpty else { return nil }
+        daysSoFar = elapsed.map { _ in
+            (calendar.dateComponents([.day], from: interval.start, to: calendar.startOfDay(for: now)).day ?? 0) + 1
+        }
+    }
+
+    static func change(_ now: Double?, _ then: Double?) -> String {
+        guard let now, let then, then > 0 else { return "–" }
+        let pct = ((now / then - 1) * 100).rounded()
+        if pct == 0 { return "0 %" }
+        return pct.formatted(.number.precision(.fractionLength(0)).sign(strategy: .always())) + " %"
     }
 }
 

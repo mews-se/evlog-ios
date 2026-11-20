@@ -2390,6 +2390,36 @@
           }
         }
       }
+    },
+    "Compared with" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compared with"
+          }
+        }
+      }
+    },
+    "The period is still running, so each is compared over its first day." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The period is still running, so each is compared over its first day."
+          }
+        }
+      }
+    },
+    "The period is still running, so each is compared over its first %lld days." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The period is still running, so each is compared over its first %lld days."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
