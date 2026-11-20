@@ -17,7 +17,7 @@ CHARGES
 AC and DC told apart, the charging curve with a readout under your finger, added and used energy, average and peak power, cost, and what the battery heater and cabin climate drew while the car charged. A card names what set the pace: the charger, a cold battery, the heater, or a DC start above half full. A car left plugged in across several charging processes is shown as one charge. Costs TeslaMate never receives from Tesla can be filled in from Tessie, if you use it.
 
 STATISTICS
-Week, month, year or any span of days you pick, drilling down to a single day and its drives. Charging statistics with what charging costs in all, per kWh and per 100 km, top locations, AC/DC split, and a weekday-by-hour heat map. Destinations: where the car goes most often and where it covers the most distance, each opening into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature and consumption: consumption grouped by outside temperature, the coldest fifth of your driving against the warmest.
+Week, month, year or any span of days you pick, each set against the period before and a year earlier, drilling down to a single day and its drives. Charging statistics with what charging costs in all, per kWh and per 100 km, top locations, AC/DC split, and a weekday-by-hour heat map. Destinations: where the car goes most often and where it covers the most distance, each opening into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature and consumption: consumption grouped by outside temperature, the coldest fifth of your driving against the warmest.
 
 FREE AND OPEN SOURCE
 No ads, no in-app purchases, no analytics. The source is on GitHub under the MIT licence.
@@ -29,6 +29,6 @@ Nothing, to look around — the built-in demo needs no server at all. For your o
 • Optionally Grafana, for the visited-places map, battery health and a few queries the API does not expose
 • Optionally a Tessie API key, only to fill in costs TeslaMate never records
 
-Light and dark, metric and imperial, costs in your own currency.
+Light and dark, kilometres or miles, °C or °F, costs in your own currency.
 
 This project is an unofficial community tool and is not affiliated with, endorsed by, or supported by the official TeslaMate project.

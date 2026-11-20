@@ -1,11 +1,10 @@
 What's new
 
-• Each day in the Timeline says how far the car went and how much it charged.
+• Distance and temperature have a setting each, so miles and °C can go together.
+• Tap a week, month or year in Statistics to see its distance and energy against the period before and the same one a year earlier.
 
 Bug fixes
 
-• Statistics show the energy your drives used, so a day without a charge no longer reads 0.0 kWh.
-• A day on the cable no longer splits into several charges when the car tops up along the way.
-• Charging statistics count charges the same way as the rest of the app.
+• A phone set to the UK now shows temperatures in °C from the start, not °F.
 
 Full story: https://evlog.martinstockzell.se/changelog/

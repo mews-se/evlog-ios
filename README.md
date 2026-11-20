@@ -63,12 +63,13 @@ energy counter to tell. Costs TeslaMate does not have can be filled in from Tess
 
 **Statistics**: week, month, year or any span of days you pick, each period with its distance, the
 energy the drives used, efficiency and what was charged, drilling down from period to day to
-individual drives. Charging statistics with what charging costs in all, per kWh and per 100 km or
-100 mi, top locations that open into the charges behind them, AC/DC split and a weekday-by-hour heat
-map. Destinations: where the car goes most often and where it covers the most distance, each opening
-into the drives behind it, weekdays against weekends, and a heat map of when you drive. Temperature
-and consumption: consumption grouped by outside temperature, with the coldest fifth of the driving
-set against the warmest.
+individual drives. A period's own view holds its distance and energy against the period before and
+the same one a year earlier. Charging statistics with what charging costs in all, per kWh and per
+100 km or 100 mi, top locations that open into the charges behind them, AC/DC split and a
+weekday-by-hour heat map. Destinations: where the car goes most often and where it covers the most
+distance, each opening into the drives behind it, weekdays against weekends, and a heat map of when
+you drive. Temperature and consumption: consumption grouped by outside temperature, with the coldest
+fifth of the driving set against the warmest.
 
 Costs are shown in the region's currency, or one you pick in Settings. Units work the same way,
 with distance and temperature chosen apart, so miles can go with °C. With more than one car in
